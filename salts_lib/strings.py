@@ -239,5 +239,6 @@ STRINGS = {
     'scraper_timeout_list': 30227,
     'reset_fails': 30228,
     'result_limit': 30229,
-    'include_in_mne': 30230
+    'include_in_mne': 30230,
+    'auto-play': 30231
 }

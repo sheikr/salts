@@ -1041,6 +1041,7 @@ def browse_episodes(trakt_id, season):
 @url_dispatcher.register(MODES.GET_SOURCES, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
 @url_dispatcher.register(MODES.SELECT_SOURCE, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
 @url_dispatcher.register(MODES.DOWNLOAD_SOURCE, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
+@url_dispatcher.register(MODES.AUTOPLAY, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
 def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate='', dialog=None):
     timeout = max_timeout = int(kodi.get_setting('source_timeout'))
     if max_timeout == 0: timeout = None
@@ -1138,7 +1139,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
             return False
 
         pseudo_tv = xbmcgui.Window(10000).getProperty('PseudoTVRunning').lower()
-        if pseudo_tv == 'true' or (mode == MODES.GET_SOURCES and kodi.get_setting('auto-play') == 'true'):
+        if pseudo_tv == 'true' or (mode == MODES.GET_SOURCES and kodi.get_setting('auto-play') == 'true') or mode == MODES.AUTOPLAY:
             auto_play_sources(hosters, video_type, trakt_id, dialog, season, episode)
         else:
             if dialog or (dialog is None and kodi.get_setting('source-win') == 'Dialog'):
@@ -2181,14 +2182,20 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
                'ep_title': episode['title'], 'ep_airdate': air_date, 'trakt_id': show['ids']['trakt']}
     liz_url = kodi.get_plugin_url(queries)
 
+    queries = {'video_type': VIDEO_TYPES.EPISODE, 'title': show['title'], 'year': show['year'], 'season': episode['season'], 'episode': episode['number'],
+               'ep_title': episode['title'], 'ep_airdate': air_date, 'trakt_id': show['ids']['trakt']}
     if kodi.get_setting('auto-play') == 'true':
-        queries = {'mode': MODES.SELECT_SOURCE, 'video_type': VIDEO_TYPES.EPISODE, 'title': show['title'], 'year': show['year'], 'season': episode['season'], 'episode': episode['number'],
-                   'ep_title': episode['title'], 'ep_airdate': air_date, 'trakt_id': show['ids']['trakt']}
+        queries['mode'] = MODES.SELECT_SOURCE
+        label = i18n('select_source')
         if kodi.get_setting('source-win') == 'Dialog':
             runstring = 'RunPlugin(%s)' % kodi.get_plugin_url(queries)
         else:
             runstring = 'Container.Update(%s)' % kodi.get_plugin_url(queries)
-        menu_items.insert(0, (i18n('select_source'), runstring),)
+    else:
+        queries['mode'] = MODES.AUTOPLAY
+        runstring = 'RunPlugin(%s)' % kodi.get_plugin_url(queries)
+        label = i18n('auto-play')
+    menu_items.insert(0, (label, runstring),)
 
     if kodi.get_setting('show_download') == 'true':
         queries = {'mode': MODES.DOWNLOAD_SOURCE, 'video_type': VIDEO_TYPES.EPISODE, 'title': show['title'], 'year': show['year'], 'season': episode['season'], 'episode': episode['number'],
@@ -2199,7 +2206,7 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
             runstring = 'Container.Update(%s)' % kodi.get_plugin_url(queries)
         menu_items.append((i18n('download_source'), runstring),)
 
-    if menu_items and menu_items[0][0] == 'Select Source':
+    if menu_items and menu_items[0][0] in [i18n('select_source'), i18n('auto-play')]:
         menu_items.append((i18n('show_information'), 'XBMC.Action(Info)'),)
     else:
         menu_items.insert(0, (i18n('show_information'), 'XBMC.Action(Info)'),)
@@ -2264,13 +2271,20 @@ def make_item(section_params, show, menu_items=None):
     liz.setInfo('video', info)
     liz_url = kodi.get_plugin_url(queries)
 
-    if section_params['next_mode'] == MODES.GET_SOURCES and kodi.get_setting('auto-play') == 'true':
-        queries = {'mode': MODES.SELECT_SOURCE, 'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}
-        if kodi.get_setting('source-win') == 'Dialog':
-            runstring = 'RunPlugin(%s)' % kodi.get_plugin_url(queries)
+    queries = {'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}
+    if section_params['next_mode'] == MODES.GET_SOURCES:
+        if kodi.get_setting('auto-play') == 'true':
+            queries['mode'] = MODES.SELECT_SOURCE
+            label = i18n('select_source')
+            if kodi.get_setting('source-win') == 'Dialog':
+                runstring = 'RunPlugin(%s)' % kodi.get_plugin_url(queries)
+            else:
+                runstring = 'Container.Update(%s)' % kodi.get_plugin_url(queries)
         else:
-            runstring = 'Container.Update(%s)' % kodi.get_plugin_url(queries)
-        menu_items.insert(0, (i18n('select_source'), runstring),)
+            queries['mode'] = MODES.AUTOPLAY
+            runstring = 'RunPlugin(%s)' % kodi.get_plugin_url(queries)
+            label = i18n('auto-play')
+        menu_items.insert(0, (label, runstring),)
 
     if section_params['next_mode'] == MODES.GET_SOURCES and kodi.get_setting('show_download') == 'true':
         queries = {'mode': MODES.DOWNLOAD_SOURCE, 'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}
@@ -2348,7 +2362,7 @@ def make_item(section_params, show, menu_items=None):
         menu_items.insert(-3, (i18n('play_trailer'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
     if len(menu_items) < 10:
-        menu_items.insert(0, (i18n('show_information'), 'XBMC.Action(Info)'),)
+        menu_items.insert(1, (i18n('show_information'), 'XBMC.Action(Info)'),)
 
     liz.addContextMenuItems(menu_items, replaceItems=True)
 

@@ -938,6 +938,10 @@ msgctxt "#30230"
 msgid "Include in My Next Episodes"
 msgstr ""
 
+msgctxt "#30231"
+msgid "Auto-Play"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
