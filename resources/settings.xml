@@ -513,8 +513,9 @@
         <setting id="subtitle-hi" type="bool" label="30618" default="false" enable="eq(-3,true)"/>
         <setting id="subtitle-hd" type="bool" label="30619" default="false" enable="eq(-4,true)"/>
         <setting id="subtitle-download" type="bool" label="30620" default="true" enable="eq(-5,true)"/>
-        <setting id="subtitle-folder" type="folder" label="30621" default="special://userdata/addon_data/plugin.video.salts/Subtitles" enable="eq(-1,true)+eq(-6,true)"/>
-        <setting id="subtitle-show" type="bool" label="30622" default="false" enable="eq(-2,true)+eq(-7,true)"/>
+        <setting id="subtitle-autopick" type="bool" label="30665" default="false" enable="eq(-1,true) + eq(-6,true)"/>
+        <setting id="subtitle-folder" type="folder" label="30621" default="special://userdata/addon_data/plugin.video.salts/Subtitles" enable="eq(-2,true)+eq(-7,true)"/>
+        <setting id="subtitle-show" type="bool" label="30622" default="false" enable="eq(-3,true)+eq(-8,true)"/>
     </category>
     
     <category label="30635">

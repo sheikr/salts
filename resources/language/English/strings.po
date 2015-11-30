@@ -1620,3 +1620,7 @@ msgctxt "#30664"
 msgid "Low"
 msgstr ""
 
+msgctxt "#30665"
+msgid "Automatically pick first matching subtitle"
+msgstr ""
+

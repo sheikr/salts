@@ -1234,12 +1234,10 @@ def download_subtitles(language, title, year, season, episode):
         return
 
     subs = srt_scraper.get_episode_subtitles(language, tvshow_id, season, episode)
-    sub_labels = []
-    for sub in subs:
-        sub_labels.append(utils.format_sub_label(sub))
+    sub_labels = [utils.format_sub_label(sub) for sub in subs]
 
     index = 0
-    if len(sub_labels) > 1:
+    if len(sub_labels) > 1 and kodi.get_setting('subtitle-autopick') == 'false':
         dialog = xbmcgui.Dialog()
         index = dialog.select(i18n('choose_subtitle'), sub_labels)
 
