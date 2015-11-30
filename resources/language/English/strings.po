@@ -899,7 +899,7 @@ msgid "Received %s Sources from: %s"
 msgstr ""
 
 msgctxt "#30221"
-msgid "Filtering Out Unusable Sources"
+msgid "Applying Source Filters"
 msgstr ""
 
 msgctxt "#30222"

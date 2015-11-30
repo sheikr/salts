@@ -230,7 +230,7 @@ STRINGS = {
     'getting_sources': 30218,
     'requested_sources_from': 30219,
     'received_sources_from': 30220,
-    'filtering_unusable_sources': 30221,
+    'applying_source_filters': 30221,
     'include_comments': 30222,
     'watched_history': 30223,
     'trying_autoplay': 30224,

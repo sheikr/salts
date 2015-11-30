@@ -1108,7 +1108,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
             if timeout_msg:
                 kodi.notify(msg=timeout_msg, duration=7500)
             
-            pd.update(100, line2='Filtering Out Unusable Sources')
+            pd.update(100, line2=i18n('applying_source_filters'))
                 
             if pd.is_canceled(): return False
             hosters = utils.filter_exclusions(hosters)
