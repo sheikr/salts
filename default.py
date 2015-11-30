@@ -355,7 +355,9 @@ def scraper_settings():
     else:
         label = '**%s**' % (i18n('disable_all_scrapers'))
     kodi.create_item({'mode': MODES.TOGGLE_ALL}, label, thumb=utils.art('scraper.png'), fanart=utils.art('fanart.jpg'))
-
+    COLORS = ['green', 'limegreen', 'greenyellow', 'yellowgreen', 'yellow', 'orange', 'darkorange', 'orangered', 'red', 'darkred']
+    fail_limit = int(kodi.get_setting('disable-limit'))
+    
     for i, cls in enumerate(scrapers):
         label = '%s (Provides: %s)' % (cls.get_name(), str(list(cls.provides())).replace("'", ""))
         if not utils.scraper_enabled(cls.get_name()):
@@ -364,8 +366,13 @@ def scraper_settings():
         else:
             toggle_label = i18n('disable_scraper')
         failures = kodi.get_setting('%s_last_results' % (cls.get_name()))
-        if failures == '-1': failures = 'N/A'
-        label = '%s. %s [FL: %s]' % (i + 1, label, failures)
+        if failures == '-1':
+            failures = 'N/A'
+            index = 0
+        else:
+            index = min([(int(failures) * (len(COLORS) - 1) / fail_limit), len(COLORS) - 1])
+            
+        label = '%s. %s [COLOR %s][FL: %s][/COLOR]:' % (i + 1, label, COLORS[index], failures)
 
         menu_items = []
         if i > 0:
