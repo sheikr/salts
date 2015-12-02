@@ -19,6 +19,7 @@ import xbmcgui
 import time
 import os
 import kodi
+import random
 from trans_utils import i18n
 from trakt_api import Trakt_API
 from salts_lib import log_utils
@@ -144,3 +145,86 @@ class ProgressDialog(object):
     def update(self, percent, line1=None, line2=None, line3=None):
         if self.pd is not None:
             self.pd.update(percent, line1, line2, line3)
+
+def perform_auto_conf():
+    kodi.set_setting('trakt_timeout', '60')
+    kodi.set_setting('calendar-day', '-1')
+    kodi.set_setting('source_timeout', '20')
+    kodi.set_setting('enable_sort', 'true')
+    kodi.set_setting('filter-unknown', 'false')
+    kodi.set_setting('include_watchlist_next', 'true')
+    kodi.set_setting('filter_direct', 'true')
+    kodi.set_setting('filter_unusable', 'true')
+    kodi.set_setting('show_debrid', 'true')
+    kodi.set_setting('sort1_field', '2')
+    kodi.set_setting('sort2_field', '5')
+    kodi.set_setting('sort3_field', '6')
+    kodi.set_setting('sort4_field', '1')
+    kodi.set_setting('sort5_field', '3')
+    kodi.set_setting('sort6_field', '4')
+    tiers = ['Local', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
+             ['alluc.com', 'OneClickTVShows', '123Movies', 'niter.tv', 'ororo.tv', 'movietv.to'],
+             ['tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie', 'torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'MiraDeTodo'],
+             ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Diziay', 'Dizipas', 'Shush.se', 'MovieFarsi'],
+             ['DDLValley', 'ReleaseBB', 'MyVideoLinks.eu', 'OneClickWatch', 'RLSSource.net'],
+             ['IceFilms', 'PrimeWire', 'Flixanity', 'wso.ch', 'WatchSeries', 'UFlix.org', 'Putlocker', 'MovieHut'],
+             ['funtastic-vids', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K', 'afdah', 'SolarMovie', 'yify-streaming'],
+             ['CouchTunerV2', 'CouchTunerV1', 'Watch8Now', 'yshows', '2movies', 'iWatchOnline', 'vidics.ch', 'pubfilm'],
+             ['OnlineMoviesIs', 'OnlineMoviesPro', 'ViewMovies', 'movie25', 'viooz.ac', 'view47', 'MoviesHD', 'wmo.ch'],
+             ['ayyex', 'stream-tv.co', 'clickplay.to', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch'],
+             ['MovieTube', 'LosMovies', 'FilmStreaming.in', 'moviestorm.eu', 'MerDB'],
+             'MoviesOnline7']
+
+    sso = []
+    random_sso = kodi.get_setting('random_sso') == 'true'
+    for tier in tiers:
+        if isinstance(tier, basestring):
+            sso.append(tier)
+        else:
+            if random_sso:
+                random.shuffle(tier)
+            sso += tier
+    kodi.set_setting('source_sort_order', '|'.join(sso))
+
+    kodi.notify(msg=i18n('auto_conf_complete'))
+
+def do_auto_config():
+    ACTION_PREVIOUS_MENU = 10
+    ACTION_BACK = 92
+    CONTINUE_BUTTON = 200
+    CANCEL_BUTTON = 201
+
+    class AutoConfDialog(xbmcgui.WindowXMLDialog):
+        def onInit(self):
+            print 'onInit:'
+            self.OK = False
+            
+        def onAction(self, action):
+            print 'Action: %s' % (action.getId())
+            if action == ACTION_PREVIOUS_MENU or action == ACTION_BACK:
+                self.close()
+
+        def onControl(self, control):
+            print 'onControl: %s' % (control)
+            pass
+
+        def onFocus(self, control):
+            print 'onFocus: %s' % (control)
+            pass
+
+        def onClick(self, control):
+            print 'onClick: %s' % (control)
+            if control == CONTINUE_BUTTON:
+                self.OK = True
+                
+            if control == CANCEL_BUTTON:
+                self.OK = False
+
+            if control == CONTINUE_BUTTON or control == CANCEL_BUTTON:
+                self.close()
+
+    dialog = AutoConfDialog('AutoConfDialog.xml', kodi.get_path())
+    dialog.doModal()
+    if dialog.OK:
+        perform_auto_conf()
+    del dialog

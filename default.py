@@ -185,52 +185,7 @@ def reset_base_url():
 
 @url_dispatcher.register(MODES.AUTO_CONF)
 def auto_conf():
-    dialog = xbmcgui.Dialog()
-    line1 = i18n('auto_conf_line1')
-    line2 = i18n('auto_conf_line2')
-    line3 = i18n('auto_conf_line3')
-    ret = dialog.yesno('SALTS', line1, line2, line3, i18n('go_back'), i18n('continue'))
-    if ret:
-        kodi.set_setting('trakt_timeout', '60')
-        kodi.set_setting('calendar-day', '-1')
-        kodi.set_setting('source_timeout', '20')
-        kodi.set_setting('enable_sort', 'true')
-        kodi.set_setting('filter-unknown', 'false')
-        kodi.set_setting('include_watchlist_next', 'true')
-        kodi.set_setting('filter_direct', 'true')
-        kodi.set_setting('filter_unusable', 'true')
-        kodi.set_setting('show_debrid', 'true')
-        kodi.set_setting('sort1_field', '2')
-        kodi.set_setting('sort2_field', '5')
-        kodi.set_setting('sort3_field', '6')
-        kodi.set_setting('sort4_field', '1')
-        kodi.set_setting('sort5_field', '3')
-        kodi.set_setting('sort6_field', '4')
-        tiers = ['Local', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
-                 ['alluc.com', 'OneClickTVShows', '123Movies', 'niter.tv', 'ororo.tv', 'movietv.to'],
-                 ['tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie', 'torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'MiraDeTodo'],
-                 ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Diziay', 'Dizipas', 'Shush.se', 'MovieFarsi'],
-                 ['DDLValley', 'ReleaseBB', 'MyVideoLinks.eu', 'OneClickWatch', 'RLSSource.net'],
-                 ['IceFilms', 'PrimeWire', 'Flixanity', 'wso.ch', 'WatchSeries', 'UFlix.org', 'Putlocker', 'MovieHut'],
-                 ['funtastic-vids', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K', 'afdah', 'SolarMovie', 'yify-streaming'],
-                 ['CouchTunerV2', 'CouchTunerV1', 'Watch8Now', 'yshows', '2movies', 'iWatchOnline', 'vidics.ch', 'pubfilm'],
-                 ['OnlineMoviesIs', 'OnlineMoviesPro', 'ViewMovies', 'movie25', 'viooz.ac', 'view47', 'MoviesHD', 'wmo.ch'],
-                 ['ayyex', 'stream-tv.co', 'clickplay.to', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch'],
-                 ['MovieTube', 'LosMovies', 'FilmStreaming.in', 'moviestorm.eu', 'MerDB'],
-                 'MoviesOnline7']
-
-        sso = []
-        random_sso = kodi.get_setting('random_sso') == 'true'
-        for tier in tiers:
-            if isinstance(tier, basestring):
-                sso.append(tier)
-            else:
-                if random_sso:
-                    random.shuffle(tier)
-                sso += tier
-                
-        kodi.set_setting('source_sort_order', '|'.join(sso))
-        kodi.notify(msg=i18n('auto_conf_complete'))
+    gui_utils.do_auto_config()
     
 @url_dispatcher.register(MODES.BROWSE, ['section'])
 def browse_menu(section):
