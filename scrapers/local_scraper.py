@@ -114,7 +114,7 @@ class Local_Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year):
-        filter_str = '{"field": "title", "operator": "contains", "value": "%s"}' % (title)
+        filter_str = '{"field": "title", "operator": "contains", "value": "%s"}' % (title.encode('utf-8'))
         if year: filter_str = '{"and": [%s, {"field": "year", "operator": "is", "value": "%s"}]}' % (filter_str, year)
         if video_type == VIDEO_TYPES.MOVIE:
             cmd = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": %s, "limits": { "start" : 0, "end": 25 }, "properties" : ["title", "year", "file", "streamdetails"], \
