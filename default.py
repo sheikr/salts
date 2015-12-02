@@ -1055,7 +1055,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
         fails = {}
         counts = {}
         video = ScraperVideo(video_type, title, year, trakt_id, season, episode, ep_title, ep_airdate)
-        active = kodi.get_setting('show_pd') == 'true' or not dialog
+        active = kodi.get_setting('show_pd') == 'true' or (not dialog and not utils.from_playlist())
         with gui_utils.ProgressDialog(i18n('getting_sources'), utils.make_progress_msg(video_type, title, year, season, episode), '', '', active=active) as pd:
             scrapers = utils.relevant_scrapers(video_type)
             total = len(scrapers)
@@ -1338,7 +1338,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, dialog, season='
     except: pass
     listitem.setPath(stream_url)
     listitem.setInfo('video', info)
-    if dialog:
+    if dialog or utils.from_playlist():
         xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
     else:
         xbmc.Player().play(stream_url, listitem)

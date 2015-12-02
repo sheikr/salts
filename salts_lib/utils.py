@@ -939,3 +939,14 @@ def make_progress_msg(video_type, title, year, season, episode):
     if video_type == VIDEO_TYPES.EPISODE:
         progress_msg += ' - S%02dE%02d' % (int(season), int(episode))
     return progress_msg
+
+def from_playlist():
+    pl = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+    if pl.size() > 0:
+        li = pl[pl.getposition()]
+        plugin_url = 'plugin://%s/' % (kodi.get_id())
+        if li.getfilename().lower().startswith(plugin_url):
+            log_utils.log('Playing SALTS item from playlist |%s|%s|%s|' % (pl.getposition(), li.getfilename(), plugin_url), log_utils.LOGDEBUG)
+            return True
+    
+    return False

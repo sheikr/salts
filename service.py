@@ -91,6 +91,14 @@ class Service(xbmc.Player):
     def onPlayBackStopped(self):
         log_utils.log('Service: Playback Stopped')
         if self.tracked:
+            # clear the playlist if SALTS was playing and only one item in playlist to
+            # use playlist to determine playback method in get_sources
+            pl = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+            plugin_url = 'plugin://%s/' % (kodi.get_id())
+            if pl.size() == 1 and pl[0].getfilename().lower().startswith(plugin_url):
+                log_utils.log('Service: Clearing Single Item SALTS Playlist', log_utils.LOGDEBUG)
+                pl.clear()
+                
             playedTime = float(self._lastPos)
             try: percent_played = int((playedTime / self._totalTime) * 100)
             except: percent_played = 0  # guard div by zero
@@ -98,7 +106,7 @@ class Service(xbmc.Player):
             tTime = utils.format_time(self._totalTime)
             log_utils.log('Service: Played %s of %s total = %s%%' % (pTime, tTime, percent_played), log_utils.LOGDEBUG)
             if playedTime == 0 and self._totalTime == 999999:
-                log_utils.log('XBMC silently failed to start playback', log_utils.LOGWARNING)
+                log_utils.log('Kodi silently failed to start playback', log_utils.LOGWARNING)
             elif playedTime >= 5:
                 log_utils.log('Service: Setting bookmark on |%s|%s|%s| to %s seconds' % (self.trakt_id, self.season, self.episode, playedTime), log_utils.LOGDEBUG)
                 db_connection.set_bookmark(self.trakt_id, playedTime, self.season, self.episode)
