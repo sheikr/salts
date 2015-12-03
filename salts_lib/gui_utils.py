@@ -150,16 +150,20 @@ class ProgressDialog(object):
 
 def perform_auto_conf(responses):
     length = len(responses)
-    if length <= 0 or responses[0]: kodi.set_setting('trakt_timeout', '60')
-    if length <= 1 or responses[1]: kodi.set_setting('calendar-day', '-1')
-    if length <= 2 or responses[2]: kodi.set_setting('calendar_time', '2')
-    if length <= 3 or responses[3]: kodi.set_setting('source_timeout', '20')
-    if length <= 4 or responses[4]: kodi.set_setting('include_watchlist_next', 'true')
-    if length <= 5 or responses[5]: kodi.set_setting('filter_direct', 'true')
-    if length <= 6 or responses[6]: kodi.set_setting('filter_unusable', 'true')
-    if length <= 7 or responses[7]: kodi.set_setting('show_debrid', 'true')
-    if length <= 8 or responses[8]: kodi.set_setting('source_results', '0')
-    if length <= 9 or responses[9]:
+    TOTAL = 12
+    if length < TOTAL:
+        responses += [True] * (TOTAL - length)
+        
+    if responses[0]: kodi.set_setting('trakt_timeout', '60')
+    if responses[1]: kodi.set_setting('calendar-day', '-1')
+    if responses[2]: kodi.set_setting('calendar_time', '2')
+    if responses[3]: kodi.set_setting('source_timeout', '20')
+    if responses[4]: kodi.set_setting('include_watchlist_next', 'true')
+    if responses[5]: kodi.set_setting('filter_direct', 'true')
+    if responses[6]: kodi.set_setting('filter_unusable', 'true')
+    if responses[7]: kodi.set_setting('show_debrid', 'true')
+    if responses[8]: kodi.set_setting('source_results', '0')
+    if responses[9]:
         kodi.set_setting('enable_sort', 'true')
         kodi.set_setting('sort1_field', '2')
         kodi.set_setting('sort2_field', '5')
@@ -168,7 +172,7 @@ def perform_auto_conf(responses):
         kodi.set_setting('sort5_field', '3')
         kodi.set_setting('sort6_field', '4')
 
-    if length <= 10 or responses[10]:
+    if responses[10]:
         tiers = ['Local', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
                  ['alluc.com', 'OneClickTVShows', '123Movies', 'niter.tv', 'ororo.tv', 'movietv.to'],
                  ['tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie', 'torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'MiraDeTodo'],
@@ -193,7 +197,7 @@ def perform_auto_conf(responses):
                 sso += tier
         kodi.set_setting('source_sort_order', '|'.join(sso))
     
-    if length <= 11 or responses[11]: reset_base_url()
+    if responses[11]: reset_base_url()
     kodi.set_setting('filter-unknown', 'false')
     kodi.notify(msg=i18n('auto_conf_complete'))
 
