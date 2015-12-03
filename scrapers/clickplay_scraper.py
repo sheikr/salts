@@ -116,7 +116,7 @@ class ClickPlay_Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         season_url = show_url + 'season-%d/' % (int(video.season))
         episode_pattern = 'href="([^"]+/season-%d/episode-%d-[^"]+)' % (int(video.season), int(video.episode))
-        title_pattern = 'href="([^"]+)"\s+title="[^"]+/\s*([^"]+)'
+        title_pattern = 'href="(?P<url>[^"]+)"\s+title="[^"]+/\s*(?P<title>[^"]+)'
         return super(ClickPlay_Scraper, self)._default_get_episode_url(season_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year):

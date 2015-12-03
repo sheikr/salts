@@ -101,5 +101,5 @@ class Putlocker_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+season-%s-episode-%s-[^"]+)' % (video.season, video.episode)
-        title_pattern = 'href="([^"]+season-\d+-episode-\d+-[^"]+).*?&nbsp;\s+(.*?)</td>'
+        title_pattern = 'href="(?P<url>[^"]+season-\d+-episode-\d+-[^"]+).*?&nbsp;\s+(?P<title>.*?)</td>'
         return super(Putlocker_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)

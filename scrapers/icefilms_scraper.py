@@ -160,7 +160,7 @@ class IceFilms_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href=(/ip\.php[^>]+)>%sx0?%s\s+' % (video.season, video.episode)
-        title_pattern = 'class=star>\s*<a href=([^>]+)>(?:\d+x\d+\s+)+([^<]+)'
+        title_pattern = 'class=star>\s*<a href=(?P<url>[^>]+)>(?:\d+x\d+\s+)+(?P<title>[^<]+)'
         return super(IceFilms_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def __show_ice_ad(self, ad_url, ice_referer):

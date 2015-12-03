@@ -130,7 +130,7 @@ class Flixanity_Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         season_url = show_url + '/season/%s' % (video.season)
         episode_pattern = 'href="([^"]+/season/%s/episode/%s/?)"' % (video.season, video.episode)
-        title_pattern = 'href="([^"]+/season/%s/episode/%s/?)"\s+title="([^"]+)'
+        title_pattern = 'href="(?P<url>[^"]+/season/%s/episode/%s/?)"\s+title="(?P<title>[^"]+)'
         return super(Flixanity_Scraper, self)._default_get_episode_url(season_url, video, episode_pattern, title_pattern)
 
     @classmethod

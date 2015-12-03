@@ -313,6 +313,9 @@ def scraper_settings():
         else:
             toggle_label = i18n('disable_scraper')
         failures = kodi.get_setting('%s_last_results' % (cls.get_name()))
+        if not failures:
+            failures = 0
+            
         if failures == '-1':
             failures = 'N/A'
             index = 0

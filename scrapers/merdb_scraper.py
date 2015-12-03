@@ -129,6 +129,6 @@ class MerDB_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = '"tv_episode_item">\s*<a\s+href="([^"]+/season-%s-episode-%s)"' % (video.season, video.episode)
-        title_pattern = 'class="tv_episode_item">\s*<a\s+href="([^"]+).*?class="tv_episode_name">\s+-\s+([^<]+)'
+        title_pattern = 'class="tv_episode_item">\s*<a\s+href="(?P<url>[^"]+).*?class="tv_episode_name">\s+-\s+(?P<title>[^<]+)'
         airdate_pattern = 'href="([^"]+)(?:[^<]+<){3}span class="tv_episode_airdate">\s*-\s*{year}-{p_month}-{p_day}'
         return super(MerDB_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)

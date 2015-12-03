@@ -115,6 +115,6 @@ class TwoMovies_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'class="linkname\d*" href="([^"]+/watch_episode/[^/]+/%s/%s/)"' % (video.season, video.episode)
-        title_pattern = 'class="linkname"\s+href="([^"]+)">Episode_\d+\s+-\s+([^<]+)'
+        title_pattern = 'class="linkname"\s+href="(?P<url>[^"]+)">Episode_\d+\s+-\s+(?P<title>[^<]+)'
         headers = {'Referer': self.base_url}
         return super(TwoMovies_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern, headers=headers)

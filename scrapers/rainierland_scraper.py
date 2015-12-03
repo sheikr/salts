@@ -86,7 +86,7 @@ class Rainierland_Scraper(scraper.Scraper):
             else:
                 page_url = show_url
             episode_pattern = 'href="([^"]+season-%s-episode-%s-[^"]*)' % (video.season, video.episode)
-            title_pattern = 'class="entry-title".*?href="([^"]+)[^>]+title="[^"]*&#8211;\s*([^"]+)'
+            title_pattern = 'class="entry-title".*?href="(?P<url>[^"]+)[^>]+title="[^"]*&#8211;\s*(?P<title>[^"]+)'
             result = super(Rainierland_Scraper, self)._default_get_episode_url(page_url, video, episode_pattern, title_pattern)
             if result:
                 return result

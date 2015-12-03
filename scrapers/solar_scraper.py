@@ -101,6 +101,6 @@ class Solar_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+/season-%s/episode-%s/)' % (video.season, video.episode)
-        title_pattern = 'href="([^"]+/season-\d+/episode-\d+/)"\s+title="([^"]+)'
+        title_pattern = 'href="(?P<url>[^"]+/season-\d+/episode-\d+/)"\s+title="(?P<title>[^"]+)'
         airdate_pattern = '<em>{month_name}\s+{day},\s+{year}</em>\s*<span\s+class="epnomber">\s*<a\s+href="([^"]+)'
         return super(Solar_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)

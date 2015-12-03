@@ -114,7 +114,7 @@ class Dizigold_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+/%s-sezon/%s-[^"]*bolum[^"]*)' % (video.season, video.episode)
-        title_pattern = 'href="([^"]+)"\s+class="realcuf".*?<p\s+class="realcuf">([^<]+)'
+        title_pattern = 'href="(?P<url>[^"]+)"\s+class="realcuf".*?<p\s+class="realcuf">(?P<title>[^<]+)'
         return super(Dizigold_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year):

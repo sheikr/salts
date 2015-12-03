@@ -123,5 +123,5 @@ class UFlix_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'class="link"\s+href="([^"]+/show/[^"]+/season/%s/episode/%s)"' % (video.season, video.episode)
-        title_pattern = 'class="link"\s+href="([^"]+).*?class="tv_episode_name">.*?Episode\s+\d+\s+-\s+([^<]+)'
+        title_pattern = 'class="link"\s+href="(?P<url>[^"]+).*?class="tv_episode_name">.*?Episode\s+\d+\s+-\s+(?P<title>[^<]+)'
         return super(UFlix_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)

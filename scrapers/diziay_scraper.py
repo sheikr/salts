@@ -91,7 +91,7 @@ class Diziay_Scraper(scraper.Scraper):
         if show_id:
             data = {'sezon_id': video.season, 'dizi_id': show_id[0], 'tip': 'dizi', 'bolumid': ''}
             episode_pattern = 'href="([^"]+/[^"]*%s-sezon-%s-bolum[^"]*)"' % (video.season, video.episode)
-            title_pattern = 'href="([^"]*-\d+-sezon-\d+-bolum[^"]*)[^>]*>.*?class="realcuf">([^<]*)'
+            title_pattern = 'href="(?P<url>[^"]*-\d+-sezon-\d+-bolum[^"]*)[^>]*>.*?class="realcuf">(?P<title>[^<]*)'
             return super(Diziay_Scraper, self)._default_get_episode_url(SEASON_URL, video, episode_pattern, title_pattern, data=data, headers=XHR)
 
     def search(self, video_type, title, year):
