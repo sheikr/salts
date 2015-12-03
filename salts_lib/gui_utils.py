@@ -152,12 +152,14 @@ def perform_auto_conf(responses):
     length = len(responses)
     if length <= 0 or responses[0]: kodi.set_setting('trakt_timeout', '60')
     if length <= 1 or responses[1]: kodi.set_setting('calendar-day', '-1')
-    if length <= 2 or responses[2]: kodi.set_setting('source_timeout', '20')
-    if length <= 3 or responses[3]: kodi.set_setting('include_watchlist_next', 'true')
-    if length <= 4 or responses[4]: kodi.set_setting('filter_direct', 'true')
-    if length <= 5 or responses[5]: kodi.set_setting('filter_unusable', 'true')
-    if length <= 6 or responses[6]: kodi.set_setting('show_debrid', 'true')
-    if length <= 7 or responses[7]:
+    if length <= 2 or responses[2]: kodi.set_setting('calendar_time', '2')
+    if length <= 3 or responses[3]: kodi.set_setting('source_timeout', '20')
+    if length <= 4 or responses[4]: kodi.set_setting('include_watchlist_next', 'true')
+    if length <= 5 or responses[5]: kodi.set_setting('filter_direct', 'true')
+    if length <= 6 or responses[6]: kodi.set_setting('filter_unusable', 'true')
+    if length <= 7 or responses[7]: kodi.set_setting('show_debrid', 'true')
+    if length <= 8 or responses[8]: kodi.set_setting('source_results', '0')
+    if length <= 9 or responses[9]:
         kodi.set_setting('enable_sort', 'true')
         kodi.set_setting('sort1_field', '2')
         kodi.set_setting('sort2_field', '5')
@@ -166,7 +168,7 @@ def perform_auto_conf(responses):
         kodi.set_setting('sort5_field', '3')
         kodi.set_setting('sort6_field', '4')
 
-    if length <= 8 or responses[8]:
+    if length <= 10 or responses[10]:
         tiers = ['Local', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
                  ['alluc.com', 'OneClickTVShows', '123Movies', 'niter.tv', 'ororo.tv', 'movietv.to'],
                  ['tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie', 'torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'MiraDeTodo'],
@@ -191,7 +193,7 @@ def perform_auto_conf(responses):
                 sso += tier
         kodi.set_setting('source_sort_order', '|'.join(sso))
     
-    if length <= 9 or responses[9]: reset_base_url()
+    if length <= 11 or responses[11]: reset_base_url()
     kodi.set_setting('filter-unknown', 'false')
     kodi.notify(msg=i18n('auto_conf_complete'))
 
@@ -205,18 +207,19 @@ def do_auto_config():
     posx = 30
     gap = 35
     RADIO_BUTTONS = [
-        'Set Trakt.tv API timeout to 60 seconds',
-        'Set calendar start day to Yesterday',
-        'Set Scraper timeout to 20 seconds',
-        'Include Watchlist in My Next Episodes',
-        'Remove Deleted Direct sources from results',
-        'Remove Unusable Indirect sources from results',
-        'Show Debrid sources in Green',
-        'Set Source Sort Keys to default',
-        'Set Scraper Sort Order to default',
-        'Reset All Scraper Base Urls to Default',
-        'Select All/None'
-    ]
+        i18n('set_trakt_timeout'),
+        i18n('set_cal_start'),
+        i18n('set_cal_airtime'),
+        i18n('set_scraper_timeout'),
+        i18n('set_wl_mne'),
+        i18n('set_test_direct'),
+        i18n('set_filter_unusable'),
+        i18n('set_show_debrid'),
+        i18n('set_no_limit'),
+        i18n('set_source_sort'),
+        i18n('set_sso'),
+        i18n('set_reset_url'),
+        i18n('select_all_none')]
     
     class AutoConfDialog(xbmcgui.WindowXMLDialog):
         def onInit(self):
@@ -225,17 +228,18 @@ def do_auto_config():
             self.radio_buttons = []
             posy = starty
             for label in RADIO_BUTTONS:
-                self.radio_buttons.append(self.__add_radio_button(posx, posy, label))
+                self.radio_buttons.append(self.__get_radio_button(posx, posy, label))
                 posy += gap
             
             try: responses = json.loads(kodi.get_setting('prev_responses'))
             except: responses = [True] * len(self.radio_buttons)
-            log_utils.log(responses)
+            if len(responses) < len(self.radio_buttons):
+                responses += [True] * (len(self.radio_buttons) - len(responses))
             
             self.addControls(self.radio_buttons)
             last_button = None
-            for i, radio_button in enumerate(self.radio_buttons):
-                radio_button.setSelected(responses[i])
+            for response, radio_button in zip(responses, self.radio_buttons):
+                radio_button.setSelected(response)
                 if last_button is not None:
                     radio_button.controlUp(last_button)
                     radio_button.controlLeft(last_button)
@@ -254,14 +258,14 @@ def do_auto_config():
             cancel_ctrl.controlDown(self.radio_buttons[0])
             cancel_ctrl.controlRight(self.radio_buttons[0])
             
-        def __add_radio_button(self, x, y, label):
+        def __get_radio_button(self, x, y, label):
             kwargs = {'font': 'font12', 'focusTexture': 'button-focus2.png', 'noFocusTexture': 'button-nofocus.png', 'focusOnTexture': 'radiobutton-focus.png',
                       'noFocusOnTexture': 'radiobutton-focus.png', 'focusOffTexture': 'radiobutton-nofocus.png', 'noFocusOffTexture': 'radiobutton-nofocus.png'}
             temp = xbmcgui.ControlRadioButton(x, y, 450, 30, label, **kwargs)
             return temp
             
         def onAction(self, action):
-            log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG)
+            # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG)
             if action == ACTION_PREVIOUS_MENU or action == ACTION_BACK:
                 self.close()
 
@@ -274,7 +278,7 @@ def do_auto_config():
             pass
 
         def onClick(self, control):
-            log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG)
             focus_button = self.getControl(control)
             if focus_button == self.radio_buttons[-1]:
                 all_status = focus_button.isSelected()

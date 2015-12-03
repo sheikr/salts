@@ -942,6 +942,58 @@ msgctxt "#30231"
 msgid "Auto-Play"
 msgstr ""
 
+msgctxt "#30232"
+msgid "Set Trakt.tv API timeout to 60 seconds"
+msgstr ""
+
+msgctxt "#30233"
+msgid "Set Calendar start day to Yesterday"
+msgstr ""
+
+msgctxt "#30234"
+msgid "Show Episode Airtime on Calendar"
+msgstr ""
+
+msgctxt "#30235"
+msgid "Set Scraper timeout to 20 seconds"
+msgstr ""
+
+msgctxt "#30236"
+msgid "Include Watchlist in My Next Episodes"
+msgstr ""
+
+msgctxt "#30237"
+msgid "Remove Deleted Direct sources from results"
+msgstr ""
+
+msgctxt "#30238"
+msgid "Remove Unusable Indirect sources from results"
+msgstr ""
+
+msgctxt "#30239"
+msgid "Show Debrid sources in Green"
+msgstr ""
+
+msgctxt "#30240"
+msgid "No Limit on Maximum Source Results"
+msgstr ""
+
+msgctxt "#30241"
+msgid "Set Source Sort Keys to default"
+msgstr ""
+
+msgctxt "#30242"
+msgid "Set Scraper Sort Order to default"
+msgstr ""
+
+msgctxt "#30243"
+msgid "Reset All Scraper Base Urls to Default"
+msgstr ""
+
+msgctxt "#30244"
+msgid "Select All/None"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
@@ -1622,5 +1674,17 @@ msgstr ""
 
 msgctxt "#30665"
 msgid "Automatically pick first matching subtitle"
+msgstr ""
+
+msgctxt "#30666"
+msgid "SALTS Auto Configuration"
+msgstr ""
+
+msgctxt "#30667"
+msgid "Continue"
+msgstr ""
+
+msgctxt "#30668"
+msgid "Cancel"
 msgstr ""
 
