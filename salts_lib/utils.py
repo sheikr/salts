@@ -31,6 +31,7 @@ import urlparse
 import urllib
 import urllib2
 import traceback
+import xml.etree.ElementTree as ET
 import kodi
 from constants import *
 from trans_utils import i18n
@@ -950,3 +951,13 @@ def from_playlist():
             return True
     
     return False
+
+def reset_base_url():
+    xml_path = os.path.join(kodi.get_path(), 'resources', 'settings.xml')
+    tree = ET.parse(xml_path)
+    for category in tree.getroot().findall('category'):
+        if category.get('label').startswith('Scrapers '):
+            for setting in category.findall('setting'):
+                if setting.get('id').endswith('-base_url'):
+                    log_utils.log('Resetting: %s -> %s' % (setting.get('id'), setting.get('default')), xbmc.LOGDEBUG)
+                    kodi.set_setting(setting.get('id'), setting.get('default'))

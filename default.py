@@ -26,7 +26,6 @@ import xbmc
 import xbmcvfs
 import json
 import random
-import xml.etree.ElementTree as ET
 from Queue import Queue, Empty
 from salts_lib.db_utils import DB_Connection
 from salts_lib.url_dispatcher import URL_Dispatcher
@@ -172,15 +171,7 @@ def get_pin():
 
 @url_dispatcher.register(MODES.RESET_BASE_URL)
 def reset_base_url():
-    xml_path = os.path.join(kodi.get_path(), 'resources', 'settings.xml')
-    tree = ET.parse(xml_path)
-    for category in tree.getroot().findall('category'):
-        if category.get('label').startswith('Scrapers '):
-            for setting in category.findall('setting'):
-                if setting.get('id').endswith('-base_url'):
-                    log_utils.log('Resetting: %s -> %s' % (setting.get('id'), setting.get('default')), xbmc.LOGDEBUG)
-                    kodi.set_setting(setting.get('id'), setting.get('default'))
-
+    utils.reset_base_url()
     kodi.notify(msg=i18n('reset_complete'))
 
 @url_dispatcher.register(MODES.AUTO_CONF)
