@@ -1,3 +1,16 @@
+[B]Version 1.0.83[/B]
+- Colorize FL Values (Green-Yellow-Orange-Red)
+- Add auto-play menu item
+- Add option to automatically pick 1st subtitle
+- Force "drop sources with unknown sort values" to be off during auto-conf
+- Fix kodi freeze when playing from Infodialog
+- Fix update sub failing on unicode movie titles
+- Improve Auto-config process/dialog
+- Add StreamLord Scraper
+- Make dd.tv respect max quality settings
+- Add CyberReel scraper
+- Update Translations
+
 [B]Version 1.0.82[/B]
 - Fix CouchTunerV1 scraper
 - Fix filmstreaming.in scraper
