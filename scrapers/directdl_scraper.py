@@ -25,13 +25,14 @@ from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
+from salts_lib.constants import Q_ORDER
 
 BASE_URL = 'http://directdownload.tv'
 SEARCH_URL = '/api?key=%s&%s&keyword=%s'
 API_KEY = 'AFBF8E33A19787D1'
 
-Q_ORDER = ['PDTV', 'DSR', 'DVDRIP', 'HDTV', '720P', 'WEBDL', 'WEBDL1080P']
-Q_DICT = dict((quality, i) for i, quality in enumerate(Q_ORDER))
+DD_QUALITIES = ['PDTV', 'DSR', 'DVDRIP', 'HDTV', '720P', 'WEBDL', 'WEBDL1080P']
+Q_DICT = dict((quality, i) for i, quality in enumerate(DD_QUALITIES))
 QUALITY_MAP = {'PDTV': QUALITIES.MEDIUM, 'DSR': QUALITIES.MEDIUM, 'DVDRIP': QUALITIES.HIGH,
                'HDTV': QUALITIES.HIGH, '720P': QUALITIES.HD720, 'WEBDL': QUALITIES.HD720, 'WEBDL1080P': QUALITIES.HD1080}
 
@@ -41,6 +42,8 @@ class DirectDownload_Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
+        qual_filter = 5 - int(kodi.get_setting('%s_quality' % VIDEO_TYPES.EPISODE))
+        self.q_order = [dd_qual for dd_qual in DD_QUALITIES if Q_ORDER[QUALITY_MAP[dd_qual]] <= qual_filter]
 
     @classmethod
     def provides(cls):
@@ -73,7 +76,7 @@ class DirectDownload_Scraper(scraper.Scraper):
                         return hosters
 
                     query = urlparse.parse_qs(urlparse.urlparse(url).query)
-                    match_quality = Q_ORDER
+                    match_quality = self.q_order
                     if 'quality' in query:
                         temp_quality = re.sub('\s', '', query['quality'][0])
                         match_quality = temp_quality.split(',')
@@ -167,6 +170,6 @@ class DirectDownload_Scraper(scraper.Scraper):
         if 'quality' in query:
             q_list = re.sub('\s', '', query['quality'][0].upper()).split(',')
         else:
-            q_list = Q_ORDER
+            q_list = self.q_order
         quality = '&'.join(['quality[]=%s' % (q) for q in q_list])
         return urlparse.urljoin(self.base_url, (SEARCH_URL % (API_KEY, quality, urllib.quote_plus(query['query'][0]))))
