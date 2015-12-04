@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2015-11-27 17:24+0000\n"
+"PO-Revision-Date: 2015-12-03 12:22+0000\n"
 "Last-Translator: Achaw <achaw.ar@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/tv-addons/salts/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -66,23 +66,23 @@ msgstr "Eliminar url(s) cacheadas"
 
 msgctxt "#30012"
 msgid "Trending %s"
-msgstr "Tendencias %s"
+msgstr "Tendencias de %s"
 
 msgctxt "#30013"
 msgid "Popular %s"
-msgstr "Populares %s"
+msgstr "%s mas populares"
 
 msgctxt "#30014"
 msgid "Recently Updated %s"
-msgstr "Actualizadas recientemente %s"
+msgstr " %s actualizadas recientemente"
 
 msgctxt "#30015"
 msgid "Recommended %s"
-msgstr "Recomendadas %s"
+msgstr " %s recomendadas"
 
 msgctxt "#30016"
 msgid "My %s Collection"
-msgstr "Mi Colección %s"
+msgstr "%s en mi colección"
 
 msgctxt "#30017"
 msgid "My Favorites"
@@ -106,7 +106,7 @@ msgstr "Otras Listas"
 
 msgctxt "#30022"
 msgid "My Next Episodes"
-msgstr "Mis Episodios siguentes"
+msgstr "Mis Próximos Episodios"
 
 msgctxt "#30023"
 msgid "My Calendar"
@@ -182,7 +182,7 @@ msgstr "Ingresar nueva posición (1 - %s)"
 
 msgctxt "#30041"
 msgid "Set Default %s View"
-msgstr "Dfinir vista por defecto %s"
+msgstr "Definir vista por defecto %s"
 
 msgctxt "#30042"
 msgid "Set a view then select this item to set the default %s view"
@@ -210,7 +210,7 @@ msgstr "sea efectivo. Las siguientes configuraciones seran cambiadas:"
 
 msgctxt "#30048"
 msgid ""
-msgstr "[COLOR red]Definir orden de Scraper, Fuentes DEfinidas, Día de inicio en Calendario, Tiempo de espera de Trakt, Tiempo de espera de Scraper, Lista de seguimiento MNE, Testear Direct[/COLOR]"
+msgstr "[COLOR red]Definir orden de Scraper, Fuentes Definidas, Día de inicio en Calendario, Tiempo de espera de Trakt, Tiempo de espera de Scraper, Lista de seguimiento MNE, Testear Direct[/COLOR]"
 
 msgctxt "#30049"
 msgid "Go Back"
@@ -286,7 +286,7 @@ msgstr "Limpiar Suscripciones"
 
 msgctxt "#30067"
 msgid "Pick a list to use for Subscriptions"
-msgstr "Elige una lista para usar como suscripciónes"
+msgstr "Elige una lista para usar como suscripciones"
 
 msgctxt "#30068"
 msgid "Pick a list to use for Favorites"
@@ -330,7 +330,7 @@ msgstr "Elige un subtítulo para descargar"
 
 msgctxt "#30078"
 msgid "Link Resolve Failed: %s"
-msgstr "Rsolución de Link Fallida: %s"
+msgstr "Error al reproducir el link: %s"
 
 msgctxt "#30079"
 msgid "All sources failed to play"
@@ -346,7 +346,7 @@ msgstr "Define la Url relacionada"
 
 msgctxt "#30082"
 msgid "Received result from: %s"
-msgstr "Resultados recibidos desde: %s"
+msgstr "Resultados recibidos de: %s"
 
 msgctxt "#30083"
 msgid "Url To Change (%s)"
@@ -422,7 +422,7 @@ msgstr "¿Estas seguro que deseas eliminar la cache url?"
 
 msgctxt "#30101"
 msgid "This will slow things down until all urls are re-cached"
-msgstr "Esto pondrá lenta las cosas hasta que todas las urls sean re-cacheadas"
+msgstr "Esto pondrá lento el sistema hasta que todas las urls sean re-cacheadas"
 
 msgctxt "#30102"
 msgid "Keep"
@@ -446,7 +446,7 @@ msgstr "Reiniciar solo permitidas en BD de sqlite"
 
 msgctxt "#30107"
 msgid "Select Export Directory"
-msgstr "Selecciona el directorio de exporatación"
+msgstr "Selecciona el directorio de exportación"
 
 msgctxt "#30108"
 msgid "Enter Export Filename"
@@ -574,7 +574,7 @@ msgstr "Agregar a Lista"
 
 msgctxt "#30139"
 msgid "Add to Library"
-msgstr "Agregar a Librería"
+msgstr "Agregar a Colección"
 
 msgctxt "#30140"
 msgid "Set Addic7ed TVShowID"
@@ -594,7 +594,7 @@ msgstr "Definir Url relativa (Buscar)"
 
 msgctxt "#30144"
 msgid "Play Trailer"
-msgstr "REproducir Trailer"
+msgstr "Reproducir Trailer"
 
 msgctxt "#30145"
 msgid "Pick a list"
@@ -650,7 +650,7 @@ msgstr "Continuar"
 
 msgctxt "#30158"
 msgid "Downloading: %s..."
-msgstr "Downloading: %s..."
+msgstr "Descargando: %s..."
 
 msgctxt "#30159"
 msgid "Download Complete: %s"
@@ -702,7 +702,7 @@ msgstr "Autorización de PIN Trakt.tv fallida"
 
 msgctxt "#30171"
 msgid "You will be reminded in 24 hours"
-msgstr "Serás recordado en 24 hroas"
+msgstr "Serás recordado en 24 horas"
 
 msgctxt "#30172"
 msgid "Use Addon Settings later if you change your mind"
@@ -814,7 +814,7 @@ msgstr "Lista de Me gusta"
 
 msgctxt "#30199"
 msgid "%s Mosts"
-msgstr "%s Mas"
+msgstr "Mas %s"
 
 msgctxt "#30200"
 msgid "Most Played This Week"
@@ -894,15 +894,15 @@ msgstr "Obteniendo Fuentes"
 
 msgctxt "#30219"
 msgid "Requested Sources from: %s"
-msgstr "Fuentes requeridas desde: %s"
+msgstr "Solicitando fuentes de: %s"
 
 msgctxt "#30220"
 msgid "Received %s Sources from: %s"
-msgstr "%s fuentes recibidas desde: %s"
+msgstr "%s fuentes recibidas de: %s"
 
 msgctxt "#30221"
-msgid "Filtering Out Unusable Sources"
-msgstr "Filtrando fuentes no-usables"
+msgid "Applying Source Filters"
+msgstr "Aplicando filtro de fuentes"
 
 msgctxt "#30222"
 msgid "Include Links from Comments"
@@ -940,9 +940,61 @@ msgctxt "#30230"
 msgid "Include in My Next Episodes"
 msgstr "Incluir en Mis Próximos Episodios"
 
+msgctxt "#30231"
+msgid "Auto-Play"
+msgstr "Auto-Play"
+
+msgctxt "#30232"
+msgid "Set Trakt.tv API timeout to 60 seconds"
+msgstr "Definir tiempo de espera del API de Trakt.tv en 60 segs."
+
+msgctxt "#30233"
+msgid "Set Calendar start day to Yesterday"
+msgstr "Definir AYER como dia de inicio en Calendario"
+
+msgctxt "#30234"
+msgid "Show Episode Airtime on Calendar"
+msgstr "Mostrar dia de emisión de episodio en Calendario"
+
+msgctxt "#30235"
+msgid "Set Scraper timeout to 20 seconds"
+msgstr "Definir tiempo de espera de Scraper en 20 segs."
+
+msgctxt "#30236"
+msgid "Include Watchlist in My Next Episodes"
+msgstr "Incluir Lista de Seguimiento en Mis Próximos Episodios"
+
+msgctxt "#30237"
+msgid "Remove Deleted Direct sources from results"
+msgstr "Eliminar fuentes directas de los resultados"
+
+msgctxt "#30238"
+msgid "Remove Unusable Indirect sources from results"
+msgstr "Eliminar fuentes indirectas/inutilizables de los resultados"
+
+msgctxt "#30239"
+msgid "Show Debrid sources in Green"
+msgstr "Mostrar fuentes de DEBRID en verde"
+
+msgctxt "#30240"
+msgid "No Limit on Maximum Source Results"
+msgstr "Sin límite máximo de resultado de fuentes"
+
+msgctxt "#30242"
+msgid "Set Scraper Sort Order to default"
+msgstr "Definir orden de Prioridad de Scraper a valores por defecto"
+
+msgctxt "#30243"
+msgid "Reset All Scraper Base Urls to Default"
+msgstr "Reiniciar todas las base de url de scraper a valores por defecto"
+
+msgctxt "#30244"
+msgid "Select All/None"
+msgstr "Seleccionar Todos/Ninguno"
+
 msgctxt "#30500"
 msgid "Addon Theme"
-msgstr "Tema de Addon"
+msgstr "Tema:"
 
 msgctxt "#30501"
 msgid "Authorized Trakt User"
@@ -958,11 +1010,11 @@ msgstr "Mostrar tiempo de emisión en calendarios"
 
 msgctxt "#30504"
 msgid "My Collection Sort Order"
-msgstr "Orden de ordenamiento de Mi Colección"
+msgstr "Orden de clasificación de Mi Colección"
 
 msgctxt "#30505"
 msgid "My Next Episodes Sort Order"
-msgstr "Orden de ordenamiento de Mis Próximos Episodios"
+msgstr "Orden de clasificación de Mis Próximos Episodios"
 
 msgctxt "#30506"
 msgid "Show unaired episodes in My Next Episodes"
@@ -970,7 +1022,7 @@ msgstr "Mostrar Episodios no emitidos en Mis Próximos Episodios"
 
 msgctxt "#30507"
 msgid "Show Season 0 in Seasons View"
-msgstr "Mostrart Temporada 0 en la vista de Temporadas"
+msgstr "Mostrar Temporada 0 en la vista de Temporadas"
 
 msgctxt "#30508"
 msgid "Show unaired episodes in Seasons"
@@ -982,7 +1034,7 @@ msgstr "    Mostrar un indicador en Episodios no emitidos"
 
 msgctxt "#30510"
 msgid "    Show episodes with unknown air date"
-msgstr "Mostrar episodios no fecha de emisión desconocida"
+msgstr "Mostrar episodios con fecha de emisión desconocida"
 
 msgctxt "#30511"
 msgid "Off"
@@ -1002,7 +1054,7 @@ msgstr "Anteriormente recogido"
 
 msgctxt "#30515"
 msgid "Recently Collected"
-msgstr "Recientemente recogido"
+msgstr "Recolectados recientemente"
 
 msgctxt "#30516"
 msgid "Title"
@@ -1030,7 +1082,7 @@ msgstr "Menos Completos"
 
 msgctxt "#30522"
 msgid "Recently Aired"
-msgstr "Recientemente Emitids"
+msgstr "Emitidos recientemente"
 
 msgctxt "#30523"
 msgid "Previously Aired"
@@ -1154,7 +1206,7 @@ msgstr "Usar Trakt Bookmarks"
 
 msgctxt "#30553"
 msgid "Cache watched status"
-msgstr "Cahear Status de Vistos"
+msgstr "Cachear Status de Vistos"
 
 msgctxt "#30554"
 msgid "Cache Collection"
@@ -1210,7 +1262,7 @@ msgstr "Incluir episodios con fecha de emisión desconocida"
 
 msgctxt "#30567"
 msgid "Update Library Afterward?"
-msgstr "¿Actualizar Libreria Después?"
+msgstr "¿Actualizar colección al finalizar?"
 
 msgctxt "#30568"
 msgid "Show Notifications?"
@@ -1258,23 +1310,23 @@ msgstr "Tiempo de Espera de Scraper (segundos) (0=Sin Límite)"
 
 msgctxt "#30579"
 msgid "Maximum Source Results (0=No Limit)"
-msgstr "resultado máximo de fuentes (0=Sin Límite)"
+msgstr "Resultado máximo de fuentes (0=Sin Límite)"
 
 msgctxt "#30580"
 msgid "Filter Out Unusable Sources"
-msgstr "Filtrar fuentes no-usables"
+msgstr "Filtrar fuentes inutilizables"
 
 msgctxt "#30581"
 msgid "Source Exclusion List"
 msgstr "Lista de exclusión de fuentes"
 
 msgctxt "#30582"
-msgid "Allowed TV Show Quality"
-msgstr "Calidad de Series de TV permitida"
+msgid "Maximum Allowed TV Show Quality"
+msgstr "Calidad máxima permitida para Series de TV"
 
 msgctxt "#30583"
-msgid "Allowed Movie Quality"
-msgstr "Calidad de Películas permitida"
+msgid "Maximum Allowed Movie Quality"
+msgstr "Calidad máxima permitida para Películas"
 
 msgctxt "#30584"
 msgid "Match episode air date when season & episode fails"
@@ -1358,7 +1410,7 @@ msgstr "Incluir en chequeo de Page Existence"
 
 msgctxt "#30614"
 msgid "Subtitles work only for TV Shows currently"
-msgstr "Los Subtítulos sono funcionana para Series de TV por ahora"
+msgstr "Los Subtítulos solo funcionan para Series de TV por ahora"
 
 msgctxt "#30615"
 msgid "Enable Subtitles"
@@ -1370,7 +1422,7 @@ msgstr "Mostrar indicador de subtítulos"
 
 msgctxt "#30617"
 msgid "Subtitle Language"
-msgstr "Lenguaje de Subtítulo"
+msgstr "Idioma de Subtítulo"
 
 msgctxt "#30619"
 msgid "Require HD"
@@ -1458,7 +1510,7 @@ msgstr "Si"
 
 msgctxt "#30640"
 msgid "Show Liked Lists"
-msgstr "Mostrar Lsita de Me gusta"
+msgstr "Mostrar Lista de Me gusta"
 
 msgctxt "#30641"
 msgid "Show Mosts"
@@ -1470,7 +1522,7 @@ msgstr "Orden Lista de Seguimiento"
 
 msgctxt "#30643"
 msgid "Recently Added"
-msgstr "Recientemente agregados"
+msgstr "Agregados recientemente"
 
 msgctxt "#30644"
 msgid "Previously Added"
@@ -1527,4 +1579,40 @@ msgstr "Silenciar Notificaciones"
 msgctxt "#30659"
 msgid "Exclude Completed, Ended Shows from My Next Episodes"
 msgstr "Excluir Series completas o terminadas de Mis Próximos Episodios"
+
+msgctxt "#30660"
+msgid "HD1080"
+msgstr "HD1080"
+
+msgctxt "#30661"
+msgid "HD720"
+msgstr "HD720"
+
+msgctxt "#30662"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "#30663"
+msgid "Medium"
+msgstr "Media"
+
+msgctxt "#30664"
+msgid "Low"
+msgstr "Baja"
+
+msgctxt "#30665"
+msgid "Automatically pick first matching subtitle"
+msgstr "Elegir primer subtítulo automáticamente"
+
+msgctxt "#30666"
+msgid "SALTS Auto Configuration"
+msgstr "Auto Configuración de SALTS"
+
+msgctxt "#30667"
+msgid "Continue"
+msgstr "Continuar"
+
+msgctxt "#30668"
+msgid "Cancel"
+msgstr "Cancelar"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2015-11-23 00:21+0000\n"
+"PO-Revision-Date: 2015-12-04 23:09+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: English (United States) (http://www.transifex.com/tv-addons/salts/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -901,8 +901,8 @@ msgid "Received %s Sources from: %s"
 msgstr "Received %s Sources from: %s"
 
 msgctxt "#30221"
-msgid "Filtering Out Unusable Sources"
-msgstr "Filtering Out Unusable Sources"
+msgid "Applying Source Filters"
+msgstr "Applying Source Filters"
 
 msgctxt "#30222"
 msgid "Include Links from Comments"
@@ -939,6 +939,62 @@ msgstr "Maximum Source Results"
 msgctxt "#30230"
 msgid "Include in My Next Episodes"
 msgstr "Include in My Next Episodes"
+
+msgctxt "#30231"
+msgid "Auto-Play"
+msgstr "Auto-Play"
+
+msgctxt "#30232"
+msgid "Set Trakt.tv API timeout to 60 seconds"
+msgstr "Set Trakt.tv API timeout to 60 seconds"
+
+msgctxt "#30233"
+msgid "Set Calendar start day to Yesterday"
+msgstr "Set Calendar start day to Yesterday"
+
+msgctxt "#30234"
+msgid "Show Episode Airtime on Calendar"
+msgstr "Show Episode Airtime on Calendar"
+
+msgctxt "#30235"
+msgid "Set Scraper timeout to 20 seconds"
+msgstr "Set Scraper timeout to 20 seconds"
+
+msgctxt "#30236"
+msgid "Include Watchlist in My Next Episodes"
+msgstr "Include Watchlist in My Next Episodes"
+
+msgctxt "#30237"
+msgid "Remove Deleted Direct sources from results"
+msgstr "Remove Deleted Direct sources from results"
+
+msgctxt "#30238"
+msgid "Remove Unusable Indirect sources from results"
+msgstr "Remove Unusable Indirect sources from results"
+
+msgctxt "#30239"
+msgid "Show Debrid sources in Green"
+msgstr "Show Debrid sources in Green"
+
+msgctxt "#30240"
+msgid "No Limit on Maximum Source Results"
+msgstr "No Limit on Maximum Source Results"
+
+msgctxt "#30241"
+msgid "Set Source Sort Keys to default"
+msgstr "Set Source Sort Keys to default"
+
+msgctxt "#30242"
+msgid "Set Scraper Sort Order to default"
+msgstr "Set Scraper Sort Order to default"
+
+msgctxt "#30243"
+msgid "Reset All Scraper Base Urls to Default"
+msgstr "Reset All Scraper Base Urls to Default"
+
+msgctxt "#30244"
+msgid "Select All/None"
+msgstr "Select All/None"
 
 msgctxt "#30500"
 msgid "Addon Theme"
@@ -1269,12 +1325,12 @@ msgid "Source Exclusion List"
 msgstr "Source Exclusion List"
 
 msgctxt "#30582"
-msgid "Allowed TV Show Quality"
-msgstr "Allowed TV Show Quality"
+msgid "Maximum Allowed TV Show Quality"
+msgstr "Maximum Allowed TV Show Quality"
 
 msgctxt "#30583"
-msgid "Allowed Movie Quality"
-msgstr "Allowed Movie Quality"
+msgid "Maximum Allowed Movie Quality"
+msgstr "Maximum Allowed Movie Quality"
 
 msgctxt "#30584"
 msgid "Match episode air date when season & episode fails"
@@ -1579,4 +1635,40 @@ msgstr "Mute Notifications"
 msgctxt "#30659"
 msgid "Exclude Completed, Ended Shows from My Next Episodes"
 msgstr "Exclude Completed, Ended Shows from My Next Episodes"
+
+msgctxt "#30660"
+msgid "HD1080"
+msgstr "HD1080"
+
+msgctxt "#30661"
+msgid "HD720"
+msgstr "HD720"
+
+msgctxt "#30662"
+msgid "High"
+msgstr "High"
+
+msgctxt "#30663"
+msgid "Medium"
+msgstr "Medium"
+
+msgctxt "#30664"
+msgid "Low"
+msgstr "Low"
+
+msgctxt "#30665"
+msgid "Automatically pick first matching subtitle"
+msgstr "Automatically pick first matching subtitle"
+
+msgctxt "#30666"
+msgid "SALTS Auto Configuration"
+msgstr "SALTS Auto Configuration"
+
+msgctxt "#30667"
+msgid "Continue"
+msgstr "Continue"
+
+msgctxt "#30668"
+msgid "Cancel"
+msgstr "Cancel"
 
