@@ -594,7 +594,8 @@ class Scraper(object):
         if str(height)[-1] in ['p', 'P']:
             height = str(height)[:-1]
             
-        height = int(height)
+        try: height = int(height)
+        except: height = 200
         if height > 800:
             quality = QUALITIES.HD1080
         elif height > 480:
