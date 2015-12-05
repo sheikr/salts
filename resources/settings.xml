@@ -21,6 +21,7 @@
         <setting id="Movies_main" type="string" default="imdb-best-250-movies@hulkhorgen" visible="false"/>
         <setting id="source_sort_order" type="text" label="Source Sort Order" enable="false" visible="false"/>
         <setting id="prev_responses" type="text" label="Previous Auto-Conf Responses" enable="false" visible="false"/>
+        <setting id="pd_force_disable" type="bool" default="false" visible="false"/>
     </category>
 
     <category label="30546">

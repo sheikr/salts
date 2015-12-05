@@ -1005,6 +1005,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
         counts = {}
         video = ScraperVideo(video_type, title, year, trakt_id, season, episode, ep_title, ep_airdate)
         active = kodi.get_setting('show_pd') == 'true' or (not dialog and not utils.from_playlist())
+        if kodi.get_setting('pd_force_disable') == 'true': active = False
         with gui_utils.ProgressDialog(i18n('getting_sources'), utils.make_progress_msg(video_type, title, year, season, episode), '', '', active=active) as pd:
             scrapers = utils.relevant_scrapers(video_type)
             total = len(scrapers)
@@ -1295,6 +1296,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, dialog, season='
 
 def auto_play_sources(hosters, video_type, trakt_id, dialog, season, episode):
     active = kodi.get_setting('show_pd') == 'true' or not dialog
+    if kodi.get_setting('pd_force_disable') == 'true': active = False
     total_hosters = len(hosters)
     with gui_utils.ProgressDialog(i18n('trying_autoplay'), line1=' ', line2=' ', active=active) as pd:
         prev = ''
@@ -2305,12 +2307,12 @@ def make_item(section_params, show, menu_items=None):
     queries = {'mode': MODES.SET_URL_MANUAL, 'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}
     menu_items.append((i18n('set_rel_url_manual'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
+    if len(menu_items) < 10:
+        menu_items.insert(1, (i18n('show_information'), 'XBMC.Action(Info)'),)
+
     if len(menu_items) < 10 and 'trailer' in info:
         queries = {'mode': MODES.PLAY_TRAILER, 'stream_url': info['trailer']}
         menu_items.insert(-3, (i18n('play_trailer'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
-
-    if len(menu_items) < 10:
-        menu_items.insert(1, (i18n('show_information'), 'XBMC.Action(Info)'),)
 
     liz.addContextMenuItems(menu_items, replaceItems=True)
 
