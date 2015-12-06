@@ -246,8 +246,7 @@ def make_ids(item):
 
 def make_people(item):
     people = {}
-    if 'cast' in item: people['cast'] = [person['person']['name'] for person in item['cast']]
-    if 'cast' in item: people['castandrole'] = ['%s as %s' % (person['person']['name'], person['character']) for person in item['cast']]
+    if 'cast' in item: people['castandrole'] = people['cast'] = [(person['person']['name'], person['character']) for person in item['cast']]
     if 'crew' in item and 'directing' in item['crew']:
         directors = [director['person']['name'] for director in item['crew']['directing'] if director['job'].lower() == 'director']
         people['director'] = ', '.join(directors)
