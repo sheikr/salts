@@ -607,15 +607,15 @@ msgid "Scraper Automatically Disabled"
 msgstr ""
 
 msgctxt "#30148"
-msgid "[COLOR blue]%s[/COLOR] returned no results %s times in a row."
+msgid "[COLOR blue]%s[/COLOR]'s FL of %s is over your Failure Level threshold"
 msgstr ""
 
 msgctxt "#30149"
-msgid "This wastes system resources and time."
+msgid "Disabling it avoids wasting time and resources"
 msgstr ""
 
 msgctxt "#30150"
-msgid "([I]If you keep it enabled, consider increasing your scraper timeout.[/I])"
+msgid "([I]If you Keep Enabled, consider increasing scraper timeout[/I])"
 msgstr ""
 
 msgctxt "#30151"
