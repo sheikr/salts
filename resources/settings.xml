@@ -452,6 +452,12 @@
          <setting id="tunemovie-base_url" type="text" label="    Base Url" default="http://tunemovie.is" visible="eq(-1,true)"/>
          <setting id="tunemovie-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="tunemovie_last_results" type="number" default="0" visible="false"/>
+         <setting id="TVRelease.Net-enable" type="bool" label="TVRelease.Net Enabled" default="true" visible="true"/>
+         <setting id="TVRelease.Net-base_url" type="text" label="    Base Url" default="http://tv-release.net" visible="eq(-1,true)"/>
+         <setting id="TVRelease.Net-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
+         <setting id="TVRelease.Net_last_results" type="number" default="0" visible="false"/>
+         <setting id="TVRelease.Net-filter" type="slider" range="0,180" option="int" label="     Filter results older than (0=No Filter) (days)" default="30" visible="eq(-4,true)"/>
+         <setting id="TVRelease.Net-select" type="enum" label="     Automatically Select" lvalues="30636|30637" default="0" visible="eq(-5,true)"/>
          <setting id="UFlix.org-enable" type="bool" label="UFlix.org Enabled" default="true" visible="true"/>
          <setting id="UFlix.org-base_url" type="text" label="    Base Url" default="http://vizz.is" visible="eq(-1,true)"/>
          <setting id="UFlix.org-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
