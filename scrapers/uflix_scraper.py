@@ -115,6 +115,7 @@ class UFlix_Scraper(scraper.Scraper):
                         match_title = match_title_year
                         match_year = ''
                     if match_title.startswith('Watch '): match_title = match_title.replace('Watch ', '')
+                    if match_title.endswith(' Online'): match_title = match_title.replace(' Online', '')
                     
                     if not year or not match_year or year == match_year:
                         result = {'title': match_title, 'url': self._pathify_url(url), 'year': match_year}
