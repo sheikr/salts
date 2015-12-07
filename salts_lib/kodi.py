@@ -100,7 +100,11 @@ def parse_query(query):
 def notify(header=None, msg='', duration=2000, sound=None):
     if header is None: header = get_name()
     if sound is None: sound = get_setting('mute_notifications') == 'false'
-    xbmcgui.Dialog().notification(header, msg, ICON_PATH, duration, sound)
+    try:
+        xbmcgui.Dialog().notification(header, msg, ICON_PATH, duration, sound)
+    except:
+        builtin = "XBMC.Notification(%s,%s, %s, %s)" % (header, msg, duration, ICON_PATH)
+        xbmc.executebuiltin(builtin)
     
 def get_current_view():
     skinPath = xbmc.translatePath('special://skin/')

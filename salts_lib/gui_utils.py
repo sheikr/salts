@@ -122,7 +122,7 @@ def get_pin():
     del dialog
 
 class ProgressDialog(object):
-    def __init__(self, heading, line1=None, line2=None, line3=None, active=True):
+    def __init__(self, heading, line1='', line2='', line3='', active=True):
         if active:
             self.pd = xbmcgui.DialogProgress()
             self.pd.create(heading, line1, line2, line3)
@@ -144,7 +144,7 @@ class ProgressDialog(object):
         else:
             return False
         
-    def update(self, percent, line1=None, line2=None, line3=None):
+    def update(self, percent, line1='', line2='', line3=''):
         if self.pd is not None:
             self.pd.update(percent, line1, line2, line3)
 
