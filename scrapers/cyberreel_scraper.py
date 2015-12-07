@@ -127,7 +127,7 @@ class CyberReel_Scraper(scraper.Scraper):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/?s=')
         search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=1)
+        html = self._http_get(search_url, cache_limit=0)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):
             match = re.search('href="([^"]+)', item)
             if match:
