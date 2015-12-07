@@ -28,7 +28,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 
 BASE_URL = 'http://dizipas.com'
 
-class Dizilab_Scraper(scraper.Scraper):
+class Dizipas_Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
