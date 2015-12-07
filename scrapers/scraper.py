@@ -204,10 +204,12 @@ class Scraper(object):
         return settings
 
     def _default_get_url(self, video):
-        temp_video_type = video.video_type
-        if video.video_type == VIDEO_TYPES.EPISODE: temp_video_type = VIDEO_TYPES.TVSHOW
         url = None
         self.create_db_connection()
+        if video.video_type == VIDEO_TYPES.EPISODE:
+            temp_video_type = VIDEO_TYPES.TVSHOW
+        else:
+            temp_video_type = video.video_type
 
         result = self.db_connection.get_related_url(temp_video_type, video.title, video.year, self.get_name())
         if result:

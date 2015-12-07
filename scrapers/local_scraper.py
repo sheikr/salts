@@ -93,7 +93,7 @@ class Local_Scraper(scraper.Scraper):
             log_utils.log('Skipping S&E matching as title search is forced on: %s' % (video.trakt_id), log_utils.LOGDEBUG)
 
         if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title and not episodes:
-            run = cmd % (params['id'][0], video.season, 'title', video.ep_title.encode('utf-8'))
+            run = cmd % (params['id'][0], video.season, 'title', video.ep_title)
             meta = xbmc.executeJSONRPC(run)
             meta = json.loads(meta)
             log_utils.log('Episode Title Meta: %s' % (meta), log_utils.LOGDEBUG)
@@ -114,7 +114,7 @@ class Local_Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year):
-        filter_str = '{"field": "title", "operator": "contains", "value": "%s"}' % (title.encode('utf-8'))
+        filter_str = '{"field": "title", "operator": "contains", "value": "%s"}' % (title)
         if year: filter_str = '{"and": [%s, {"field": "year", "operator": "is", "value": "%s"}]}' % (filter_str, year)
         if video_type == VIDEO_TYPES.MOVIE:
             cmd = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": %s, "limits": { "start" : 0, "end": 25 }, "properties" : ["title", "year", "file", "streamdetails"], \

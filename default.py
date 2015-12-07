@@ -1686,6 +1686,7 @@ def update_strms(section, dialog=None):
             add_to_library(section_params['video_type'], item['title'], item['year'], item['ids']['trakt'])
         except Exception as e:
             log_utils.log('Subscription Update Exception: |%s|%s|%s|%s| - %s' % (section_params['video_type'], item['title'], item['year'], item['ids']['trakt'], e), xbmc.LOGDEBUG)
+            raise
 
 @url_dispatcher.register(MODES.CLEAN_SUBS)
 def clean_subs():
@@ -1926,6 +1927,7 @@ def write_strm(stream, path, video_type, title, year, trakt_id, season='', episo
                 log_utils.log('No strm written for |%s|%s|%s|%s|%s|' % (video_type, title, year, season, episode), xbmc.LOGWARNING)
         except Exception as e:
             log_utils.log('Failed to create .strm file (%s): %s' % (path, e), xbmc.LOGERROR)
+            raise
 
 def show_pickable_list(slug, pick_label, pick_mode, section):
     if not slug:
