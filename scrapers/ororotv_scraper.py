@@ -64,7 +64,7 @@ class OroroTV_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, headers=XHR, cache_limit=0)
+            html = self._http_get(url, headers=XHR, cache_limit=.5)
             if video.video_type == VIDEO_TYPES.MOVIE:
                 quality = QUALITIES.HD720
                 pattern = "source src='([^']+)'\s+type='video/([^']+)"
@@ -72,13 +72,12 @@ class OroroTV_Scraper(scraper.Scraper):
                 if match:
                     source_url = match.group(1)
                     url = urlparse.urljoin(self.base_url, source_url)
-                    html = self._http_get(url, headers=XHR, cache_limit=0)
+                    html = self._http_get(url, headers=XHR, cache_limit=.5)
             else:
                 quality = QUALITIES.HD720
                 pattern = "'([^']+)'"
                 match = re.search('video\.tag\.src\s*=\s*(.*)', html)
                 if match:
-                    log_utils.log(match.group(1))
                     html = match.group(1)
 
             for match in re.finditer(pattern, html):
