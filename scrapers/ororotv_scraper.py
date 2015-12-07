@@ -26,6 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import USER_AGENT
+from salts_lib.constants import XHR
 
 BASE_URL = 'http://ororo.tv'
 LANDING_URL = '/nl'
@@ -55,7 +56,7 @@ class OroroTV_Scraper(scraper.Scraper):
         return link
 
     def format_source_label(self, item):
-        label = '[%s] %s (%s)' % (item['quality'], item['host'], item['format'])
+        label = '[%s] %s' % (item['quality'], item['host'])
         return label
 
     def get_sources(self, video):
@@ -63,21 +64,28 @@ class OroroTV_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, headers=XHR, cache_limit=0)
             if video.video_type == VIDEO_TYPES.MOVIE:
                 quality = QUALITIES.HD720
-                match = re.search('data-href="([^"]+)', html)
+                pattern = "source src='([^']+)'\s+type='video/([^']+)"
+                match = re.search('<a\s+data-href="([^"]+)', html)
                 if match:
                     source_url = match.group(1)
                     url = urlparse.urljoin(self.base_url, source_url)
-                    html = self._http_get(url, cache_limit=.5)
+                    html = self._http_get(url, headers=XHR, cache_limit=0)
             else:
-                quality = QUALITIES.HIGH
+                quality = QUALITIES.HD720
+                pattern = "'([^']+)'"
+                match = re.search('video\.tag\.src\s*=\s*(.*)', html)
+                if match:
+                    log_utils.log(match.group(1))
+                    html = match.group(1)
 
-            for match in re.finditer("source src='([^']+)'\s+type='video/([^']+)", html):
-                stream_url, format = match.groups()
+            for match in re.finditer(pattern, html):
+                stream_url = match.group(1)
+                stream_url = stream_url.replace('&amp;', '&')
                 stream_url = stream_url + '|User-Agent=%s' % (USER_AGENT)
-                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'format': format, 'direct': True}
+                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 hosters.append(hoster)
         return hosters
 
