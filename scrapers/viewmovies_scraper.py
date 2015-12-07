@@ -56,15 +56,14 @@ class ViewMovies_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'tab_container'})
-            if fragment:
-                q_str = ''
-                match = re.search('<b>\s*Quality:\s*</b>([^<]+)', html)
-                if match:
-                    q_str = match.group(1)
-                    q_str = ' %s ' % (q_str)
+            q_str = ''
+            match = re.search('<b>\s*Quality:\s*</b>([^<]+)', html)
+            if match:
+                q_str = match.group(1)
+                q_str = ' %s ' % (q_str)
 
-                for match in re.finditer('<iframe[^>]*src="([^"]+)', fragment[0], re.I):
+            for fragment in dom_parser.parse_dom(html, 'div', {'class': 'video-embed'}):
+                for match in re.finditer('<iframe[^>]*src="([^"]+)', fragment, re.I):
                     stream_url = match.group(1)
                     host = urlparse.urlparse(stream_url).hostname
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': self._blog_get_quality(video, q_str, host), 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
