@@ -31,6 +31,7 @@ from salts_lib.constants import QUALITIES
 BASE_URL = 'http://123movies.to'
 PLAYLIST_URL1 = 'movie/loadEmbed/%s'
 PLAYLIST_URL2 = 'movie/loadepisoderss/%s/%s/3/%s'
+SL_URL  = '/movie/loadepisodes/%s'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
 
 class One23Movies_Scraper(scraper.Scraper):
@@ -60,19 +61,24 @@ class One23Movies_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
-            sources = {}
-            for match in re.finditer('changeServer\(\s*(\d+)\s*,\s*(\d+)\s*\).*?class="btn-eps[^>]*>([^<]+)', html, re.DOTALL):
-                link_type, link_id, q_str = match.groups()
-                if link_type in ['12', '13', '14']:
-                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
-                    sources.update(self.__get_link_from_json(url, q_str))
-                else:
-                    media_url = self.__get_ep_pl_url(link_type, html)
-                    if media_url:
-                        url = urlparse.urljoin(self.base_url, media_url)
-                        xml = self._http_get(url, cache_limit=.5)
-                        sources.update(self.__get_links_from_xml(xml, video))
+            page_html = self._http_get(url, cache_limit=.5)
+            movie_id = dom_parser.parse_dom(page_html, 'div', {'id': 'media-player'}, 'movie-id')
+            if movie_id:
+                server_url = SL_URL % (movie_id[0])
+                url = urlparse.urljoin(self.base_url, server_url)
+                html = self._http_get(url, cache_limit=.5)
+                sources = {}
+                for match in re.finditer('changeServer\(\s*(\d+)\s*,\s*(\d+)\s*\).*?class="btn-eps[^>]*>([^<]+)', html, re.DOTALL):
+                    link_type, link_id, q_str = match.groups()
+                    if link_type in ['12', '13', '14']:
+                        url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
+                        sources.update(self.__get_link_from_json(url, q_str))
+                    else:
+                        media_url = self.__get_ep_pl_url(link_type, page_html)
+                        if media_url:
+                            url = urlparse.urljoin(self.base_url, media_url)
+                            xml = self._http_get(url, cache_limit=.5)
+                            sources.update(self.__get_links_from_xml(xml, video))
                 
             for source in sources:
                 if sources[source]['direct']:
@@ -129,10 +135,11 @@ class One23Movies_Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, '/movie/search/')
         search_url += title
         html = self._http_get(search_url, cache_limit=1)
+        log_utils.log(html)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})
-            match_url = re.search('class="jtip-bottom".*?href="([^"]+)', item, re.DOTALL)
+            match_url = re.search('href="([^"]+)', item, re.DOTALL)
             match_year = re.search('class="jt-info">(\d{4})<', item)
             is_episodes = dom_parser.parse_dom(item, 'span', {'class': 'mli-eps'})
             
@@ -140,7 +147,7 @@ class One23Movies_Scraper(scraper.Scraper):
                 match_title = match_title[0]
                 match_title = re.sub('</?h2>', '', match_title)
                 match_title = re.sub('\s+\d{4}$', '', match_title)
-                url = match_url.group(1)
+                url = urlparse.urljoin(match_url.group(1), 'watching.html')
                 match_year = match_year.group(1) if match_year else ''
 
                 if not year or not match_year or year == match_year:
