@@ -1,3 +1,15 @@
+[B]Version 1.0.84[/B]
+- Add hidden option to disable custom dialogs completely
+- Fix cast info label
+- Restore tv-release.net scraper
+- Fix Unicode error in sub updates
+- Fix ororo.tv
+- Fix ViewMovies
+- Improve CyberReel
+- Fix 123Movies
+- Fix wso.ch scrpaer
+- Fix MoviesOnline7 scraper
+
 [B]Version 1.0.83[/B]
 - Colorize FL Values (Green-Yellow-Orange-Red)
 - Add auto-play menu item
