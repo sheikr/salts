@@ -19,6 +19,7 @@
 import scraper
 import re
 import urlparse
+import urllib
 from salts_lib import kodi
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -72,7 +73,8 @@ class WSO_Scraper(scraper.Scraper):
         return super(WSO_Scraper, self)._default_get_url(video)
 
     def search(self, video_type, title, year):
-        url = urlparse.urljoin(self.base_url, '/index')
+        url = urlparse.urljoin(self.base_url, '/?s=%s&search=')
+        url = url % (urllib.quote_plus(title))
         html = self._http_get(url, cache_limit=24)
 
         results = []
