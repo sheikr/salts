@@ -56,6 +56,12 @@ class MO7_Scraper(scraper.Scraper):
                 host = urlparse.urlparse(html_url).hostname
                 stream_url = 'http://' + host + match.group(1)
                 return stream_url
+            else:
+                match = re.search('<source\s+src="([^"]+)', html)
+                if match:
+                    host = urlparse.urlparse(html_url).hostname
+                    stream_url = 'http://' + host + match.group(1)
+                    return stream_url
 
     def format_source_label(self, item):
         return '[%s] %s' % (item['quality'], item['host'])
@@ -71,7 +77,7 @@ class MO7_Scraper(scraper.Scraper):
             if fragment:
                 for stream_url in dom_parser.parse_dom(fragment[0], 'iframe', ret='src'):
                     host = urlparse.urlparse(stream_url).hostname
-                    hoster = {'multi-part': False, 'host': host, 'url': stream_url, 'class': self, 'rating': None, 'views': None, 'quality': QUALITIES.HIGH, 'direct': False}
+                    hoster = {'multi-part': False, 'host': host, 'url': stream_url, 'class': self, 'rating': None, 'views': None, 'quality': QUALITIES.HIGH, 'direct': True}
                     hosters.append(hoster)
 
         return hosters
