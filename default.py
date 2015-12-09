@@ -1424,56 +1424,62 @@ def set_related_url(mode, video_type, title, year, trakt_id, season='', episode=
 
     workers = utils.reap_workers(workers)
     try:
-        dialog = xbmcgui.Dialog()
-        index = dialog.select(i18n('url_to_change') % (video_type), [related['label'] for related in related_list])
-        if index > -1:
-            if mode == MODES.SET_URL_MANUAL:
-                keyboard = xbmc.Keyboard()
-                keyboard.setHeading(i18n('rel_url_at') % (video_type, related_list[index]['name']))
-                keyboard.setDefault(related_list[index]['url'])
-                keyboard.doModal()
-                if keyboard.isConfirmed():
-                    new_url = keyboard.getText()
-                    utils.update_url(video_type, title, year, related_list[index]['name'], related_list[index]['url'], new_url, season, episode)
-                    kodi.notify(msg=i18n('rel_url_set') % (related_list[index]['name']), duration=5000)
-            elif mode == MODES.SET_URL_SEARCH:
-                temp_title = title
-                temp_year = year
-                while True:
-                    dialog = xbmcgui.Dialog()
-                    choices = [i18n('manual_search'), '[COLOR green]%s[/COLOR]' % (i18n('force_no_match'))]
-                    try:
-                        log_utils.log('Searching for: |%s|%s|' % (temp_title, temp_year), xbmc.LOGDEBUG)
-                        results = related_list[index]['class'].search(video_type, temp_title, temp_year)
-                        for result in results:
-                            choice = result['title']
-                            if result['year']: choice = '%s (%s)' % (choice, result['year'])
-                            choices.append(choice)
-                        results_index = dialog.select(i18n('select_related'), choices)
-                        if results_index == 0:
-                            keyboard = xbmc.Keyboard()
-                            keyboard.setHeading(i18n('enter_search'))
-                            text = temp_title
-                            if temp_year: text = '%s (%s)' % (text, temp_year)
-                            keyboard.setDefault(text)
-                            keyboard.doModal()
-                            if keyboard.isConfirmed():
-                                match = re.match('([^\(]+)\s*\(*(\d{4})?\)*', keyboard.getText())
-                                temp_title = match.group(1).strip()
-                                temp_year = match.group(2) if match.group(2) else ''
-                        elif results_index == 1:
-                            utils.update_url(video_type, title, year, related_list[index]['name'], related_list[index]['url'], FORCE_NO_MATCH, season, episode)
+        while True:
+            dialog = xbmcgui.Dialog()
+            index = dialog.select(i18n('url_to_change') % (video_type), [related['label'] for related in related_list])
+            if index > -1:
+                if mode == MODES.SET_URL_MANUAL:
+                    keyboard = xbmc.Keyboard()
+                    keyboard.setHeading(i18n('rel_url_at') % (video_type, related_list[index]['name']))
+                    keyboard.setDefault(related_list[index]['url'])
+                    keyboard.doModal()
+                    if keyboard.isConfirmed():
+                        new_url = keyboard.getText()
+                        utils.update_url(video_type, title, year, related_list[index]['name'], related_list[index]['url'], new_url, season, episode)
+                        kodi.notify(msg=i18n('rel_url_set') % (related_list[index]['name']), duration=5000)
+                elif mode == MODES.SET_URL_SEARCH:
+                    temp_title = title
+                    temp_year = year
+                    while True:
+                        dialog = xbmcgui.Dialog()
+                        choices = [i18n('manual_search'), '[COLOR green]%s[/COLOR]' % (i18n('force_no_match'))]
+                        try:
+                            log_utils.log('Searching for: |%s|%s|' % (temp_title, temp_year), xbmc.LOGDEBUG)
+                            results = related_list[index]['class'].search(video_type, temp_title, temp_year)
+                            for result in results:
+                                choice = result['title']
+                                if result['year']: choice = '%s (%s)' % (choice, result['year'])
+                                choices.append(choice)
+                            results_index = dialog.select(i18n('select_related'), choices)
+                            if results_index == 0:
+                                keyboard = xbmc.Keyboard()
+                                keyboard.setHeading(i18n('enter_search'))
+                                text = temp_title
+                                if temp_year: text = '%s (%s)' % (text, temp_year)
+                                keyboard.setDefault(text)
+                                keyboard.doModal()
+                                if keyboard.isConfirmed():
+                                    match = re.match('([^\(]+)\s*\(*(\d{4})?\)*', keyboard.getText())
+                                    temp_title = match.group(1).strip()
+                                    temp_year = match.group(2) if match.group(2) else ''
+                            elif results_index >= 1:
+                                related = related_list[index]
+                                if results_index == 1:
+                                    utils.update_url(video_type, title, year, related['name'], related['url'], FORCE_NO_MATCH, season, episode)
+                                    related['label'] = '[%s] [COLOR green]%s[/COLOR]' % (related['name'], i18n('force_no_match'))
+                                else:
+                                    utils.update_url(video_type, title, year, related['name'], related['url'], results[results_index - 2]['url'], season, episode)
+                                    related['label'] = '[%s] %s' % (related['name'], results[results_index - 2]['url'])
+                                kodi.notify(msg=i18n('rel_url_set') % (related['name']), duration=5000)
+                                break
+                            else:
+                                break
+                        except NotImplementedError:
+                            log_utils.log('%s Scraper does not support searching.' % (related_list[index]['class'].get_name()))
+                            kodi.notify(msg=i18n('scraper_no_search'), duration=5000)
                             break
-                        elif results_index > 1:
-                            utils.update_url(video_type, title, year, related_list[index]['name'], related_list[index]['url'], results[results_index - 2]['url'], season, episode)
-                            kodi.notify(msg=i18n('rel_url_set') % (related_list[index]['name']), duration=5000)
-                            break
-                        else:
-                            break
-                    except NotImplementedError:
-                        log_utils.log('%s Scraper does not support searching.' % (related_list[index]['class'].get_name()))
-                        kodi.notify(msg=i18n('scraper_no_search'), duration=5000)
-                        break
+            else:
+                break
     finally:
         utils.reap_workers(workers, None)
 
