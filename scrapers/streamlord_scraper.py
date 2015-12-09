@@ -88,13 +88,14 @@ class StreamLord_Scraper(scraper.Scraper):
         else:
             query_type = 'watch-tvshow-'
 
+        norm_title = self._normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item movie'}):
             match = re.search('href="(%s[^"]+)' % (query_type), item)
             if match:
                 link = match.group(1)
                 match_title = self.__make_title(link, query_type)
                 match_year = ''
-                if not year or not match_year or int(year) == int(match_year):
+                if norm_title in self._normalize_title(match_title) and (not year or not match_year or int(year) == int(match_year)):
                     result = {'url': self._pathify_url(link), 'title': match_title, 'year': match_year}
                     results.append(result)
 
