@@ -135,7 +135,6 @@ class One23Movies_Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, '/movie/search/')
         search_url += title
         html = self._http_get(search_url, cache_limit=1)
-        log_utils.log(html)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})
