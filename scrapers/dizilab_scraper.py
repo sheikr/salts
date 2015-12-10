@@ -18,9 +18,9 @@
 import scraper
 import re
 import urlparse
-import urllib
 from salts_lib import kodi
-from salts_lib import dom_parser
+import xml.etree.ElementTree as ET
+from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
@@ -73,30 +73,17 @@ class Dizilab_Scraper(scraper.Scraper):
         return super(Dizilab_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year):
-        search_url = urlparse.urljoin(self.base_url, '/arsiv?limit=&tur=&orderby=&ulke=&order=&yil=&dizi_adi=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=8)
+        xml_url = urlparse.urljoin(self.base_url, 'diziler.xml')
+        xml = self._http_get(xml_url, cache_limit=24)
+        norm_title = self._normalize_title(title)
+        match_year = ''
         results = []
-        for item in dom_parser.parse_dom(html, 'div', {'class': 'tv-series-single'}):
-            try:
-                url = re.search('href="([^"]+)', item).group(1)
-            except:
-                url = ''
-
-            try:
-                match_year = re.search('<span>\s*(\d{4})\s*</span>', item).group(1)
-            except:
-                match_year = ''
-            
-            try:
-                match_title = dom_parser.parse_dom(item, 'a', {'class': 'title'})
-                match_title = re.search('([^>]+)$', match_title[0]).group(1)
-                match_title = match_title.strip()
-            except:
-                match_title = ''
-            
-            if url and match_title and (not year or not match_year or year == match_year):
-                result = {'url': self._pathify_url(url), 'title': match_title, 'year': ''}
-                results.append(result)
+        for element in ET.fromstring(xml).iter('dizi'):
+            name = element.find('adi')
+            if name is not None and norm_title in self._normalize_title(name.text):
+                url = element.find('url')
+                if url is not None and (not year or not match_year or year == match_year):
+                    result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
+                    results.append(result)
 
         return results
