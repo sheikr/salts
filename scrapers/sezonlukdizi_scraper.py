@@ -51,8 +51,18 @@ class SezonLukDizi_Scraper(scraper.Scraper):
         return 'SezonLukDizi'
 
     def resolve_link(self, link):
-        return link
-
+        if 'v.asp' in link:
+            try:
+                headers = dict([item.split('=') for item in (link.split('|')[1]).split('&')])
+                for key in headers: headers[key] = urllib.unquote(headers[key])
+            except:
+                headers = {}
+            request = urllib2.Request(link.split('|')[0], headers=headers)
+            response = urllib2.urlopen(request)
+            return response.geturl()
+        else:
+            return link
+            
     def format_source_label(self, item):
         return '[%s] %s' % (item['quality'], item['host'])
 
@@ -113,7 +123,7 @@ class SezonLukDizi_Scraper(scraper.Scraper):
             for match in re.finditer('"?file"?\s*:\s*"([^"]+)"\s*,\s*"?label"?\s*:\s*"(\d+)p?"', html):
                 stream_url, height = match.groups()
                 stream_url = stream_url.replace('\\&', '&').replace('\\/', '/')
-                if 'v.asp' in stream_url:
+                if 'v.asp' in stream_url and 'ok.ru' not in url:
                     stream_redirect = self._http_get(stream_url, allow_redirect=False, cache_limit=0)
                     if stream_redirect: stream_url = stream_redirect
 
