@@ -1,3 +1,9 @@
+[B]Version 1.0.85[/B]
+- Fix dizipas scraper
+- Return to SRU window after search
+- Improve moveitv scraper
+- Improve dizilab scraper
+
 [B]Version 1.0.84[/B]
 - Add hidden option to disable custom dialogs completely
 - Fix cast info label
