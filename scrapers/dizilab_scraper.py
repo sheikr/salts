@@ -75,15 +75,16 @@ class Dizilab_Scraper(scraper.Scraper):
     def search(self, video_type, title, year):
         xml_url = urlparse.urljoin(self.base_url, 'diziler.xml')
         xml = self._http_get(xml_url, cache_limit=24)
-        norm_title = self._normalize_title(title)
-        match_year = ''
-        results = []
-        for element in ET.fromstring(xml).iter('dizi'):
-            name = element.find('adi')
-            if name is not None and norm_title in self._normalize_title(name.text):
-                url = element.find('url')
-                if url is not None and (not year or not match_year or year == match_year):
-                    result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
-                    results.append(result)
+        if xml:
+            norm_title = self._normalize_title(title)
+            match_year = ''
+            results = []
+            for element in ET.fromstring(xml).findall('.//dizi'):
+                name = element.find('adi')
+                if name is not None and norm_title in self._normalize_title(name.text):
+                    url = element.find('url')
+                    if url is not None and (not year or not match_year or year == match_year):
+                        result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
+                        results.append(result)
 
         return results
