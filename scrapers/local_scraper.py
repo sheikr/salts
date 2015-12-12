@@ -20,6 +20,7 @@ import json
 from salts_lib import kodi
 import xbmc
 import urlparse
+import re
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -114,8 +115,8 @@ class Local_Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year):
-        filter_str = '{"field": "title", "operator": "contains", "value": "%s"}' % (title)
-        if year: filter_str = '{"and": [%s, {"field": "year", "operator": "is", "value": "%s"}]}' % (filter_str, year)
+        filter_str = '{{"field": "title", "operator": "contains", "value": "{search_title}"}}'
+        if year: filter_str = '{{"and": [%s, {{"field": "year", "operator": "is", "value": "%s"}}]}}' % (filter_str, year)
         if video_type == VIDEO_TYPES.MOVIE:
             cmd = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": %s, "limits": { "start" : 0, "end": 25 }, "properties" : ["title", "year", "file", "streamdetails"], \
             "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}'
@@ -127,8 +128,21 @@ class Local_Scraper(scraper.Scraper):
             result_key = 'tvshows'
             id_key = 'tvshowid'
 
+        command = cmd % (filter_str.format(search_title=title))
+        results = self.__get_results(command, result_key, video_type, id_key)
+        norm_title = self.__normalize_title(title)
+        if not results and norm_title and norm_title != title:
+            command = cmd % (filter_str.format(search_title=norm_title))
+            results = self.__get_results(command, result_key, video_type, id_key)
+        return results
+    
+    def __normalize_title(self, title):
+        norm_title = re.sub('[^A-Za-z0-9 ]', ' ', title)
+        return re.sub('\s+', ' ', norm_title)
+    
+    def __get_results(self, cmd, result_key, video_type, id_key):
         results = []
-        cmd = cmd % (filter_str)
+        log_utils.log('Search Command: %s' % (cmd), log_utils.LOGDEBUG)
         meta = xbmc.executeJSONRPC(cmd)
         meta = json.loads(meta)
         log_utils.log('Search Meta: %s' % (meta), log_utils.LOGDEBUG)
