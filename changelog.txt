@@ -1,3 +1,8 @@
+[B]Version 1.0.88[/B]
+- Add MoviesPlanet scraper
+- Updated Hebrew translation
+- Fix dizipas scraper
+
 [B]Version 1.0.87[/B]
 - Fix dizipas scraper
 - Return to SRU window after search
