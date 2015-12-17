@@ -23,7 +23,6 @@ from salts_lib import dom_parser
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import XHR
 from salts_lib import kodi
 
@@ -93,7 +92,7 @@ class Dizigold_Scraper(scraper.Scraper):
                             direct = True
 
                         for source in sources:
-                            stream_url = source['file'] + '|User-Agent=%s' % (USER_AGENT)
+                            stream_url = source['file'] + '|User-Agent=%s' % (self._get_ua())
                             if direct:
                                 host = self._get_direct_hostname(stream_url)
                                 if host == 'gvideo':

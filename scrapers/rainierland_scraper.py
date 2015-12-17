@@ -23,7 +23,6 @@ from salts_lib import kodi
 from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://rainierland.com'
 PAGE_LIMIT = 5
@@ -70,7 +69,7 @@ class Rainierland_Scraper(scraper.Scraper):
                         else:
                             _, _, height, _ = self._parse_movie_link(stream_url)
                             quality = self._height_get_quality(height)
-                            stream_url += '|User-Agent=%s' % (USER_AGENT)
+                            stream_url += '|User-Agent=%s' % (self._get_ua())
                             
                         hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                         hosters.append(hoster)

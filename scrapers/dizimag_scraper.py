@@ -23,7 +23,6 @@ import urllib
 from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import XHR
 from salts_lib import kodi
 
@@ -74,7 +73,7 @@ class Dizimag_Scraper(scraper.Scraper):
                         quality = self._gv_get_quality(stream_url)
                     else:
                         quality = self._height_get_quality(height)
-                        stream_url += '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(page_url))
+                        stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(page_url))
 
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                     hosters.append(hoster)

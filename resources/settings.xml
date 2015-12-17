@@ -22,6 +22,8 @@
         <setting id="source_sort_order" type="text" label="Source Sort Order" enable="false" visible="false"/>
         <setting id="prev_responses" type="text" label="Previous Auto-Conf Responses" enable="false" visible="false"/>
         <setting id="pd_force_disable" type="bool" default="false" visible="false"/>
+        <setting id="current_ua" type="text" visible="false"/>
+        <setting id="last_ua_create" type="number" default="0" visible="false"/>
     </category>
 
     <category label="30546">

@@ -21,7 +21,6 @@ import urlparse
 import re
 from salts_lib import kodi
 from salts_lib import dom_parser
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import XHR
 from salts_lib.constants import FORCE_NO_MATCH
@@ -64,7 +63,7 @@ class XMovies8V2_Scraper(scraper.Scraper):
                     for match in re.finditer('href="([^"]+)[^>]+>([^<]+)', fragment[0]):
                         stream_url, label = match.groups()
                         quality = self._height_get_quality(label)
-                        stream_url += '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(page_url))
+                        stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(page_url))
                         hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                         hosters.append(hoster)
             

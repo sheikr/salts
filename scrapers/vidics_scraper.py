@@ -25,7 +25,6 @@ from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://www.vidics.ch'
 
@@ -47,7 +46,7 @@ class Vidics_Scraper(scraper.Scraper):
     def resolve_link(self, link):
         url = urlparse.urljoin(self.base_url, link)
         request = urllib2.Request(url)
-        request.add_header('User-Agent', USER_AGENT)
+        request.add_header('User-Agent', self._get_ua())
         request.add_unredirected_header('Host', request.get_host())
         request.add_unredirected_header('Referer', url)
         response = urllib2.urlopen(request)

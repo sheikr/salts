@@ -25,7 +25,6 @@ from salts_lib import dom_parser
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://www.streamlord.com'
@@ -64,7 +63,7 @@ class StreamLord_Scraper(scraper.Scraper):
                     quality = QUALITIES.HD720
                 else:
                     quality = QUALITIES.HIGH
-                stream_url = match.group(1) + '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(url))
+                stream_url = match.group(1) + '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(url))
                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 hosters.append(hoster)
 

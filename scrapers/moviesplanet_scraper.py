@@ -27,7 +27,6 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://www.moviesplanet.is'
 QUALITY_MAP = {'HD': QUALITIES.HD720}
@@ -79,7 +78,7 @@ class MoviesPlanet_Scraper(scraper.Scraper):
                                 quality = self._gv_get_quality(stream_url)
                             else:
                                 quality = QUALITY_MAP.get(label, QUALITIES.HIGH)
-                            stream_url += '|User-Agent=%s' % (USER_AGENT)
+                            stream_url += '|User-Agent=%s' % (self._get_ua())
                             source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                             sources.append(source)
 

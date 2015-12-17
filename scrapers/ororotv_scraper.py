@@ -25,7 +25,6 @@ from salts_lib.trans_utils import i18n
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import XHR
 
 BASE_URL = 'http://ororo.tv'
@@ -83,7 +82,7 @@ class OroroTV_Scraper(scraper.Scraper):
             for match in re.finditer(pattern, html):
                 stream_url = match.group(1)
                 stream_url = stream_url.replace('&amp;', '&')
-                stream_url = stream_url + '|User-Agent=%s' % (USER_AGENT)
+                stream_url = stream_url + '|User-Agent=%s' % (self._get_ua())
                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 hosters.append(hoster)
         return hosters

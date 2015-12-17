@@ -27,7 +27,6 @@ import random
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import XHR
 from salts_lib import kodi
 
@@ -133,7 +132,7 @@ class SezonLukDizi_Scraper(scraper.Scraper):
                     quality = self._height_get_quality(height)
                         
                 host = self._get_direct_hostname(stream_url)
-                stream_url += '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(url))
+                stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(url))
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                 sources.append(hoster)
         return sources

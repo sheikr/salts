@@ -26,7 +26,6 @@ from salts_lib.trans_utils import i18n
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://superchillin.com'
 
@@ -57,7 +56,7 @@ class NoobRoom_Scraper(scraper.Scraper):
             stream_url = urlparse.urljoin(self.base_url, file_link)
             cj = self._set_cookies(self.base_url, {})
             request = urllib2.Request(stream_url)
-            request.add_header('User-Agent', USER_AGENT)
+            request.add_header('User-Agent', self._get_ua())
             request.add_unredirected_header('Host', request.get_host())
             request.add_unredirected_header('Referer', url)
             cj.add_cookie_header(request)

@@ -25,7 +25,6 @@ from salts_lib import log_utils
 from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 from salts_lib.constants import XHR
 
 VIDEO_URL = '/video_info/html5'
@@ -68,7 +67,7 @@ class XMovies8_Scraper(scraper.Scraper):
                 headers['Referer'] = page_url
                 html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
                 for match in re.finditer('<source\s+data-res="([^"]+)"\s+src="([^"]+)', html):
-                    stream_url = urlparse.urljoin(self.base_url, match.group(2)) + '|User-Agent=%s' % (USER_AGENT)
+                    stream_url = urlparse.urljoin(self.base_url, match.group(2)) + '|User-Agent=%s' % (self._get_ua())
                     quality = self._height_get_quality(match.group(1))
                     hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                     hosters.append(hoster)

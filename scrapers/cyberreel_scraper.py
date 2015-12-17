@@ -25,7 +25,6 @@ from salts_lib import dom_parser
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://cyberreel.com'
 HEIGHT_MAP = {'MOBILE': 240}
@@ -86,7 +85,7 @@ class CyberReel_Scraper(scraper.Scraper):
                     else:
                         quality = self.__get_quality_from_label(label)
 
-                    stream_url += '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(page_url))
+                    stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(page_url))
                     hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                     hosters.append(hoster)
         return hosters
@@ -115,7 +114,7 @@ class CyberReel_Scraper(scraper.Scraper):
         for source in sources:
             if self._get_direct_hostname(source) == 'gvideo':
                 quality = self._gv_get_quality(source)
-                stream_url = source + '|User-Agent=%s&Referer=%s' % (USER_AGENT, urllib.quote(page_url))
+                stream_url = source + '|User-Agent=%s&Referer=%s' % (self._get_ua(), urllib.quote(page_url))
                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                 hosters.append(hoster)
         return hosters

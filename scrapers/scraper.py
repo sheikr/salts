@@ -32,6 +32,7 @@ import gzip
 import datetime
 import json
 import sys
+import random
 from salts_lib import log_utils
 from salts_lib.trans_utils import i18n
 from salts_lib import cloudflare
@@ -39,7 +40,9 @@ from salts_lib import pyaes
 from salts_lib.db_utils import DB_Connection
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import USER_AGENT
+from salts_lib.constants import BR_VERS
+from salts_lib.constants import WIN_VERS
+from salts_lib.constants import RAND_UAS
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import HOST_Q
 from salts_lib.constants import Q_ORDER
@@ -266,7 +269,7 @@ class Scraper(object):
         try:
             self.cj = self._set_cookies(base_url, cookies)
             request = urllib2.Request(url, data=data)
-            request.add_header('User-Agent', USER_AGENT)
+            request.add_header('User-Agent', self._get_ua())
             request.add_unredirected_header('Host', request.get_host())
             request.add_unredirected_header('Referer', referer)
             for key in headers: request.add_header(key, headers[key])
@@ -318,6 +321,19 @@ class Scraper(object):
         self.db_connection.cache_url(url, html, data)
         return html
 
+    def _get_ua(self):
+        try: last_gen = int(kodi.get_setting('last_ua_create'))
+        except: last_gen = 0
+        if not kodi.get_setting('current_ua') or last_gen < (time.time() - (24 * 60 * 60)):
+            index = random.randrange(len(RAND_UAS))
+            user_agent = RAND_UAS[index].format(win_ver=random.choice(WIN_VERS), br_ver=random.choice(BR_VERS[index]))
+            log_utils.log('Creating New User Agent: %s' % (user_agent), log_utils.LOGDEBUG)
+            kodi.set_setting('current_ua', user_agent)
+            kodi.set_setting('last_ua_create', str(int(time.time())))
+        else:
+            user_agent = kodi.get_setting('current_ua')
+        return user_agent
+    
     def _set_cookies(self, base_url, cookies):
         cookie_file = os.path.join(COOKIEPATH, '%s_cookies.lwp' % (self.get_name()))
         cj = cookielib.LWPCookieJar(cookie_file)

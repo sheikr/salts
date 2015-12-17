@@ -24,7 +24,6 @@ from salts_lib import kodi
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
-from salts_lib.constants import USER_AGENT
 
 BASE_URL = 'http://afdah.tv'
 
@@ -86,7 +85,7 @@ class Afdah_Scraper(scraper.Scraper):
         hosters = []
         for match in re.finditer('file\s*:\s*"([^"]+).*?label\s*:\s*"([^"]+)', html):
             url, resolution = match.groups()
-            url += '|User-Agent=%s&Cookie=%s' % (USER_AGENT, self.__get_stream_cookies())
+            url += '|User-Agent=%s&Cookie=%s' % (self._get_ua(), self.__get_stream_cookies())
             hoster = {'multi-part': False, 'url': url, 'host': self._get_direct_hostname(url), 'class': self, 'quality': self._height_get_quality(resolution), 'rating': None, 'views': None, 'direct': True}
             hosters.append(hoster)
         return hosters
