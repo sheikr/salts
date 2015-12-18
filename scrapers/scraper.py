@@ -309,7 +309,7 @@ class Scraper(object):
                 html = response.read(MAX_RESPONSE)
         except urllib2.HTTPError as e:
             if e.code == 503 and 'cf-browser-verification' in e.read():
-                html = cloudflare.solve(url, self.cj)
+                html = cloudflare.solve(url, self.cj, self._get_ua())
                 if not html:
                     return ''
             else:

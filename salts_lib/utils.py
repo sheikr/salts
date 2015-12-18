@@ -31,6 +31,7 @@ import urlparse
 import urllib
 import urllib2
 import traceback
+import random
 import xml.etree.ElementTree as ET
 import kodi
 from constants import *

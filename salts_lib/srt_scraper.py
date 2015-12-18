@@ -27,15 +27,13 @@ import log_utils
 import kodi
 from constants import VIDEO_TYPES
 from constants import SRT_SOURCE
+from constants import USER_AGENT
 from db_utils import DB_Connection
 
 ADDON_PATH = kodi.get_path()
 ICON_PATH = os.path.join(ADDON_PATH, 'icon.png')
 MAX_RETRIES = 2
 TEMP_ERRORS = [500, 502, 503, 504]
-USER_AGENT = ("User-Agent:Mozilla/5.0 (Windows NT 6.2; WOW64)"
-              "AppleWebKit/537.17 (KHTML, like Gecko)"
-              "Chrome/24.0.1312.56")
 BASE_URL = 'http://www.addic7ed.com'
 BASE_PATH = kodi.get_setting('subtitle-folder')
 db_connection = DB_Connection()
