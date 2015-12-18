@@ -42,6 +42,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import BR_VERS
 from salts_lib.constants import WIN_VERS
+from salts_lib.constants import FEATURES
 from salts_lib.constants import RAND_UAS
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import HOST_Q
@@ -324,9 +325,9 @@ class Scraper(object):
     def _get_ua(self):
         try: last_gen = int(kodi.get_setting('last_ua_create'))
         except: last_gen = 0
-        if not kodi.get_setting('current_ua') or last_gen < (time.time() - (24 * 60 * 60)):
+        if not kodi.get_setting('current_ua') or last_gen < (time.time() - (7 * 24 * 60 * 60)):
             index = random.randrange(len(RAND_UAS))
-            user_agent = RAND_UAS[index].format(win_ver=random.choice(WIN_VERS), br_ver=random.choice(BR_VERS[index]))
+            user_agent = RAND_UAS[index].format(win_ver=random.choice(WIN_VERS), feature=random.choice(FEATURES), br_ver=random.choice(BR_VERS[index]))
             log_utils.log('Creating New User Agent: %s' % (user_agent), log_utils.LOGDEBUG)
             kodi.set_setting('current_ua', user_agent)
             kodi.set_setting('last_ua_create', str(int(time.time())))

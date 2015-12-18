@@ -45,14 +45,6 @@ QUALITIES = __enum(LOW='Low', MEDIUM='Medium', HIGH='High', HD720='HD720', HD108
 DIRS = __enum(UP='up', DOWN='down')
 WATCHLIST_SLUG = 'watchlist_slug'
 COLLECTION_SLUG = 'collection_slug'
-USER_AGENT = "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
-BR_VERS = [
-    ['%s.0' % i for i in xrange(18, 42)],
-    ['41.0.2228.0', '41.0.2227.1', '41.0.2227.0', '41.0.2226.0', '40.0.2214.93', '37.0.2062.124']]
-WIN_VERS = ['Windows NT 6.3', 'Windows NT 6.1', 'Windows NT 6.0', 'Windows NT 5.0', 'Windows 3.1']
-RAND_UAS = ['Mozilla/5.0 ({win_ver}; WOW64; rv:{br_ver}) Gecko/20100101 Firefox/{br_ver}',
-            'Mozilla/5.0 ({win_ver}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{br_ver} Safari/537.36']
-XHR = {'X-Requested-With': 'XMLHttpRequest'}
 SEARCH_HISTORY = 10
 DEFAULT_EXT = '.mpg'
 CHUNK_SIZE = 512 * 1024
@@ -92,3 +84,15 @@ HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega
 Q_ORDER = {QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 
 IMG_SIZES = ['full', 'medium', 'thumb']
+
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
+BR_VERS = [
+    ['%s.0' % i for i in xrange(18, 43)],
+    ['41.0.2228.0', '41.0.2227.1', '41.0.2227.0', '41.0.2226.0', '40.0.2214.93', '37.0.2062.124'],
+    ['11.0'],
+    ['11.0']]
+WIN_VERS = ['Windows NT 10.0', 'Windows NT 7.0', 'Windows NT 6.3', 'Windows NT 6.2', 'Windows NT 6.1', 'Windows NT 6.0', 'Windows NT 5.1', 'Windows NT 5.0']
+FEATURES = ['; WOW64', '; Win64; IA64', '; Win64; x64', '']
+RAND_UAS = ['Mozilla/5.0 ({win_ver}{feature}; rv:{br_ver}) Gecko/20100101 Firefox/{br_ver}',
+            'Mozilla/5.0 ({win_ver}{feature}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{br_ver} Safari/537.36',
+            'Mozilla/5.0 ({win_ver}{feature}; Trident/7.0; rv:{br_ver}) like Gecko']
