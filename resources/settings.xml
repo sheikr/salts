@@ -347,7 +347,7 @@
          <setting id="movietv.to-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="movietv.to_last_results" type="number" default="0" visible="false"/>
          <setting id="MyVideoLinks.eu-enable" type="bool" label="MyVideoLinks.eu Enabled" default="true" visible="true"/>
-         <setting id="MyVideoLinks.eu-base_url" type="text" label="    Base Url" default="http://site.mvlgroup.xyz" visible="eq(-1,true)"/>
+         <setting id="MyVideoLinks.eu-base_url" type="text" label="    Base Url" default="http://myvideolinks.xyz" visible="eq(-1,true)"/>
          <setting id="MyVideoLinks.eu-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
          <setting id="MyVideoLinks.eu_last_results" type="number" default="0" visible="false"/>
          <setting id="MyVideoLinks.eu-filter" type="slider" range="0,180" option="int" label="     Filter results older than (0=No Filter) (days)" default="30" visible="eq(-4,true)"/>

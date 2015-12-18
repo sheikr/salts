@@ -1,3 +1,7 @@
+[B]Version 1.0.89[/B]
+- Fix mvl scraper
+- Randomize User Agent
+
 [B]Version 1.0.88[/B]
 - Add MoviesPlanet scraper
 - Updated Hebrew translation
