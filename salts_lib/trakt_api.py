@@ -410,11 +410,16 @@ class Trakt_API():
                             else:
                                 raise TransientTraktError('Temporary Trakt Error: ' + str(e))
                         elif e.code == 401 or e.code == 405:
-                            if auth_retry or url.endswith('/token'):
+                            # token is fine, profile is private
+                            if e.info().getheader('X-Private-User') == 'true':
+                                raise TraktAuthError('Object is No Longer Available (%s)' % (e.code))
+                            # auth failure retry or a token request
+                            elif auth_retry or url.endswith('/token'):
                                 self.token = None
                                 kodi.set_setting('trakt_oauth_token', '')
                                 kodi.set_setting('trakt_refresh_token', '')
                                 raise TraktAuthError('Trakt Call Authentication Failed (%s)' % (e.code))
+                            # first try token fail, try to refresh token
                             else:
                                 result = self.get_token()
                                 self.token = result['access_token']
@@ -422,7 +427,7 @@ class Trakt_API():
                                 kodi.set_setting('trakt_refresh_token', result['refresh_token'])
                                 auth_retry = True
                         elif e.code == 404:
-                            raise TraktNotFoundError()
+                            raise TraktNotFoundError('Object Not Found (%s)' % (e.code))
                         else:
                             raise
                     elif isinstance(e.reason, socket.timeout) or isinstance(e.reason, ssl.SSLError):
