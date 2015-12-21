@@ -27,7 +27,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 
-BASE_URL = 'http://directdownload.tv'
+BASE_URL = 'https://directdownload.tv'
 SEARCH_URL = '/api?key=%s&%s&keyword=%s'
 API_KEY = 'AFBF8E33A19787D1'
 
@@ -98,8 +98,9 @@ class DirectDownload_Scraper(scraper.Scraper):
                                     continue
                                 
                                 hostname = urlparse.urlparse(url).hostname
-                                hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname,
-                                          'quality': QUALITY_MAP[result['quality']], 'dd_qual': result['quality'], 'direct': False}
+                                hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname, 'quality': QUALITY_MAP[result['quality']], 'direct': False}
+                                hoster['dd_qual'] = result['quality']
+                                if 'x265' in result['release']: hoster['dd_qual'] += '-x265'
                                 hosters.append(hoster)
 
         return hosters

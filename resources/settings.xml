@@ -202,7 +202,7 @@
          <setting id="CyberReel-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="CyberReel_last_results" type="number" default="0" visible="false"/>
          <setting id="DD.tv-enable" type="bool" label="DD.tv Enabled" default="true" visible="true"/>
-         <setting id="DD.tv-base_url" type="text" label="    Base Url" default="http://directdownload.tv" visible="eq(-1,true)"/>
+         <setting id="DD.tv-base_url" type="text" label="    Base Url" default="https://directdownload.tv" visible="eq(-1,true)"/>
          <setting id="DD.tv-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
          <setting id="DD.tv_last_results" type="number" default="0" visible="false"/>
          <setting id="DDLValley-enable" type="bool" label="DDLValley Enabled" default="true" visible="true"/>
