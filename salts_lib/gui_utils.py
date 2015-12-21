@@ -173,7 +173,7 @@ def perform_auto_conf(responses):
         kodi.set_setting('sort6_field', '4')
 
     if responses[10]:
-        tiers = ['Local', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
+        tiers = ['Local', 'Furk.net', 'Premiumize.me', 'EasyNews', 'DD.tv', 'NoobRoom',
                  ['alluc.com', 'MoviesPlanet', 'OneClickTVShows', 'CyberReel', '123Movies', 'niter.tv', 'ororo.tv', 'movietv.to', 'StreamLord'],
                  ['tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie', 'torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'MiraDeTodo'],
                  ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Diziay', 'Dizipas', 'Shush.se', 'MovieFarsi'],
