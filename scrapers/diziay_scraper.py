@@ -19,7 +19,9 @@
 import scraper
 import re
 import urlparse
+import urllib
 from salts_lib import dom_parser
+from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import XHR
@@ -70,16 +72,22 @@ class Diziay_Scraper(scraper.Scraper):
                     else:
                         subs = True
                         
-                    match = re.search('sources\s*:\s*\[(.*?)\]', html)
-                    if match:
-                        for match in re.finditer('"file"\s*:\s*"([^"]+)', match.group(1)):
-                            stream_url = match.group(1)
+                    for name, stream_url in self.__get_stream_cookies().items():
+                        if re.match('source_\d+p?', name):
+                            stream_url = urllib.unquote(stream_url)
                             if self._get_direct_hostname(stream_url) == 'gvideo':
                                 quality = self._gv_get_quality(stream_url)
                                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True, 'subs': subs}
                                 hosters.append(hoster)
     
         return hosters
+
+    def __get_stream_cookies(self):
+        cj = self._set_cookies(self.base_url, {})
+        cookies = {}
+        for cookie in cj:
+            cookies[cookie.name] =cookie.value
+        return cookies
 
     def get_url(self, video):
         return super(Diziay_Scraper, self)._default_get_url(video)
