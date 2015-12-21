@@ -1,3 +1,11 @@
+[B]Version 1.0.91[/B]
+- Improve random UA algorithm
+- Fix private trakt list handling
+- Add premiumize scraper
+- Make dd.tv https & show x265 info
+- Add extra info to easynews results
+- Fix diziay scraper
+
 [B]Version 1.0.90[/B]
 - Fix mvl scraper
 - Randomize User Agent
