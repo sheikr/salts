@@ -75,7 +75,6 @@ class VioozAc_Scraper(scraper.Scraper):
                     except ValueError:
                         log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
                     else:
-                        log_utils.log(js_result)
                         if 'link' in js_result and 'func' not in js_result:
                             if isinstance(js_result['link'], list):
                                 sources = dict((link['link'], self._height_get_quality(link['label'])) for link in js_result['link'])

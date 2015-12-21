@@ -68,7 +68,6 @@ class MoviesPlanet_Scraper(scraper.Scraper):
                     if match:
                         for match in re.finditer('''['"]*file['"]*\s*:\s*['"]*([^'"]+).*?['"]*label['"]*\s*:\s*['"]*([^'"]+)''', match.group(1), re.DOTALL):
                             stream_url, label = match.groups()
-                            log_utils.log(stream_url)
                             if 'download.php' in stream_url:
                                 redir_html = self._http_get(stream_url, allow_redirect=False, cache_limit=0)
                                 if stream_url.startswith('http'): stream_url = redir_html

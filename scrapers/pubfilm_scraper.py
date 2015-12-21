@@ -83,7 +83,6 @@ class PubFilm_Scraper(scraper.Scraper):
         links = {}
         url = url.replace('&#038;', '&')
         html = self._http_get(url, cache_limit=.5)
-        log_utils.log(html)
         if 'gkpluginsphp' in html:
             match = re.search('link\s*:\s*"([^"]+)', html)
             if match:
