@@ -728,14 +728,19 @@ class Scraper(object):
             if match:
                 return match.groups()[:-1] + ('480', ) + (match.groups()[-1],)  # assume no height = 480
             else:
-                return ('', '-1', '-1', '-1', '')
+                match = re.search('(?:\.|_| )(\d+)p(?:\.|_| )', link)
+                if match:
+                    return ('', '-1', '-1', match.group(1), '')
+                else:
+                    return ('', '-1', '-1', '480', '')
     
     def _parse_movie_link(self, link):
         file_name = link.split('/')[-1]
-        match = re.match('(.*?)(?:(?:\.|_)(\d{4})(?:(?:\.|_).*?)*)?(?:\.|_)(\d+)p(?:\.|_)(.*)', file_name)
+        match = re.match('(.*?)(?:(?:\.|_| )(\d{4})(?:(?:\.|_| ).*?)*)?(?:\.|_| )(\d+)p(?:\.|_| )(.*)', file_name)
         if match:
             return match.groups()
         else:
+            match = re.match('', file_name)
             return ('', '', '480', '')  # make 480p when unknown
     
     def _title_check(self, video, title):

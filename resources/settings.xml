@@ -394,6 +394,12 @@
          <setting id="pftv-base_url" type="text" label="    Base Url" default="http://projectfreetv.so" visible="eq(-1,true)"/>
          <setting id="pftv-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="pftv_last_results" type="number" default="0" visible="false"/>
+         <setting id="Premiumize.me-enable" type="bool" label="Premiumize.me Enabled" default="true" visible="true"/>
+         <setting id="Premiumize.me-base_url" type="text" label="    Base Url" default="https://www.premiumize.me" visible="eq(-1,true)"/>
+         <setting id="Premiumize.me-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
+         <setting id="Premiumize.me_last_results" type="number" default="0" visible="false"/>
+         <setting id="Premiumize.me-username" type="text" label="     Username" default="" visible="eq(-4,true)"/>
+         <setting id="Premiumize.me-password" type="text" label="     Password" option="hidden" default="" visible="eq(-5,true)"/>
          <setting id="PrimeWire-enable" type="bool" label="PrimeWire Enabled" default="true" visible="true"/>
          <setting id="PrimeWire-base_url" type="text" label="    Base Url" default="http://www.primewire.ag" visible="eq(-1,true)"/>
          <setting id="PrimeWire-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -423,6 +429,9 @@
          <setting id="RLSSource.net_last_results" type="number" default="0" visible="false"/>
          <setting id="RLSSource.net-filter" type="slider" range="0,180" option="int" label="     Filter results older than (0=No Filter) (days)" default="30" visible="eq(-4,true)"/>
          <setting id="RLSSource.net-select" type="enum" label="     Automatically Select" values="Most Recent|Highest Quality" default="0" visible="eq(-5,true)"/>
+    </category>
+    
+    <category label="Scrapers 4">
          <setting id="SezonLukDizi-enable" type="bool" label="SezonLukDizi Enabled" default="true" visible="true"/>
          <setting id="SezonLukDizi-base_url" type="text" label="    Base Url" default="http://sezonlukdizi.com" visible="eq(-1,true)"/>
          <setting id="SezonLukDizi-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -433,9 +442,6 @@
          <setting id="Shush.se_last_results" type="number" default="0" visible="false"/>
          <setting id="Shush.se-scraper_url" type="text" label="    Scraper Download Url" default="" visible="eq(-4,true)"/>
          <setting id="Shush.se-scraper_password" type="text" label="    Scraper Decryption Key" option="hidden" default="" visible="eq(-5,true)"/>
-    </category>
-    
-    <category label="Scrapers 4">
          <setting id="SolarMovie-enable" type="bool" label="SolarMovie Enabled" default="true" visible="true"/>
          <setting id="SolarMovie-base_url" type="text" label="    Base Url" default="https://www.solarmovie.is" visible="eq(-1,true)"/>
          <setting id="SolarMovie-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -519,6 +525,9 @@
          <setting id="yify-streaming-base_url" type="text" label="    Base Url" default="http://yify-streaming.com" visible="eq(-1,true)"/>
          <setting id="yify-streaming-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="yify-streaming_last_results" type="number" default="0" visible="false"/>
+    </category>
+
+    <category label="Scrapers 5">
          <setting id="yshows-enable" type="bool" label="yshows Enabled" default="true" visible="true"/>
          <setting id="yshows-base_url" type="text" label="    Base Url" default="http://yshow.me" visible="eq(-1,true)"/>
          <setting id="yshows-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>

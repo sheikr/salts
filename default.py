@@ -1417,14 +1417,16 @@ def set_related_url(mode, video_type, title, year, trakt_id, season='', episode=
             index = dialog.select(i18n('url_to_change') % (video_type), [related['label'] for related in related_list])
             if index > -1:
                 if mode == MODES.SET_URL_MANUAL:
+                    related = related_list[index]
                     keyboard = xbmc.Keyboard()
-                    keyboard.setHeading(i18n('rel_url_at') % (video_type, related_list[index]['name']))
-                    keyboard.setDefault(related_list[index]['url'])
+                    keyboard.setHeading(i18n('rel_url_at') % (video_type, related['name']))
+                    keyboard.setDefault(related['url'])
                     keyboard.doModal()
                     if keyboard.isConfirmed():
                         new_url = keyboard.getText()
-                        utils.update_url(video_type, title, year, related_list[index]['name'], related_list[index]['url'], new_url, season, episode)
-                        kodi.notify(msg=i18n('rel_url_set') % (related_list[index]['name']), duration=5000)
+                        utils.update_url(video_type, title, year, related['name'], related['url'], new_url, season, episode)
+                        kodi.notify(msg=i18n('rel_url_set') % (related['name']), duration=5000)
+                        related['label'] = '[%s] %s' % (related['name'], new_url)
                 elif mode == MODES.SET_URL_SEARCH:
                     temp_title = title
                     temp_year = year
@@ -1447,9 +1449,13 @@ def set_related_url(mode, video_type, title, year, trakt_id, season='', episode=
                                 keyboard.setDefault(text)
                                 keyboard.doModal()
                                 if keyboard.isConfirmed():
-                                    match = re.match('([^\(]+)\s*\(*(\d{4})?\)*', keyboard.getText())
-                                    temp_title = match.group(1).strip()
-                                    temp_year = match.group(2) if match.group(2) else ''
+                                    match = re.match('(.*?)\(?(\d{4})\)?', keyboard.getText())
+                                    if match:
+                                        temp_title, temp_year = match.groups()
+                                        temp_title = temp_title.strip()
+                                    else:
+                                        temp_title = keyboard.getText()
+                                        temp_year = ''
                             elif results_index >= 1:
                                 related = related_list[index]
                                 if results_index == 1:
