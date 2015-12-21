@@ -58,6 +58,8 @@ class EasyNews_Scraper(scraper.Scraper):
         label = '[%s] %s' % (item['quality'], item['host'])
         if 'size' in item:
             label += ' (%s)' % (item['size'])
+        if 'extra' in item:
+            label += ' [%s]' % (item['extra'])
         return label
 
     def get_sources(self, video):
@@ -116,6 +118,7 @@ class EasyNews_Scraper(scraper.Scraper):
                     quality = self._width_get_quality(item['width'])
                     hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': True}
                     if size: hoster['size'] = size
+                    if post_title: hoster['extra'] = post_title
                     hosters.append(hoster)
         return hosters
     
