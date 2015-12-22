@@ -28,7 +28,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
 
 BASE_URL = 'http://viooz.ac'
-GK_URL = '/p7/plugins/gkpluginsphp.php'
+GK_URL = '/p8/plugins/gkpluginsphp.php'
 
 class VioozAc_Scraper(scraper.Scraper):
     base_url = BASE_URL
