@@ -23,7 +23,6 @@ import json
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 
@@ -31,10 +30,11 @@ BASE_URL = 'https://directdownload.tv'
 SEARCH_URL = '/api?key=%s&%s&keyword=%s'
 API_KEY = 'AFBF8E33A19787D1'
 
-DD_QUALITIES = ['PDTV', 'DSR', 'DVDRIP', 'HDTV', '720P', 'WEBDL', 'WEBDL1080P']
+DD_QUALITIES = ['PDTV', 'DSR', 'DVDRIP', 'HDTV', '720P', 'WEBDL', 'WEBDL1080P', '1080P-X265']
 Q_DICT = dict((quality, i) for i, quality in enumerate(DD_QUALITIES))
 QUALITY_MAP = {'PDTV': QUALITIES.MEDIUM, 'DSR': QUALITIES.MEDIUM, 'DVDRIP': QUALITIES.HIGH,
-               'HDTV': QUALITIES.HIGH, '720P': QUALITIES.HD720, 'WEBDL': QUALITIES.HD720, 'WEBDL1080P': QUALITIES.HD1080}
+               'HDTV': QUALITIES.HIGH, '720P': QUALITIES.HD720, 'WEBDL': QUALITIES.HD720, 'WEBDL1080P': QUALITIES.HD1080,
+               '1080P-X265': QUALITIES.HD1080}
 
 class DirectDownload_Scraper(scraper.Scraper):
     base_url = BASE_URL
