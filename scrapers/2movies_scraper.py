@@ -19,12 +19,17 @@ import scraper
 import urlparse
 import re
 import time
+import random
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
+from salts_lib.constants import BR_VERS
+from salts_lib.constants import WIN_VERS
+from salts_lib.constants import FEATURES
+from salts_lib.constants import RAND_UAS
 
 BASE_URL = 'http://twomovies.us'
 AJAX_URL = '/Xajax/aj0001'
@@ -118,3 +123,13 @@ class TwoMovies_Scraper(scraper.Scraper):
         title_pattern = 'class="linkname"\s+href="(?P<url>[^"]+)">Episode_\d+\s+-\s+(?P<title>[^<]+)'
         headers = {'Referer': self.base_url}
         return super(TwoMovies_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern, headers=headers)
+    
+    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, cache_limit=8):
+        if headers is None: headers = {}
+        headers.update({'User-Agent': self.__randomize_ua()})
+        return super(TwoMovies_Scraper, self)._http_get(url, cookies=cookies, data=data, multipart_data=multipart_data, headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
+
+    def __randomize_ua(self):
+        index = random.randrange(len(RAND_UAS))
+        user_agent = RAND_UAS[index].format(win_ver=random.choice(WIN_VERS), feature=random.choice(FEATURES), br_ver=random.choice(BR_VERS[index]))
+        log_utils.log('2Movies User Agent: %s' % (user_agent), log_utils.LOGDEBUG)
