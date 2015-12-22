@@ -87,6 +87,11 @@ class Dizigold_Scraper(scraper.Scraper):
                                     stream_url = match.group(1).replace('&gt;', '')
                                     sources.append({'label': '720p', 'file': stream_url})
                                     direct = False
+                                else:
+                                    src = dom_parser.parse_dom(html, 'iframe', ret='src')
+                                    if src:
+                                        sources.append({'label': '720p', 'file': src[0]})
+                                        direct = False
                         else:
                             sources = js_data
                             direct = True
