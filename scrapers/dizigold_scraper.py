@@ -92,6 +92,10 @@ class Dizigold_Scraper(scraper.Scraper):
                                     if src:
                                         sources.append({'label': '720p', 'file': src[0]})
                                         direct = False
+                                    else:
+                                        for match in re.finditer('"file"\s*:\s*"([^"]+)"\s*,\s*"label"\s*:\s*"([^"]+)', html):
+                                            sources.append({'label': match.group(2), 'file': match.group(1)})
+                                        direct = True
                         else:
                             sources = js_data
                             direct = True
