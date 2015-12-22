@@ -100,7 +100,7 @@ class DirectDownload_Scraper(scraper.Scraper):
                                 hostname = urlparse.urlparse(url).hostname
                                 hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname, 'quality': QUALITY_MAP[result['quality']], 'direct': False}
                                 hoster['dd_qual'] = result['quality']
-                                if 'x265' in result['release']: hoster['dd_qual'] += '-x265'
+                                if 'x265' in result['release'] and result['quality'] != '1080P-X265': hoster['dd_qual'] += '-x265'
                                 hosters.append(hoster)
 
         return hosters
