@@ -24,7 +24,7 @@ from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
-BASE_URL = 'http://onlinemovies.pro'
+BASE_URL = 'http://onlinemovies-pro.com'
 
 class OnlineMoviesPro_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -62,7 +62,7 @@ class OnlineMoviesPro_Scraper(scraper.Scraper):
             if match:
                 stream_url = match.group(1)
                 host = urlparse.urlparse(stream_url).hostname
-                q_str = ''
+                q_str = 'HDRIP'
                 match = re.search('>Quality(.*?)<br\s*/>', html, re.I)
                 if match:
                     q_str = match.group(1)
