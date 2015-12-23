@@ -31,7 +31,7 @@ from salts_lib.constants import XHR
 
 
 BASE_URL = 'http://movietv.to'
-SEASON_URL = '/series/season?id=%s&s=%s&_=%s'
+SEASON_URL = '/series/season?id=%s&s=%s&_=%s&token=%s'
 LINK_URL = '/series/getLink?id=%s&s=%s&e=%s'
 
 class MovieTV_Scraper(scraper.Scraper):
@@ -40,6 +40,7 @@ class MovieTV_Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
+        self.token = None
 
     @classmethod
     def provides(cls):
@@ -62,8 +63,10 @@ class MovieTV_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             if video.video_type == VIDEO_TYPES.EPISODE:
                 source_url += '&_=%s' % (str(int(time.time()) * 1000))
+                source_url += '&token=%s' % (self.__get_token())
             url = urlparse.urljoin(self.base_url, source_url)
-            headers = {'Referer': self.base_url + '/'}
+            headers = XHR
+            headers['Referer'] = self.base_url + '/series/'
             html = self._http_get(url, headers=headers, cache_limit=1)
             sources = {}
             if video.video_type == VIDEO_TYPES.MOVIE:
@@ -81,10 +84,6 @@ class MovieTV_Scraper(scraper.Scraper):
                     log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
                 else:
                     sources[js_data['url']] = QUALITIES.HD720
-                
-            if not sources:
-                for match in re.finditer('<source[^>]+src=["\']([^\'"]+)[^>]+type=[\'"]video', html):
-                    sources[match.group(1)] = QUALITIES.HD720
                 
             for source in sources:
                 stream_url = source + '|Referer=%s&Cookie=%s' % (urllib.quote(url), self.__get_stream_cookies())
@@ -109,7 +108,7 @@ class MovieTV_Scraper(scraper.Scraper):
         match = re.search("var\s+id\s*=\s*'?(\d+)'?", html)
         if match:
             show_id = match.group(1)
-            season_url = SEASON_URL % (show_id, video.season, str(int(time.time()) * 1000))
+            season_url = SEASON_URL % (show_id, video.season, str(int(time.time()) * 1000), self.__get_token())
             season_url = urlparse.urljoin(self.base_url, season_url)
             html = self._http_get(season_url, cache_limit=1)
             try:
@@ -136,7 +135,7 @@ class MovieTV_Scraper(scraper.Scraper):
             query_type = 'movie'
         else:
             query_type = 'tv'
-        data = {'loadmovies': 'showData', 'page': 1, 'abc': 'All', 'genres': '', 'sortby': 'Popularity', 'quality': 'All', 'type': query_type, 'q': title}
+        data = {'loadmovies': 'showData', 'page': 1, 'abc': 'All', 'genres': '', 'sortby': 'Popularity', 'quality': 'All', 'type': query_type, 'q': title, 'token': self.__get_token()}
         html = self._http_get(url, data=data, headers=XHR, cache_limit=2)
 
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):
@@ -149,5 +148,11 @@ class MovieTV_Scraper(scraper.Scraper):
 
         return results
 
-    def _http_get(self, url, data=None, headers=None, allow_redirect=True, cache_limit=8):
-        return super(MovieTV_Scraper, self)._cached_http_get(url, self.base_url, self.timeout, data=data, headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
+    def __get_token(self):
+        if self.token is None:
+            html = super(MovieTV_Scraper, self)._cached_http_get(self.base_url, self.base_url, self.timeout, cache_limit=8)
+            match = re.search('var\s+token_key\s*=\s*"([^"]+)', html)
+            if match:
+                self.token = match.group(1)
+
+        return self.token
