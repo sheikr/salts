@@ -1,3 +1,9 @@
+[B]Version 1.0.93[/B]
+- Fix movietv scraper
+- Improve dizilab scraper
+- Improve 2movies scraper
+- Improve CouchertunerV1 scraper
+
 [B]Version 1.0.92[/B]
 - Fix cyberreel scraper
 - Fix viooz scraper
