@@ -20,7 +20,14 @@ import re
 import urlparse
 from salts_lib import kodi
 import xml.etree.ElementTree as ET
-from xml.parsers.expat import ExpatError
+try:
+    from xml.parsers.expat import ExpatError
+except ImportError:
+    class ExpatError(Exception): pass
+try:
+    from xml.etree.ElementTree import ParseError
+except ImportError:
+    class ParseError(Exception): pass
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -88,7 +95,7 @@ class Dizilab_Scraper(scraper.Scraper):
                         if url is not None and (not year or not match_year or year == match_year):
                             result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
                             results.append(result)
-            except (ET.ParseError, ExpatError) as e:
+            except (ParseError, ExpatError) as e:
                 log_utils.log('Dizilab Search Parse Error: %s' % (e), log_utils.LOGWARNING)
 
         return results
