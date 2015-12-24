@@ -20,6 +20,7 @@ import re
 import urlparse
 from salts_lib import kodi
 import xml.etree.ElementTree as ET
+from xml.parsers.expat import ExpatError
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -73,18 +74,21 @@ class Dizilab_Scraper(scraper.Scraper):
         return super(Dizilab_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year):
+        results = []
         xml_url = urlparse.urljoin(self.base_url, 'diziler.xml')
         xml = self._http_get(xml_url, cache_limit=24)
         if xml:
             norm_title = self._normalize_title(title)
             match_year = ''
-            results = []
-            for element in ET.fromstring(xml).findall('.//dizi'):
-                name = element.find('adi')
-                if name is not None and norm_title in self._normalize_title(name.text):
-                    url = element.find('url')
-                    if url is not None and (not year or not match_year or year == match_year):
-                        result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
-                        results.append(result)
+            try:
+                for element in ET.fromstring(xml).findall('.//dizi'):
+                    name = element.find('adi')
+                    if name is not None and norm_title in self._normalize_title(name.text):
+                        url = element.find('url')
+                        if url is not None and (not year or not match_year or year == match_year):
+                            result = {'url': self._pathify_url(url.text), 'title': name.text, 'year': ''}
+                            results.append(result)
+            except (ET.ParseError, ExpatError) as e:
+                log_utils.log('Dizilab Search Parse Error: %s' % (e), log_utils.LOGWARNING)
 
         return results
