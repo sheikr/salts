@@ -25,6 +25,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://www.couchtuner.ch'
+BASE_URL2 = 'http://www.couchtuner.city'
 
 class CouchTunerV1_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -56,6 +57,9 @@ class CouchTunerV1_Scraper(scraper.Scraper):
             entry = ''
             while True:
                 html = self._http_get(url, cache_limit=.5)
+                if not html:
+                    url = urlparse.urljoin(BASE_URL2, source_url)
+                    html = self._http_get(url, cache_limit=.5)
                 entry = dom_parser.parse_dom(html, 'div', {'class': 'entry'})
                 if entry:
                     entry = entry[0]
