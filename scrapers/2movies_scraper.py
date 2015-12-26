@@ -26,6 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
+from salts_lib.constants import USER_AGENT
 from salts_lib.constants import BR_VERS
 from salts_lib.constants import WIN_VERS
 from salts_lib.constants import FEATURES
@@ -47,7 +48,7 @@ class TwoMovies_Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return '2movies'
+        return 'TwoMovies.us'
 
     def resolve_link(self, link):
         url = urlparse.urljoin(self.base_url, link)
