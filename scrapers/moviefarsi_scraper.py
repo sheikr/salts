@@ -60,13 +60,14 @@ class MovieFarsi_Scraper(scraper.Scraper):
                     for source in sources:
                         _title, season, episode, height, _extra = self._parse_episode_link(source['link'])
                         if int(video.season) == int(season) and int(video.episode) == int(episode):
-                            hoster = {'multi-part': False, 'host': self._get_direct_hostname(source['url']), 'class': self, 'quality': self._height_get_quality(height), 'views': None, 'rating': None, 'url': source['url'], 'direct': True}
+                            stream_url = source['url'] + '|User-Agent=%s' % (self._get_ua())
+                            hoster = {'multi-part': False, 'host': self._get_direct_hostname(source['url']), 'class': self, 'quality': self._height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                             hosters.append(hoster)
             else:
                 source_url = urlparse.urljoin(self.base_url, source_url)
                 html = self._http_get(source_url, cache_limit=.5)
                 for match in re.finditer('downloadicon.png.*?href="([^"]+)', html):
-                    stream_url = match.group(1)
+                    stream_url = match.group(1) + '|User-Agent=%s' % (self._get_ua())
                     _title, _year, height, _extra = self._parse_movie_link(stream_url)
                     hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': self._height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                     hosters.append(hoster)
