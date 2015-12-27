@@ -24,8 +24,8 @@ from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
-BASE_URL = 'http://moviefarsi3.com'
-TVSHOW_URLS = ['http://dl1.moviefarsi.org/serial/', 'http://dl1.moviefarsi.org/serial/best/', 'http://dl2.moviefarsi.org/serial/', 'http://dl3.moviefarsi.org/serial/', 'http://dl5.moviefarsi.org/serial/']
+BASE_URL = 'http://moviefarsi.com'
+TVSHOW_URLS = ['http://dl1.moviefarsi.com/serial/', 'http://dl1.moviefarsi.com/serial/best/', 'http://dl2.moviefarsi.com/serial/', 'http://dl3.moviefarsi.com/serial/', 'http://dl5.moviefarsi.com/serial/']
 
 class MovieFarsi_Scraper(scraper.Scraper):
     base_url = BASE_URL
