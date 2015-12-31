@@ -29,7 +29,7 @@ from salts_lib.constants import QUALITIES
 
 QUALITY_MAP = {'HD': QUALITIES.HIGH, 'LOW': QUALITIES.LOW}
 QUALITY_ICONS = {'fullhdbr.png': QUALITIES.HIGH, 'Blu-Ray.gif': QUALITIES.HIGH}
-BASE_URL = 'http://vizz.is'
+BASE_URL = 'http://uflix.org'
 
 class UFlix_Scraper(scraper.Scraper):
     base_url = BASE_URL
