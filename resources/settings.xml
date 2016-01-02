@@ -477,7 +477,7 @@
          <setting id="TwoMovies.us-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="TwoMovies.us_last_results" type="number" default="0" visible="false"/>
          <setting id="UFlix.org-enable" type="bool" label="UFlix.org Enabled" default="true" visible="true"/>
-         <setting id="UFlix.org-base_url" type="text" label="    Base Url" default="http://vizz.is" visible="eq(-1,true)"/>
+         <setting id="UFlix.org-base_url" type="text" label="    Base Url" default="http://uflix.org" visible="eq(-1,true)"/>
          <setting id="UFlix.org-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="UFlix.org_last_results" type="number" default="0" visible="false"/>
          <setting id="vidics.ch-enable" type="bool" label="vidics.ch Enabled" default="true" visible="true"/>

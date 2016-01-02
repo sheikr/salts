@@ -26,6 +26,8 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
 BASE_URL = 'http://miradetodo.com.ar'
+GK_KEY1 = base64.urlsafe_b64decode('QjZVTUMxUms3VFJBVU56V3hraHI=')
+GK_KEY2 = base64.urlsafe_b64decode('aUJocnZjOGdGZENaQWh3V2huUm0=')
 
 class MiraDetodo_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -59,7 +61,10 @@ class MiraDetodo_Scraper(scraper.Scraper):
             if match:
                 proxy_link = match.group(1)
                 proxy_link = proxy_link.split('*', 1)[-1]
-                picasa_url = self._gk_decrypt(base64.urlsafe_b64decode('QjZVTUMxUms3VFJBVU56V3hraHI='), proxy_link)
+                if len(proxy_link) <= 224:
+                    picasa_url = self._gk_decrypt(GK_KEY1, proxy_link)
+                else:
+                    picasa_url = self._gk_decrypt(GK_KEY2, proxy_link)
                 if self._get_direct_hostname(picasa_url) == 'gvideo':
                     sources = self._parse_google(picasa_url)
                     for source in sources:
