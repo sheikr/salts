@@ -676,32 +676,64 @@ class Scraper(object):
     def _parse_google(self, link):
         sources = []
         html = self._http_get(link, cache_limit=.5)
-        i = link.rfind('#')
-        if i > -1:
-            link_id = link[i + 1:]
-            match = re.search('feedPreload:\s*(.*}]}})},', html, re.DOTALL)
+        match = re.search('pid=([^&]+)', link)
+        if match:
+            vid_id = match.group(1)
+            match = re.search('return\s+(\[\[.*?)\s*}}', html, re.DOTALL)
             if match:
                 try:
                     js = json.loads(match.group(1))
                 except ValueError:
                     log_utils.log('Invalid JSON returned for: %s' % (link), log_utils.LOGWARNING)
                 else:
-                    for item in js['feed']['entry']:
-                        if item['gphoto$id'] == link_id:
-                            for media in item['media']['content']:
-                                if media['type'].startswith('video'):
-                                    sources.append(media['url'].replace('%3D', '='))
+                    try:
+                        for item in js[1]:
+                            vid_match = False
+                            for e in item:
+                                if e == vid_id:
+                                    vid_match = True
+
+                                if vid_match:
+                                        if isinstance(e, dict):
+                                            for key in e:
+                                                for item2 in e[key]:
+                                                    try:
+                                                        for item3 in item2:
+                                                            for item4 in item3:
+                                                                if isinstance(item4, basestring):
+                                                                    for match in re.finditer('url=([^&]+)', item4):
+                                                                        sources.append(urllib.unquote(match.group(1)))
+                                                    except Exception as e:
+                                                        log_utils.log('Exception during google plus parse: %s' % (e), log_utils.LOGDEBUG)
+                    except Exception as e:
+                        log_utils.log('Google Plus Parse failure: %s - %s' % (link, e), log_utils.LOGWARNING)
         else:
-            match = re.search('preload\'?:\s*(.*}})},', html, re.DOTALL)
-            if match:
-                try:
-                    js = json.loads(match.group(1))
-                except ValueError:
-                    log_utils.log('Invalid JSON returned for: %s' % (link), log_utils.LOGWARNING)
-                else:
-                    for media in js['feed']['media']['content']:
-                        if media['type'].startswith('video'):
-                            sources.append(media['url'].replace('%3D', '='))
+            i = link.rfind('#')
+            if i > -1:
+                link_id = link[i + 1:]
+                match = re.search('feedPreload:\s*(.*}]}})},', html, re.DOTALL)
+                if match:
+                    try:
+                        js = json.loads(match.group(1))
+                    except ValueError:
+                        log_utils.log('Invalid JSON returned for: %s' % (link), log_utils.LOGWARNING)
+                    else:
+                        for item in js['feed']['entry']:
+                            if item['gphoto$id'] == link_id:
+                                for media in item['media']['content']:
+                                    if media['type'].startswith('video'):
+                                        sources.append(media['url'].replace('%3D', '='))
+            else:
+                match = re.search('preload\'?:\s*(.*}})},', html, re.DOTALL)
+                if match:
+                    try:
+                        js = json.loads(match.group(1))
+                    except ValueError:
+                        log_utils.log('Invalid JSON returned for: %s' % (link), log_utils.LOGWARNING)
+                    else:
+                        for media in js['feed']['media']['content']:
+                            if media['type'].startswith('video'):
+                                sources.append(media['url'].replace('%3D', '='))
 
         return sources
 

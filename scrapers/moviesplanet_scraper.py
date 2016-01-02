@@ -21,6 +21,7 @@ import re
 from salts_lib import kodi
 import time
 import json
+import base64
 from salts_lib import log_utils
 from salts_lib.trans_utils import i18n
 from salts_lib.constants import VIDEO_TYPES
@@ -29,6 +30,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
 
 BASE_URL = 'http://www.moviesplanet.is'
+GK_KEY = base64.urlsafe_b64decode('MllVcmlZQmhTM2swYU9BY0lmTzQ=')
 QUALITY_MAP = {'HD': QUALITIES.HD720}
 
 class MoviesPlanet_Scraper(scraper.Scraper):
@@ -57,29 +59,41 @@ class MoviesPlanet_Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         sources = []
+        stream_urls = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
             for match in re.finditer("embeds\[(\d+)\]\s*=\s*'([^']+)", html):
                 match = re.search('src="([^"]+)', match.group(2))
                 if match:
-                    html = self._http_get(match.group(1), cache_limit=0)
-                    match = re.search('sources\s*:\s*\[(.*?)\]', html, re.DOTALL)
-                    if match:
-                        for match in re.finditer('''['"]*file['"]*\s*:\s*['"]*([^'"]+).*?['"]*label['"]*\s*:\s*['"]*([^'"]+)''', match.group(1), re.DOTALL):
-                            stream_url, label = match.groups()
-                            if 'download.php' in stream_url:
-                                redir_html = self._http_get(stream_url, allow_redirect=False, cache_limit=0)
-                                if stream_url.startswith('http'): stream_url = redir_html
+                    iframe_url = match.group(1)
+                    if 'play-en.php' in iframe_url:
+                        match = re.search('id=([^"&]+)', iframe_url)
+                        if match:
+                            proxy_link = match.group(1)
+                            proxy_link = proxy_link.split('*', 1)[-1]
+                            picasa_url = self._gk_decrypt(GK_KEY, proxy_link)
+                            stream_urls += self._parse_google(picasa_url)
+                    else:
+                        html = self._http_get(iframe_url, cache_limit=0)
+                        match = re.search('sources\s*:\s*\[(.*?)\]', html, re.DOTALL)
+                        if match:
+                            for match in re.finditer('''['"]*file['"]*\s*:\s*['"]*([^'"]+).*?['"]*label['"]*\s*:\s*['"]*([^'"]+)''', match.group(1), re.DOTALL):
+                                stream_url, label = match.groups()
+                                if 'download.php' in stream_url:
+                                    redir_html = self._http_get(stream_url, allow_redirect=False, cache_limit=0)
+                                    if stream_url.startswith('http'): stream_url = redir_html
+                                    stream_urls.append(stream_url)
                 
-                            host = self._get_direct_hostname(stream_url)
-                            if host == 'gvideo':
-                                quality = self._gv_get_quality(stream_url)
-                            else:
-                                quality = QUALITY_MAP.get(label, QUALITIES.HIGH)
-                            stream_url += '|User-Agent=%s' % (self._get_ua())
-                            source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
-                            sources.append(source)
+        for stream_url in list(set(stream_urls)):
+            host = self._get_direct_hostname(stream_url)
+            if host == 'gvideo':
+                quality = self._gv_get_quality(stream_url)
+            else:
+                quality = QUALITY_MAP.get(label, QUALITIES.HIGH)
+            stream_url += '|User-Agent=%s' % (self._get_ua())
+            source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
+            sources.append(source)
 
         return sources
 
