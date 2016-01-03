@@ -85,7 +85,7 @@ class TorbaSe_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, cache_limit=0)
             vid_link = dom_parser.parse_dom(html, 'a', {'class': 'video-play'}, 'href')
             if vid_link:
                 i = vid_link[0].rfind('#')
