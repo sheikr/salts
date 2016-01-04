@@ -174,8 +174,8 @@ def perform_auto_conf(responses):
 
     if responses[10]:
         tiers = ['Local', 'Furk.net', 'Premiumize.me', 'EasyNews', 'DD.tv', 'NoobRoom',
-                 ['alluc.com', 'MoviesPlanet', 'OneClickTVShows', 'CyberReel', '123Movies', 'niter.tv', 'ororo.tv'],
-                 ['movietv.to', 'StreamLord', 'tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'beinmovie'],
+                 ['MoviesPlanet', 'OneClickTVShows', 'CyberReel', '9Movies', '123Movies', 'niter.tv', 'ororo.tv'],
+                 ['movietv.to', 'StreamLord', 'tunemovie', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'alluc.com', 'beinmovie'],
                  ['torba.se', 'IzlemeyeDeger', 'Rainierland', 'zumvo.com', 'PutMV', 'MiraDeTodo'],
                  ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Diziay', 'Dizipas', 'Shush.se', 'MovieFarsi'],
                  ['DDLValley', 'ReleaseBB', 'MyVideoLinks.eu', 'OneClickWatch', 'RLSSource.net', 'TVRelease.Net'],
