@@ -1,3 +1,15 @@
+[B]Version 1.0.94[/B]
+- Fix dizilab scraper
+- Update twomovies scraper
+- Update moviefarsi scraper (still broken)
+- Add putmv scraper
+- Update uflix scraper
+- Improve Mira scraper
+- Improve MoviesPlayer scraper
+- Fix torba scraper
+- Fix/Improve movietv scraper
+- Add 9movies scraper
+
 [B]Version 1.0.93[/B]
 - Fix movietv scraper
 - Improve dizilab scraper
