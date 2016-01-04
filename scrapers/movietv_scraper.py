@@ -41,6 +41,7 @@ class MovieTV_Scraper(scraper.Scraper):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
         self.token = None
+        self.def_ref = self.base_url + '/'
 
     @classmethod
     def provides(cls):
@@ -151,7 +152,8 @@ class MovieTV_Scraper(scraper.Scraper):
 
     def __get_token(self):
         if self.token is None:
-            html = super(MovieTV_Scraper, self)._cached_http_get(self.base_url, self.base_url, self.timeout, cache_limit=8)
+            headers = {'Referer': self.def_ref}
+            html = super(MovieTV_Scraper, self)._cached_http_get(self.base_url, self.base_url, self.timeout, headers=headers, cache_limit=8)
             match = re.search('var\s+token_key\s*=\s*"([^"]+)', html)
             if match:
                 self.token = match.group(1)
@@ -160,7 +162,7 @@ class MovieTV_Scraper(scraper.Scraper):
 
     def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, cache_limit=8):
         if headers is None: headers = {}
-        headers['Referer'] = self.base_url + '/'
+        if 'Referer' not in headers: headers['Referer'] = self.def_ref
         return self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
                                      headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
     
