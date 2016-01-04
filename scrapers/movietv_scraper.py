@@ -86,6 +86,7 @@ class MovieTV_Scraper(scraper.Scraper):
                     sources[js_data['url']] = QUALITIES.HD720
                 
             for source in sources:
+                if not source.lower().startswith('http'): continue
                 stream_url = source + '|Referer=%s&Cookie=%s' % (urllib.quote(url), self.__get_stream_cookies())
                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': sources[source], 'views': None, 'rating': None, 'direct': True}
                 hosters.append(hoster)
@@ -156,3 +157,10 @@ class MovieTV_Scraper(scraper.Scraper):
                 self.token = match.group(1)
 
         return self.token
+
+    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, cache_limit=8):
+        if headers is None: headers = {}
+        headers['Referer'] = self.base_url + '/'
+        return self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
+                                     headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
+    
