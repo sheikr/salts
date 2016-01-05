@@ -23,7 +23,6 @@ import HTMLParser
 import string
 from salts_lib import kodi
 import random
-import xbmcgui
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -32,7 +31,7 @@ from salts_lib.constants import QUALITIES
 QUALITY_MAP = {'HD 720P': QUALITIES.HD720, 'HD 720P+': QUALITIES.HD720, 'DVDRIP / STANDARD DEF': QUALITIES.HIGH, 'DVD SCREENER': QUALITIES.HIGH}
 BASE_URL = 'http://www.icefilms.info'
 LIST_URL = BASE_URL + '/membersonly/components/com_iceplayer/video.php?h=374&w=631&vid=%s&img='
-AJAX_URL = '/membersonly/components/com_iceplayer/video.phpAjaxResp.php?id=%s&s=%s&iqs=&url=&m=%s&cap= &sec=%s&t=%s&ad_url=%s'
+AJAX_URL = '/membersonly/components/com_iceplayer/video.phpAjaxResp.php?id=%s&s=%s&iqs=&url=&m=%s&cap= &sec=%s&t=%s'
 
 class IceFilms_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -55,14 +54,10 @@ class IceFilms_Scraper(scraper.Scraper):
         url = urlparse.urljoin(self.base_url, url)
         url += '?s=%s&t=%s&app_id=SALTS' % (data['id'][0], data['t'][0])
         list_url = LIST_URL % (data['t'][0])
-        headers = {
-            'Referer': list_url}
-        ad_url = urllib.unquote(data['ad_url'][0])
-        del data['ad_url']
+        headers = {'Referer': list_url}
         html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
         match = re.search('url=(.*)', html)
         if match:
-            self.__show_ice_ad(ad_url, list_url)
             url = urllib.unquote_plus(match.group(1))
             return url
 
@@ -96,12 +91,6 @@ class IceFilms_Scraper(scraper.Scraper):
                 match = re.search('(?:\s+|,)m\s*=(\d+)', html)
                 m_start = int(match.group(1))
                 
-                match = re.search('<iframe[^>]*src="([^"]+)', html)
-                if match:
-                    ad_url = urllib.quote(match.group(1))
-                else:
-                    ad_url = ''
-
                 pattern = '<div class=ripdiv>(.*?)</div>'
                 for container in re.finditer(pattern, html):
                     fragment = container.group(0)
@@ -118,7 +107,7 @@ class IceFilms_Scraper(scraper.Scraper):
                         source['host'] = re.sub('(<[^>]+>|</span>)', '', host_fragment)
                         s = s_start + random.randint(3, 1000)
                         m = m_start + random.randint(21, 1000)
-                        url = AJAX_URL % (link_id, s, m, secret, t, ad_url)
+                        url = AJAX_URL % (link_id, s, m, secret, t)
                         source['url'] = url
                         sources.append(source)
             except Exception as e:
@@ -143,7 +132,7 @@ class IceFilms_Scraper(scraper.Scraper):
         else:
             first_letter = title[:1]
         url = url + first_letter.upper()
-
+        
         html = self._http_get(url, cache_limit=.25)
         h = HTMLParser.HTMLParser()
         html = unicode(html, 'windows-1252')
@@ -158,42 +147,13 @@ class IceFilms_Scraper(scraper.Scraper):
                 results.append(result)
         return results
 
+    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, cache_limit=8):
+        if headers is None: headers = {}
+        headers['Accept'] = '*/*'
+        return self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
+                                     headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
+    
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href=(/ip\.php[^>]+)>%sx0?%s\s+' % (video.season, video.episode)
         title_pattern = 'class=star>\s*<a href=(?P<url>[^>]+)>(?:\d+x\d+\s+)+(?P<title>[^<]+)'
         return super(IceFilms_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
-
-    def __show_ice_ad(self, ad_url, ice_referer):
-        if not ad_url: return
-        try:
-            wdlg = xbmcgui.WindowDialog()
-            if not ad_url.startswith('http:'): ad_url = 'http:' + ad_url
-            log_utils.log('Getting ad page: %s' % (ad_url), log_utils.LOGDEBUG)
-            headers = {'Referer': ice_referer}
-            html = self._http_get(ad_url, headers=headers, cache_limit=0)
-            headers = {'Referer': ad_url}
-            for match in re.finditer("<img\s+src='([^']+)'\s+width='(\d+)'\s+height='(\d+)'", html):
-                img_url, width, height = match.groups()
-                img_url = img_url.replace('&amp;', '&')
-                width = int(width)
-                height = int(height)
-                log_utils.log('Image in page: |%s| - (%dx%d)' % (img_url, width, height), log_utils.LOGDEBUG)
-                if width > 0 and height > 0:
-                    left = (1280 - width) / 2
-                    img = xbmcgui.ControlImage(left, 0, width, height, img_url)
-                    wdlg.addControl(img)
-                else:
-                    _html = self._http_get(img_url, headers=headers, cache_limit=0)
-
-            wdlg.show()
-            dialog = xbmcgui.Dialog()
-            dialog.ok('Stream All The Sources', 'Continue to Video')
-            match = re.search("href='([^']+)", html)
-            if match and random.randint(0, 100) < 5:
-                log_utils.log('Link Clicked: %s' % (match.group(1)), log_utils.LOGDEBUG)
-                html = self._http_get(match.group(1), cache_limit=0)
-                match = re.search("location=decode\('([^']+)", html)
-                if match:
-                    _html = self._http_get(match.group(1), cache_limit=0)
-        finally:
-            wdlg.close()
