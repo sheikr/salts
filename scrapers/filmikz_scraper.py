@@ -81,11 +81,22 @@ class Filmikz_Scraper(scraper.Scraper):
         results = []
         # Are we on a results page?
         if not re.search('window\.location', html):
-            pattern = 'href="(/watch[^"]+)".*?<strong>(.*?)\s*\((\d{4})\)\s*:\s*</strong>'
+            pattern = '<td[^>]+class="movieText"[^>]*>(.*?)</p>.*?href="(/watch/[^"]+)'
             for match in re.finditer(pattern, html, re.DOTALL):
-                url, title, match_year = match.groups('')
+                match_title_year, match_url = match.groups('')
+                # skip porn
+                if '-XXX-' in match_url.upper() or ' XXX:' in match_title_year: continue
+                
+                match_title_year = re.sub('</?.*?>', '', match_title_year)
+                match = re.search('(.*?)\s+\(?(\d{4})\)?', match_title_year)
+                if match:
+                    match_title, match_year = match.groups()
+                else:
+                    match_title = match_title_year
+                    match_year = ''
+                
                 if not year or not match_year or year == match_year:
-                    result = {'url': url, 'title': title, 'year': match_year}
+                    result = {'url': match_url, 'title': match_title, 'year': match_year}
                     results.append(result)
         else:
             match = re.search('window\.location\s+=\s+"([^"]+)', html)
