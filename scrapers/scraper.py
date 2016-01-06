@@ -271,6 +271,7 @@ class Scraper(object):
             self.cj = self._set_cookies(base_url, cookies)
             request = urllib2.Request(url, data=data)
             request.add_header('User-Agent', self._get_ua())
+            request.add_header('Accept', '*/*')
             request.add_unredirected_header('Host', request.get_host())
             request.add_unredirected_header('Referer', referer)
             for key in headers: request.add_header(key, headers[key])

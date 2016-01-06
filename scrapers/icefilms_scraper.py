@@ -147,12 +147,6 @@ class IceFilms_Scraper(scraper.Scraper):
                 results.append(result)
         return results
 
-    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, cache_limit=8):
-        if headers is None: headers = {}
-        headers['Accept'] = '*/*'
-        return self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
-                                     headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
-    
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href=(/ip\.php[^>]+)>%sx0?%s\s+' % (video.season, video.episode)
         title_pattern = 'class=star>\s*<a href=(?P<url>[^>]+)>(?:\d+x\d+\s+)+(?P<title>[^<]+)'
