@@ -20,7 +20,6 @@ import urllib
 import urlparse
 import base64
 import hashlib
-import json
 import re
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -60,18 +59,13 @@ class WS_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             html = self._http_get(source_url, cache_limit=.5)
-            if html:
-                try:
-                    js_result = json.loads(html)
-                except ValueError:
-                    log_utils.log('Invalid JSON returned: %s: %s' % (source_url, html), log_utils.LOGWARNING)
-                else:
-                    if 'results' in js_result and '0' in js_result['results'] and 'links' in js_result['results']['0']:
-                        for link in js_result['results']['0']['links']:
-                            if 'lang' not in link or link['lang'].lower() == 'english':
-                                host = urlparse.urlparse(link['url']).hostname
-                                hoster = {'multi-part': False, 'url': link['url'], 'class': self, 'quality': self._get_quality(video, host, QUALITIES.HIGH), 'host': host, 'rating': None, 'views': None, 'direct': False}
-                                hosters.append(hoster)
+            js_result = self._parse_json(html, source_url)
+            if 'results' in js_result and '0' in js_result['results'] and 'links' in js_result['results']['0']:
+                for link in js_result['results']['0']['links']:
+                    if 'lang' not in link or link['lang'].lower() == 'english':
+                        host = urlparse.urlparse(link['url']).hostname
+                        hoster = {'multi-part': False, 'url': link['url'], 'class': self, 'quality': self._get_quality(video, host, QUALITIES.HIGH), 'host': host, 'rating': None, 'views': None, 'direct': False}
+                        hosters.append(hoster)
             
         return hosters
 
@@ -82,70 +76,60 @@ class WS_Scraper(scraper.Scraper):
         results = []
         search_url = '/search/%s/page/1' % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=.25)
-        if html:
-            try:
-                js_result = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-            else:
-                if 'results' in js_result:
-                    matches = [item[1] for item in sorted(js_result['results'].items(), key=lambda x:x[0])]
-                    for match in matches:
-                        url, match_title, match_year = match['href'], match['name'], match['year']
-                        if not year or not match_year or year == match_year:
-                            url = self._pathify_url(url)
-                            url = url.replace('/json', '')
-                            result = {'url': url, 'title': match_title, 'year': match_year}
-                            results.append(result)
+        js_result = self._parse_json(html, search_url)
+        if 'results' in js_result:
+            matches = [item[1] for item in sorted(js_result['results'].items(), key=lambda x:x[0])]
+            for match in matches:
+                url, match_title, match_year = match['href'], match['name'], match['year']
+                if not year or not match_year or year == match_year:
+                    url = self._pathify_url(url)
+                    url = url.replace('/json', '')
+                    result = {'url': url, 'title': match_title, 'year': match_year}
+                    results.append(result)
         return results
 
     def _get_episode_url(self, show_url, video):
         log_utils.log('WS Episode Url: |%s|%s|' % (show_url, str(video).decode('utf-8', 'replace')), log_utils.LOGDEBUG)
         html = self._http_get(show_url, cache_limit=2)
-        if html:
-            try:
-                js_result = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned: %s: %s' % (show_url, html), log_utils.LOGWARNING)
-            else:
-                if 'results' in js_result and '0' in js_result['results'] and 'episodes' in js_result['results']['0']:
-                    seasons = js_result['results']['0']['episodes']
-                    force_title = self._force_title(video)
-                    if not force_title:
-                        if str(video.season) in seasons:
-                            season = seasons[str(video.season)]
-                            if isinstance(season, list):
-                                season = dict((ep['episode'], ep) for ep in season)
-
-                            if str(video.episode) in season:
-                                url = season[str(video.episode)]['url']
+        js_result = self._parse_json(html, show_url)
+        if 'results' in js_result and '0' in js_result['results'] and 'episodes' in js_result['results']['0']:
+            seasons = js_result['results']['0']['episodes']
+            force_title = self._force_title(video)
+            if not force_title:
+                if str(video.season) in seasons:
+                    season = seasons[str(video.season)]
+                    if isinstance(season, list):
+                        season = dict((ep['episode'], ep) for ep in season)
+        
+                    if str(video.episode) in season:
+                        url = season[str(video.episode)]['url']
+                        return self._pathify_url(url.replace('/json', ''))
+        
+                if kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
+                    airdate_pattern = video.ep_airdate.strftime('%d/%M/%Y')
+                    for season in seasons:
+                        if season.lower() == 'epcount': continue
+                        episodes = seasons[season]
+                        if isinstance(episodes, dict):
+                            episodes = [episodes[key] for key in episodes]
+                        for episode in episodes:
+                            if airdate_pattern == episode['release']:
+                                url = episode['url']
                                 return self._pathify_url(url.replace('/json', ''))
-    
-                        if kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
-                            airdate_pattern = video.ep_airdate.strftime('%d/%M/%Y')
-                            for season in seasons:
-                                if season.lower() == 'epcount': continue
-                                episodes = seasons[season]
-                                if isinstance(episodes, dict):
-                                    episodes = [episodes[key] for key in episodes]
-                                for episode in episodes:
-                                    if airdate_pattern == episode['release']:
-                                        url = episode['url']
-                                        return self._pathify_url(url.replace('/json', ''))
-                    else:
-                        log_utils.log('Skipping S&E matching as title search is forced on: %s' % (video.trakt_id), log_utils.LOGDEBUG)
-     
-                    if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title:
-                        norm_title = self._normalize_title(video.ep_title)
-                        for season in seasons:
-                            if season.lower() == 'epcount': continue
-                            episodes = seasons[season]
-                            if isinstance(episodes, dict):
-                                episodes = [episodes[key] for key in episodes]
-                            for episode in episodes:
-                                if episode['name'] is not None and norm_title == self._normalize_title(episode['name']):
-                                    url = episode['url']
-                                    return self._pathify_url(url.replace('/json', ''))
+            else:
+                log_utils.log('Skipping S&E matching as title search is forced on: %s' % (video.trakt_id), log_utils.LOGDEBUG)
+        
+            if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title:
+                norm_title = self._normalize_title(video.ep_title)
+                for season in seasons:
+                    if season.lower() == 'epcount': continue
+                    episodes = seasons[season]
+                    if isinstance(episodes, dict):
+                        episodes = [episodes[key] for key in episodes]
+                    for episode in episodes:
+                        if episode['name'] is not None and norm_title == self._normalize_title(episode['name']):
+                            url = episode['url']
+                            return self._pathify_url(url.replace('/json', ''))
 
     @classmethod
     def get_settings(cls):

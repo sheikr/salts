@@ -19,7 +19,6 @@ import scraper
 import urllib
 import urlparse
 import re
-import json
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -69,22 +68,18 @@ class VioozAc_Scraper(scraper.Scraper):
                 headers['Referer'] = url
                 gk_url = urlparse.urljoin(self.base_url, GK_URL)
                 html = self._http_get(gk_url, data=data, headers=headers, cache_limit=.25)
-                if html:
-                    try:
-                        js_result = json.loads(html)
-                    except ValueError:
-                        log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
+                js_result = self._parse_json(html, gk_url)
+                if 'link' in js_result and 'func' not in js_result:
+                    if isinstance(js_result['link'], list):
+                        sources = dict((link['link'], self._height_get_quality(link['label'])) for link in js_result['link'])
                     else:
-                        if 'link' in js_result and 'func' not in js_result:
-                            if isinstance(js_result['link'], list):
-                                sources = dict((link['link'], self._height_get_quality(link['label'])) for link in js_result['link'])
-                            else:
-                                sources = {js_result['link']: quality}
-                            
-                            for source in sources:
-                                host = self._get_direct_hostname(source)
-                                hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': host, 'rating': None, 'views': None, 'direct': True}
-                                hosters.append(hoster)
+                        sources = {js_result['link']: quality}
+                    
+                    for source in sources:
+                        host = self._get_direct_hostname(source)
+                        hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': host, 'rating': None, 'views': None, 'direct': True}
+                        hosters.append(hoster)
+
         return hosters
 
     def get_url(self, video):

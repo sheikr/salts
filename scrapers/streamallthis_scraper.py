@@ -19,7 +19,6 @@ import scraper
 import re
 import urlparse
 from salts_lib import kodi
-import json
 import urllib
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
@@ -82,8 +81,8 @@ class Stream_Scraper(scraper.Scraper):
                 if match:
                     new_url = match.group(1)
                     html = self._http_get(new_url, cache_limit=.5)
-                    if html:
-                        js_data = json.loads(html)
+                    js_data = self._parse_json(html, new_url)
+                    if 'videos' in js_data:
                         for video in js_data['videos']:
                             stream_url = video['url'] + '|Cookie=%s' % (self.__get_stream_cookies())
                             hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': self.__set_quality(video['key'][:-1]), 'views': None, 'rating': None, 'direct': True}

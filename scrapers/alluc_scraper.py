@@ -18,7 +18,6 @@
 import scraper
 import urllib
 import urlparse
-import json
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.trans_utils import i18n
@@ -86,27 +85,22 @@ class Alluc_Scraper(scraper.Scraper):
         for search_type in SEARCH_TYPES:
             search_url = self.__translate_search(url, search_type)
             html = self._http_get(search_url, cache_limit=.5)
-            if html:
-                try:
-                    js_result = json.loads(html)
-                except ValueError:
-                    log_utils.log('Invalid JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-                else:
-                    if js_result['status'] == 'success':
-                        for result in js_result['result']:
-                            if len(result['hosterurls']) > 1: continue
-                            if result['extension'] == 'rar': continue
-                            
-                            stream_url = result['hosterurls'][0]['url']
-                            if stream_url not in seen_urls:
-                                if self._title_check(video, result['title']):
-                                    host = urlparse.urlsplit(stream_url).hostname
-                                    quality = self._get_quality(video, host, self._get_title_quality(result['title']))
-                                    hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': False}
-                                    hosters.append(hoster)
-                                    seen_urls.add(stream_url)
-                    else:
-                        log_utils.log('Alluc API Error: %s: %s' % (search_url, js_result['message']), log_utils.LOGWARNING)
+            js_result = self._parse_json(html, search_url)
+            if js_result['status'] == 'success':
+                for result in js_result['result']:
+                    if len(result['hosterurls']) > 1: continue
+                    if result['extension'] == 'rar': continue
+                    
+                    stream_url = result['hosterurls'][0]['url']
+                    if stream_url not in seen_urls:
+                        if self._title_check(video, result['title']):
+                            host = urlparse.urlsplit(stream_url).hostname
+                            quality = self._get_quality(video, host, self._get_title_quality(result['title']))
+                            hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': False}
+                            hosters.append(hoster)
+                            seen_urls.add(stream_url)
+            else:
+                log_utils.log('Alluc API Error: %s: %s' % (search_url, js_result['message']), log_utils.LOGWARNING)
 
         return hosters
         

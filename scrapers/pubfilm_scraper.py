@@ -19,7 +19,6 @@ import scraper
 import urllib
 import urlparse
 import re
-import json
 from salts_lib import kodi
 from salts_lib import dom_parser
 from salts_lib import log_utils
@@ -90,15 +89,10 @@ class PubFilm_Scraper(scraper.Scraper):
                 headers = XHR
                 headers['Referer'] = url
                 html = self._http_get(GK_URL, data=data, headers=headers, cache_limit=.25)
-                if html:
-                    try:
-                        js_result = json.loads(html)
-                    except ValueError:
-                        log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
-                    else:
-                        if 'link' in js_result:
-                            for link in js_result['link']:
-                                links[link['link']] = link['label']
+                js_result = self._parse_json(html, GK_URL)
+                if 'link' in js_result:
+                    for link in js_result['link']:
+                        links[link['link']] = link['label']
                 
         return links
 
@@ -112,34 +106,28 @@ class PubFilm_Scraper(scraper.Scraper):
         results = []
         match = re.search('showResult\((.*)\)', html)
         if match:
-            js_data = match.group(1)
-            if js_data:
-                try:
-                    js_data = json.loads(js_data)
-                except ValueError:
-                    log_utils.log('Invalid JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-                else:
-                    if 'feed' in js_data and 'entry' in js_data['feed']:
-                        for entry in js_data['feed']['entry']:
-                            for category in entry['category']:
-                                if category['term'].upper() == 'MOVIES':
-                                    break
+            js_data = self._parse_json(match.group(1), search_url)
+            if 'feed' in js_data and 'entry' in js_data['feed']:
+                for entry in js_data['feed']['entry']:
+                    for category in entry['category']:
+                        if category['term'].upper() == 'MOVIES':
+                            break
+                    else:
+                        # if no movies category found, skip entry
+                        continue
+                    
+                    for link in entry['link']:
+                        if link['rel'] == 'alternate' and link['type'] == 'text/html':
+                            match = re.search('(.*?)\s*(\d{4})\s*-\s*', link['title'])
+                            if match:
+                                match_title, match_year = match.groups()
                             else:
-                                # if no movies category found, skip entry
-                                continue
+                                match_title = link['title']
+                                match_year = ''
                             
-                            for link in entry['link']:
-                                if link['rel'] == 'alternate' and link['type'] == 'text/html':
-                                    match = re.search('(.*?)\s*(\d{4})\s*-\s*', link['title'])
-                                    if match:
-                                        match_title, match_year = match.groups()
-                                    else:
-                                        match_title = link['title']
-                                        match_year = ''
-                                    
-                                    if not year or not match_year or year == match_year:
-                                        result = {'url': self._pathify_url(link['href']), 'title': match_title, 'year': match_year}
-                                        results.append(result)
+                            if not year or not match_year or year == match_year:
+                                result = {'url': self._pathify_url(link['href']), 'title': match_title, 'year': match_year}
+                                results.append(result)
         return results
 
     def _http_get(self, url, data=None, headers=None, cache_limit=8):

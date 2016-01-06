@@ -19,7 +19,6 @@
 import scraper
 import re
 import urlparse
-import json
 import urllib
 import urllib2
 import time
@@ -91,20 +90,15 @@ class SezonLukDizi_Scraper(scraper.Scraper):
     def __get_video(self, video_id, part_name, page):
         hosters = []
         part_count = 1
-
         video_url = urlparse.urljoin(self.base_url, GET_VIDEO_URL)
         data = {'video_id': video_id, 'part_name': part_name, 'page': page}
         html = self._http_get(video_url, data=data, headers=XHR, cache_limit=.25)
-        try:
-            js_result = json.loads(html)
-        except ValueError:
-            log_utils.log('Invalid JSON returned: %s: %s' % (video_url, html), log_utils.LOGWARNING)
-        else:
-            if 'part_count' in js_result:
-                part_count = js_result['part_count']
-                
-            if 'part' in js_result and 'code' in js_result['part']:
-                hosters = self.__get_links(js_result['part']['code'])
+        js_result = self._parse_json(html, video_url)
+        if 'part_count' in js_result:
+            part_count = js_result['part_count']
+            
+        if 'part' in js_result and 'code' in js_result['part']:
+            hosters = self.__get_links(js_result['part']['code'])
         return part_count, hosters
         
     def __get_links(self, url):
@@ -150,14 +144,9 @@ class SezonLukDizi_Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, SEARCH_URL)
         search_url = search_url % (urllib.quote_plus(title), str(int(time.time() * 1000)))
         html = self._http_get(search_url, headers=XHR, cache_limit=1)
-        try:
-            js_result = json.loads(html)
-        except ValueError:
-            log_utils.log('Invalid JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-        else:
-            if js_result:
-                for item in js_result:
-                    result = {'url': self._pathify_url(item['url']), 'title': item['name'], 'year': ''}
-                    results.append(result)
+        js_result = self._parse_json(html, search_url)
+        for item in js_result:
+            result = {'url': self._pathify_url(item['url']), 'title': item['name'], 'year': ''}
+            results.append(result)
 
         return results

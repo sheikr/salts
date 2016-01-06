@@ -18,7 +18,6 @@
 import scraper
 import re
 import urlparse
-import json
 import time
 import urllib
 from salts_lib import kodi
@@ -79,11 +78,8 @@ class MovieTV_Scraper(scraper.Scraper):
                         quality = QUALITIES.HD720
                     sources[stream_url] = quality
             else:
-                try:
-                    js_data = json.loads(html)
-                except ValueError:
-                    log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
-                else:
+                js_data = self._parse_json(html, url)
+                if 'url' in js_data:
                     sources[js_data['url']] = QUALITIES.HD720
                 
             for source in sources:
@@ -113,22 +109,18 @@ class MovieTV_Scraper(scraper.Scraper):
             season_url = SEASON_URL % (show_id, video.season, str(int(time.time()) * 1000), self.__get_token())
             season_url = urlparse.urljoin(self.base_url, season_url)
             html = self._http_get(season_url, cache_limit=1)
-            try:
-                js_data = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
-            else:
-                force_title = self._force_title(video)
-                if not force_title:
-                    for episode in js_data:
-                            if int(episode['episode_number']) == int(video.episode):
-                                return LINK_URL % (show_id, video.season, episode['episode_number'])
-                
-                if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title:
-                    norm_title = self._normalize_title(video.ep_title)
-                    for episode in js_data:
-                        if norm_title == self._normalize_title(episode['title']):
+            js_data = self._parse_json(html, season_url)
+            force_title = self._force_title(video)
+            if not force_title:
+                for episode in js_data:
+                        if int(episode['episode_number']) == int(video.episode):
                             return LINK_URL % (show_id, video.season, episode['episode_number'])
+            
+            if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title:
+                norm_title = self._normalize_title(video.ep_title)
+                for episode in js_data:
+                    if norm_title == self._normalize_title(episode['title']):
+                        return LINK_URL % (show_id, video.season, episode['episode_number'])
         
     def search(self, video_type, title, year):
         results = []

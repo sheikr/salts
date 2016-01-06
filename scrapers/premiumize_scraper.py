@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import scraper
-import json
 import urlparse
 import re
 from salts_lib import kodi
@@ -177,18 +176,12 @@ class Premiumize_Scraper(scraper.Scraper):
         if data is None: data = {}
         data.update({'customer_id': self.username, 'pin': self.password})
         result = super(Premiumize_Scraper, self)._http_get(url, data=data, allow_redirect=allow_redirect, cache_limit=cache_limit)
-        if result:
-            try:
-                js_result = json.loads(result)
-            except ValueError:
-                log_utils.log('Invalid JSON received from premiumize.me (%s)' % (result), log_utils.LOGWARNING)
-                js_result = {}
-            else:
-                if 'status' in js_result and js_result['status'] == 'error':
-                    log_utils.log('Error received from premiumize.me (%s)' % (js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
-                    js_result = {}
+        js_result = self._parse_json(result, url)
+        if 'status' in js_result and js_result['status'] == 'error':
+            log_utils.log('Error received from premiumize.me (%s)' % (js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
+            js_result = {}
             
-            return js_result
+        return js_result
         
     def __format_size(self, num, suffix='B'):
         for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:

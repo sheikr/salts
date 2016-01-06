@@ -19,7 +19,6 @@ import scraper
 import urllib
 import urlparse
 import re
-import json
 import xbmcvfs
 import xbmc
 import os
@@ -105,15 +104,11 @@ class TorbaSe_Scraper(scraper.Scraper):
     def __get_stream_id(self, vid_id):
         tor_url = TOR_URL % (vid_id)
         html = self._http_get(tor_url, cache_limit=.5)
-        if html:
-            try:
-                js = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned for: %s' % (tor_url), log_utils.LOGWARNING)
-            else:
-                for file_info in js['files']:
-                    if 'streams' in file_info and file_info['streams']:
-                        return file_info['_id']
+        js_data = self._parse_json(html, tor_url)
+        if 'files' in js_data:
+            for file_info in js_data['files']:
+                if 'streams' in file_info and file_info['streams']:
+                    return file_info['_id']
     
     def __get_streams_from_m3u8(self, playlist, st_url, vid_id, stream_id):
         sources = {}

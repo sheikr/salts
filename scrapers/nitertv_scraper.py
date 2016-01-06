@@ -19,7 +19,6 @@ import scraper
 import urllib
 import urlparse
 import re
-import json
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.trans_utils import i18n
@@ -73,21 +72,16 @@ class Niter_Scraper(scraper.Scraper):
                     elif stream_url.startswith('pic='):
                         data = {'url': stream_url[4:]}
                         html = self._http_get(PHP_URL, data=data, auth=False, cache_limit=1)
-                        try:
-                            js_data = json.loads(html)
-                        except ValueError:
-                            log_utils.log('Invalid JSON returned: %s (%s): %s' % (PHP_URL, stream_url, html), log_utils.LOGWARNING)
-                            continue
+                        js_data = self._parse_json(html, PHP_URL)
+                        host = self._get_direct_hostname(stream_url)
+                        direct = True
+                        for item in js_data:
+                            if 'medium' in item and item['medium'] == 'video':
+                                stream_url = item['url']
+                                quality = self._width_get_quality(item['width'])
+                                break
                         else:
-                            host = self._get_direct_hostname(stream_url)
-                            direct = True
-                            for item in js_data:
-                                if 'medium' in item and item['medium'] == 'video':
-                                    stream_url = item['url']
-                                    quality = self._width_get_quality(item['width'])
-                                    break
-                            else:
-                                continue
+                            continue
                     elif stream_url.startswith('emb='):
                         stream_url = stream_url.replace('emb=', '')
                         host = urlparse.urlparse(stream_url).hostname

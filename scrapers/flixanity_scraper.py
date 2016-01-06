@@ -20,7 +20,6 @@ import urlparse
 import re
 from salts_lib import kodi
 import time
-import json
 import base64
 import urllib
 from salts_lib import log_utils
@@ -114,16 +113,10 @@ class Flixanity_Scraper(scraper.Scraper):
         else:
             media_type = 'MOVIE'
 
-        if html:
-            try:
-                js_data = json.loads(html)
-            except ValueError:
-                log_utils.log('No JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-            else:
-                for item in js_data:
-                    if item['meta'].upper().startswith(media_type):
-                        result = {'title': item['title'], 'url': self._pathify_url(item['permalink']), 'year': ''}
-                        results.append(result)
+        for item in self._parse_json(html, search_url):
+            if item['meta'].upper().startswith(media_type):
+                result = {'title': item['title'], 'url': self._pathify_url(item['permalink']), 'year': ''}
+                results.append(result)
 
         return results
 

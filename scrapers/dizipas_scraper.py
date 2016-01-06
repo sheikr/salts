@@ -19,7 +19,6 @@ import scraper
 import re
 import urlparse
 import urllib
-import json
 from salts_lib import kodi
 from salts_lib import dom_parser
 from salts_lib import log_utils
@@ -62,22 +61,17 @@ class Dizipas_Scraper(scraper.Scraper):
                 post_url, vid_id = match.groups()
                 data = {'id': vid_id, 'type': 'new'}
                 html = self._http_get(post_url, data=data, cache_limit=.5)
-                if html:
-                    try:
-                        js_result = json.loads(html)
-                    except ValueError:
-                        log_utils.log('Invalid JSON returned: %s: %s' % (post_url, html), log_utils.LOGWARNING)
+                js_result = self._parse_json(html, post_url)
+                for key in js_result:
+                    stream_url = js_result[key]
+                    host = self._get_direct_hostname(stream_url)
+                    if host == 'gvideo':
+                        quality = self._gv_get_quality(stream_url)
                     else:
-                        for key in js_result:
-                            stream_url = js_result[key]
-                            host = self._get_direct_hostname(stream_url)
-                            if host == 'gvideo':
-                                quality = self._gv_get_quality(stream_url)
-                            else:
-                                quality = self._height_get_quality(key)
-                                
-                            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                            hosters.append(hoster)
+                        quality = self._height_get_quality(key)
+                        
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                    hosters.append(hoster)
 
         return hosters
 

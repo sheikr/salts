@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import scraper
-import json
 from salts_lib import kodi
 import xbmc
 import urlparse
@@ -61,7 +60,7 @@ class Local_Scraper(scraper.Scraper):
 
             run = cmd % (params['id'][0])
             meta = xbmc.executeJSONRPC(run)
-            meta = json.loads(meta)
+            meta = self._parse_json(meta)
             log_utils.log('Source Meta: %s' % (meta), log_utils.LOGDEBUG)
             if 'result' in meta and result_key in meta['result']:
                 details = meta['result'][result_key]
@@ -86,7 +85,7 @@ class Local_Scraper(scraper.Scraper):
         if not force_title:
             run = cmd % (params['id'][0], video.season, 'episode', video.episode)
             meta = xbmc.executeJSONRPC(run)
-            meta = json.loads(meta)
+            meta = self._parse_json(meta)
             log_utils.log('Episode Meta: %s' % (meta), log_utils.LOGDEBUG)
             if 'result' in meta and 'episodes' in meta['result']:
                 episodes = meta['result']['episodes']
@@ -96,7 +95,7 @@ class Local_Scraper(scraper.Scraper):
         if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title and not episodes:
             run = cmd % (params['id'][0], video.season, 'title', video.ep_title)
             meta = xbmc.executeJSONRPC(run)
-            meta = json.loads(meta)
+            meta = self._parse_json(meta)
             log_utils.log('Episode Title Meta: %s' % (meta), log_utils.LOGDEBUG)
             if 'result' in meta and 'episodes' in meta['result']:
                 episodes = meta['result']['episodes']
@@ -144,7 +143,7 @@ class Local_Scraper(scraper.Scraper):
         results = []
         log_utils.log('Search Command: %s' % (cmd), log_utils.LOGDEBUG)
         meta = xbmc.executeJSONRPC(cmd)
-        meta = json.loads(meta)
+        meta = self._parse_json(meta)
         log_utils.log('Search Meta: %s' % (meta), log_utils.LOGDEBUG)
         if 'result' in meta and result_key in meta['result']:
             for item in meta['result'][result_key]:

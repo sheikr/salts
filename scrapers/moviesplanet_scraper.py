@@ -20,7 +20,6 @@ import urlparse
 import re
 from salts_lib import kodi
 import time
-import json
 import base64
 from salts_lib import log_utils
 from salts_lib.trans_utils import i18n
@@ -111,16 +110,11 @@ class MoviesPlanet_Scraper(scraper.Scraper):
         else:
             media_type = 'MOVIE'
 
-        if html:
-            try:
-                js_data = json.loads(html)
-            except ValueError:
-                log_utils.log('No JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-            else:
-                for item in js_data:
-                    if item['meta'].upper().startswith(media_type):
-                        result = {'title': item['title'], 'url': self._pathify_url(item['permalink']), 'year': ''}
-                        results.append(result)
+        js_data = self._parse_json(html, search_url)
+        for item in js_data:
+            if item['meta'].upper().startswith(media_type):
+                result = {'title': item['title'], 'url': self._pathify_url(item['permalink']), 'year': ''}
+                results.append(result)
 
         return results
 

@@ -19,7 +19,6 @@ import scraper
 import urllib
 import urlparse
 import re
-import json
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -65,43 +64,38 @@ class DirectDownload_Scraper(scraper.Scraper):
         if source_url:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            if html:
-                try:
-                    js_result = json.loads(html)
-                except ValueError:
-                    log_utils.log('Invalid JSON returned: %s: %s' % (url, html), log_utils.LOGWARNING)
-                else:
-                    if 'error' in js_result:
-                        log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], url), log_utils.LOGWARNING)
-                        return hosters
+            js_result = self._parse_json(html, url)
+            if 'error' in js_result:
+                log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], url), log_utils.LOGWARNING)
+                return hosters
 
-                    query = urlparse.parse_qs(urlparse.urlparse(url).query)
-                    match_quality = self.q_order
-                    if 'quality' in query:
-                        temp_quality = re.sub('\s', '', query['quality'][0])
-                        match_quality = temp_quality.split(',')
-    
-                    sxe_str = '.S%02dE%02d.' % (int(video.season), int(video.episode))
-                    try:
-                        airdate_str = video.ep_airdate.strftime('.%Y.%m.%d.')
-                    except:
-                        airdate_str = ''
-                        
-                    for result in js_result:
-                        if sxe_str not in result['release'] and airdate_str not in result['release']:
+            query = urlparse.parse_qs(urlparse.urlparse(url).query)
+            match_quality = self.q_order
+            if 'quality' in query:
+                temp_quality = re.sub('\s', '', query['quality'][0])
+                match_quality = temp_quality.split(',')
+
+            sxe_str = '.S%02dE%02d.' % (int(video.season), int(video.episode))
+            try:
+                airdate_str = video.ep_airdate.strftime('.%Y.%m.%d.')
+            except:
+                airdate_str = ''
+                
+            for result in js_result:
+                if sxe_str not in result['release'] and airdate_str not in result['release']:
+                    continue
+                
+                if result['quality'] in match_quality:
+                    for key in result['links']:
+                        url = result['links'][key][0]
+                        if re.search('\.rar(\.|$)', url):
                             continue
                         
-                        if result['quality'] in match_quality:
-                            for key in result['links']:
-                                url = result['links'][key][0]
-                                if re.search('\.rar(\.|$)', url):
-                                    continue
-                                
-                                hostname = urlparse.urlparse(url).hostname
-                                hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname, 'quality': QUALITY_MAP[result['quality']], 'direct': False}
-                                hoster['dd_qual'] = result['quality']
-                                if 'x265' in result['release'] and result['quality'] != '1080P-X265': hoster['dd_qual'] += '-x265'
-                                hosters.append(hoster)
+                        hostname = urlparse.urlparse(url).hostname
+                        hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname, 'quality': QUALITY_MAP[result['quality']], 'direct': False}
+                        hoster['dd_qual'] = result['quality']
+                        if 'x265' in result['release'] and result['quality'] != '1080P-X265': hoster['dd_qual'] += '-x265'
+                        hosters.append(hoster)
 
         return hosters
 
@@ -139,24 +133,19 @@ class DirectDownload_Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year):
+        results = []
         search_url = urlparse.urljoin(self.base_url, '/search?query=')
         search_url += title
         html = self._http_get(search_url, cache_limit=.25)
-        results = []
-        if html:
-            try:
-                js_result = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned: %s: %s' % (search_url, html), log_utils.LOGWARNING)
-            else:
-                if 'error' in js_result:
-                    log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], search_url), log_utils.LOGWARNING)
-                    return results
-                
-                for match in js_result:
-                    url = search_url + '&quality=%s' % match['quality']
-                    result = {'url': self._pathify_url(url), 'title': match['release'], 'quality': match['quality'], 'year': ''}
-                    results.append(result)
+        js_result = self._parse_json(html, search_url)
+        if 'error' in js_result:
+            log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], search_url), log_utils.LOGWARNING)
+            return results
+        
+        for match in js_result:
+            url = search_url + '&quality=%s' % match['quality']
+            result = {'url': self._pathify_url(url), 'title': match['release'], 'quality': match['quality'], 'year': ''}
+            results.append(result)
         return results
 
     def _http_get(self, url, data=None, cache_limit=8):

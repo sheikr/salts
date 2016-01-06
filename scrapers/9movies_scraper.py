@@ -20,7 +20,6 @@ import urllib
 import urlparse
 import re
 import time
-import json
 from salts_lib import log_utils
 from salts_lib import kodi
 from salts_lib import dom_parser
@@ -68,30 +67,20 @@ class NineMovies_Scraper(scraper.Scraper):
                     url = urlparse.urljoin(self.base_url, HASH_URL)
                     url = url % (hash_id, now.tm_hour + now.tm_min)
                     html = self._http_get(url, headers=XHR, cache_limit=.5)
-                    if html:
-                        try:
-                            js_result = json.loads(html)
-                        except ValueError:
-                            log_utils.log('Invalid JSON returned: %s: %s' % (html), log_utils.LOGWARNING)
-                        else:
-                            if 'videoUrlHash' in js_result and 'grabber' in js_result:
-                                query = {'flash': 1, 'json': 1, 's': now.tm_min, 'link': js_result['videoUrlHash'], '_': int(time.time())}
-                                query['link'] = query['link'].replace('\/', '/')
-                                grab_url = js_result['grabber'].replace('\/', '/')
-                                grab_url += '?' + urllib.urlencode(query)
-                                html = self._http_get(grab_url, headers=XHR, cache_limit=.5)
-                                if html:
-                                    try:
-                                        js_result = json.loads(html)
-                                    except ValueError:
-                                        log_utils.log('Invalid JSON returned: %s: %s' % (html), log_utils.LOGWARNING)
-                                    else:
-                                        for result in js_result:
-                                            if 'label' in result:
-                                                quality = self._height_get_quality(result['label'])
-                                            else:
-                                                quality = self._gv_get_quality(result['file'])
-                                            sources[result['file']] = quality
+                    js_result = self._parse_json(html, url)
+                    if 'videoUrlHash' in js_result and 'grabber' in js_result:
+                        query = {'flash': 1, 'json': 1, 's': now.tm_min, 'link': js_result['videoUrlHash'], '_': int(time.time())}
+                        query['link'] = query['link'].replace('\/', '/')
+                        grab_url = js_result['grabber'].replace('\/', '/')
+                        grab_url += '?' + urllib.urlencode(query)
+                        html = self._http_get(grab_url, headers=XHR, cache_limit=.5)
+                        js_result = self._parse_json(html, grab_url)
+                        for result in js_result:
+                            if 'label' in result:
+                                quality = self._height_get_quality(result['label'])
+                            else:
+                                quality = self._gv_get_quality(result['file'])
+                            sources[result['file']] = quality
                 
             for source in sources:
                 hoster = {'multi-part': False, 'host': self._get_direct_hostname(source), 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': source, 'direct': True}
