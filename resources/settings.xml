@@ -440,12 +440,6 @@
          <setting id="SezonLukDizi-base_url" type="text" label="    Base Url" default="http://sezonlukdizi.com" visible="eq(-1,true)"/>
          <setting id="SezonLukDizi-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="SezonLukDizi_last_results" type="number" default="0" visible="false"/>
-         <setting id="Shush.se-enable" type="bool" label="Shush.se Enabled" default="true" visible="true"/>
-         <setting id="Shush.se-base_url" type="text" label="    Base Url" default="http://shush.se" visible="eq(-1,true)"/>
-         <setting id="Shush.se-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
-         <setting id="Shush.se_last_results" type="number" default="0" visible="false"/>
-         <setting id="Shush.se-scraper_url" type="text" label="    Scraper Download Url" default="" visible="eq(-4,true)"/>
-         <setting id="Shush.se-scraper_password" type="text" label="    Scraper Decryption Key" option="hidden" default="" visible="eq(-5,true)"/>
          <setting id="SolarMovie-enable" type="bool" label="SolarMovie Enabled" default="true" visible="true"/>
          <setting id="SolarMovie-base_url" type="text" label="    Base Url" default="https://www.solarmovie.is" visible="eq(-1,true)"/>
          <setting id="SolarMovie-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -529,13 +523,13 @@
          <setting id="xmovies8.v2-base_url" type="text" label="    Base Url" default="http://xmovies8.tv" visible="eq(-1,true)"/>
          <setting id="xmovies8.v2-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="xmovies8.v2_last_results" type="number" default="0" visible="false"/>
-    </category>
-
-    <category label="Scrapers 5">
          <setting id="yify-streaming-enable" type="bool" label="yify-streaming Enabled" default="true" visible="true"/>
          <setting id="yify-streaming-base_url" type="text" label="    Base Url" default="http://yify-streaming.com" visible="eq(-1,true)"/>
          <setting id="yify-streaming-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="yify-streaming_last_results" type="number" default="0" visible="false"/>
+    </category>
+
+    <category label="Scrapers 5">
          <setting id="yshows-enable" type="bool" label="yshows Enabled" default="true" visible="true"/>
          <setting id="yshows-base_url" type="text" label="    Base Url" default="http://yshow.me" visible="eq(-1,true)"/>
          <setting id="yshows-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
