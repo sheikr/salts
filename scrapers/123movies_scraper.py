@@ -16,10 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import scraper
-import urllib
 import urlparse
 import re
-import json
 import xml.etree.ElementTree as ET
 from salts_lib import log_utils
 from salts_lib import kodi
@@ -31,7 +29,7 @@ from salts_lib.constants import QUALITIES
 BASE_URL = 'http://123movies.to'
 PLAYLIST_URL1 = 'movie/loadEmbed/%s'
 PLAYLIST_URL2 = 'movie/loadepisoderss/%s/%s/3/%s'
-SL_URL  = '/movie/loadepisodes/%s'
+SL_URL = '/movie/loadepisodes/%s'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
 
 class One23Movies_Scraper(scraper.Scraper):
@@ -98,34 +96,32 @@ class One23Movies_Scraper(scraper.Scraper):
     def __get_link_from_json(self, url, q_str):
         sources = {}
         html = self._http_get(url, cache_limit=.5)
-        if html:
-            try:
-                js_result = json.loads(html)
-            except ValueError:
-                log_utils.log('Invalid JSON returned: %s: %s' % (html), log_utils.LOGWARNING)
-            else:
-                if 'embed_url' in js_result:
-                    quality = Q_MAP.get(q_str.upper(), QUALITIES.HIGH)
-                    sources[js_result['embed_url']] = {'quality': quality, 'direct': False}
+        js_result = self._parse_json(html, url)
+        if 'embed_url' in js_result:
+            quality = Q_MAP.get(q_str.upper(), QUALITIES.HIGH)
+            sources[js_result['embed_url']] = {'quality': quality, 'direct': False}
         return sources
     
     def __get_links_from_xml(self, xml, video):
         sources = {}
-        root = ET.fromstring(xml)
-        ns = {'jwplayer': 'http://rss.jwpcdn.com/'}
-        for item in root.findall('.//item'):
-            title = item.find('title').text
-            for source in item.findall('jwplayer:source', ns):
-                stream_url = source.get('file')
-                label = source.get('label')
-                if self._get_direct_hostname(stream_url) == 'gvideo':
-                    quality = self._gv_get_quality(stream_url)
-                elif label:
-                    quality = self._height_get_quality(label)
-                else:
-                    quality = self._blog_get_quality(video, title, '')
-                sources[stream_url] = {'quality': quality, 'direct': True}
-                log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
+        try:
+            root = ET.fromstring(xml)
+            for item in root.findall('.//item'):
+                title = item.find('title').text
+                for source in item.findall('{http://rss.jwpcdn.com/}source'):
+                    stream_url = source.get('file')
+                    label = source.get('label')
+                    if self._get_direct_hostname(stream_url) == 'gvideo':
+                        quality = self._gv_get_quality(stream_url)
+                    elif label:
+                        quality = self._height_get_quality(label)
+                    else:
+                        quality = self._blog_get_quality(video, title, '')
+                    sources[stream_url] = {'quality': quality, 'direct': True}
+                    log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
+        except Exception as e:
+            log_utils.log('Exception during 123Movies XML Parse: %s' % (e), log_utils.LOGWARNING)
+
         return sources
     
     def get_url(self, video):

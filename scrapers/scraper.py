@@ -818,3 +818,16 @@ class Scraper(object):
         if self.db_connection is None or self.worker_id != worker_id:
             self.db_connection = DB_Connection()
             self.worker_id = worker_id
+    
+    def _parse_json(self, html, url=''):
+        if html:
+            try:
+                js_result = json.loads(html)
+            except ValueError:
+                log_utils.log('Invalid JSON returned: %s: %s' % (html, url), log_utils.LOGWARNING)
+                return {}
+            else:
+                return js_result
+        else:
+            log_utils.log('Empty JSON object: %s: %s' % (html), log_utils.LOGDEBUG)
+    
