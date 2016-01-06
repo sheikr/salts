@@ -514,7 +514,7 @@ def add_list_item(section, user_list, total_items=0):
     
     queries = {'mode': MODES.SHOW_LIST, 'section': section, 'slug': ids['slug']}
     kodi.create_item(queries, user_list['name'], thumb=utils.art('list.png'), fanart=utils.art('fanart.jpg'), is_folder=True,
-                     total_items=total_items, menu_items=menu_items, replace_menu=True)
+                     total_items=total_items, menu_items=menu_items, replace_menu=False)
 
 @url_dispatcher.register(MODES.LIKED_LISTS, ['section'])
 def browse_liked_lists(section):
