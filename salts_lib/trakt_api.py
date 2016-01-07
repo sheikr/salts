@@ -79,7 +79,7 @@ class Trakt_API():
         else:
             cache_limit = 1  # cache other user's list for one hour
 
-        url = '/users/%s/lists/%s/items' % (username, slug)
+        url = '/users/%s/lists/%s/items' % (username.strip(), slug)
         params = {'extended': 'full,images'}
         list_data = self.__call_trakt(url, params=params, auth=auth, cache_limit=cache_limit, cached=cached)
         return [item[item['type']] for item in list_data if item['type'] == TRAKT_SECTIONS[section][:-1]]
@@ -92,12 +92,12 @@ class Trakt_API():
 
     def get_list_header(self, slug, username=None, auth=True):
         if not username: username = 'me'
-        url = '/users/%s/lists/%s' % (username, slug)
+        url = '/users/%s/lists/%s' % (username.strip(), slug)
         return self.__call_trakt(url, auth=auth)
 
     def get_lists(self, username=None):
         if not username: username = 'me'
-        url = '/users/%s/lists' % (username)
+        url = '/users/%s/lists' % (username.strip())
         return self.__call_trakt(url, cache_limit=0)
 
     def get_liked_lists(self, cached=True):
@@ -281,7 +281,7 @@ class Trakt_API():
     
     def get_user_profile(self, username=None, cached=True):
         if username is None: username = 'me'
-        url = '/users/%s' % (username)
+        url = '/users/%s' % (username.strip())
         return self.__call_trakt(url, cached=cached)
         
     def get_bookmarks(self, section=None, full=False):
@@ -385,10 +385,10 @@ class Trakt_API():
                     log_utils.log('Trakt Call: %s, header: %s, data: %s cache_limit: %s cached: %s' % (url, headers, data, cache_limit, cached), log_utils.LOGDEBUG)
                     request = urllib2.Request(url, data=json_data, headers=headers)
                     if method is not None: request.get_method = lambda: method.upper()
-                    f = urllib2.urlopen(request, timeout=self.timeout)
+                    response = urllib2.urlopen(request, timeout=self.timeout)
                     result = ''
                     while True:
-                        data = f.read()
+                        data = response.read()
                         if not data: break
                         result += data
 
@@ -449,5 +449,6 @@ class Trakt_API():
             if result:
                 log_utils.log('Invalid JSON Trakt API Response: %s - |%s|' % (url, result), log_utils.LOGERROR)
 
+        
         # log_utils.log('Trakt Response: %s' % (response), xbmc.LOGDEBUG)
         return response
