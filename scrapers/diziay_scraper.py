@@ -71,13 +71,19 @@ class Diziay_Scraper(scraper.Scraper):
                         subs = False
                     else:
                         subs = True
-                        
+                    
+                    sources = []
                     for name, stream_url in self.__get_stream_cookies().items():
                         if re.match('source_\d+p?', name):
-                            stream_url = urllib.unquote(stream_url)
-                            if self._get_direct_hostname(stream_url) == 'gvideo':
-                                quality = self._gv_get_quality(stream_url)
-                                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True, 'subs': subs}
+                            sources.append(urllib.unquote(stream_url))
+
+                    for stream_url in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src'):
+                        sources.append(stream_url)
+                        
+                    for source in sources:
+                            if self._get_direct_hostname(source) == 'gvideo':
+                                quality = self._gv_get_quality(source)
+                                hoster = {'multi-part': False, 'host': self._get_direct_hostname(source), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': source, 'direct': True, 'subs': subs}
                                 hosters.append(hoster)
     
         return hosters
