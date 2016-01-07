@@ -920,7 +920,7 @@ def url2name(url):
 
 def sort_progress(episodes, sort_order):
     if sort_order == TRAKT_SORT.TITLE:
-        return sorted(episodes, key=lambda x: x['show']['title'].lstrip('The '))
+        return sorted(episodes, key=lambda x: title_key(x['show']['title']))
     elif sort_order == TRAKT_SORT.ACTIVITY:
         return sorted(episodes, key=lambda x: iso_2_utc(x['last_watched_at']), reverse=True)
     elif sort_order == TRAKT_SORT.LEAST_COMPLETED:
@@ -934,6 +934,18 @@ def sort_progress(episodes, sort_order):
     else:  # default sort set to activity
         return sorted(episodes, key=lambda x: x['last_watched_at'], reverse=True)
 
+def title_key(title):
+    temp = title.upper()
+    if temp.startswith('THE '):
+        offset = 4
+    elif temp.startswith('A '):
+        offset = 2
+    elif temp.startswith('AN '):
+        offset = 3
+    else:
+        offset = 0
+    return title[offset:]
+    
 def make_progress_msg(video_type, title, year, season, episode):
     progress_msg = '%s: %s' % (video_type, title)
     if year: progress_msg += ' (%s)' % (year)
