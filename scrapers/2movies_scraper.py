@@ -33,7 +33,7 @@ from salts_lib.constants import RAND_UAS
 
 BASE_URL = 'http://twomovies.us'
 AJAX_URL = '/Xajax/aj0001'
-USER_AGENT = 'SALTS for Kodi/%s' % (kodi.get_version()) 
+USER_AGENT = 'SALTS for Kodi/%s' % (kodi.get_version())
 
 class TwoMovies_Scraper(scraper.Scraper):
     base_url = BASE_URL
