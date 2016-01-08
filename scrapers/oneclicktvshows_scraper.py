@@ -18,8 +18,9 @@
 import scraper
 import re
 import urlparse
-import urllib
 from salts_lib import kodi
+from salts_lib import dom_parser
+from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
@@ -82,13 +83,22 @@ class OCTV_Scraper(scraper.Scraper):
         return show_url
 
     def search(self, video_type, title, year):
-        search_url = urlparse.urljoin(self.base_url, '/?s=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=8)
         results = []
-        for match in re.finditer('<div\s+class="home_post_box"\s+onClick="location\.href=\'([^\']+).*?<h3>([^<]+)', html, re.DOTALL):
-            url, match_title = match.groups()
-            result = {'url': self._pathify_url(url), 'title': match_title, 'year': ''}
-            results.append(result)
+        search_url = urlparse.urljoin(self.base_url, '/archives/')
+        html = self._http_get(search_url, cache_limit=48)
+        norm_title = self._normalize_title(title)
+        for item in dom_parser.parse_dom(html, 'li'):
+            log_utils.log(item)
+            match = re.search('href=["\']([^"\']+)[^>]+>([^<]+)', item)
+            if match:
+                log_utils.log(match.groups())
+                url, match_title = match.groups()
+                match = re.search('(.*?)\s*\(Season\s+\d+', match_title)
+                if match:
+                    match_title = match.group(1)
+                    
+                if norm_title in self._normalize_title(match_title):
+                    result = {'url': self._pathify_url(url), 'title': match_title, 'year': ''}
+                    results.append(result)
 
         return results
