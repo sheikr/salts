@@ -815,5 +815,5 @@ class Scraper(object):
                 log_utils.log('Invalid JSON returned: %s: %s' % (html, url), log_utils.LOGWARNING)
                 return {}
         else:
-            log_utils.log('Empty JSON object: %s: %s' % (html), log_utils.LOGDEBUG)
+            log_utils.log('Empty JSON object: %s: %s' % (html, url), log_utils.LOGDEBUG)
             return {}
