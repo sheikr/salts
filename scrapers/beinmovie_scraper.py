@@ -24,6 +24,7 @@ from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
+from salts_lib.constants import XHR
 
 BASE_URL = 'https://beinmovie.com'
 DETAIL_URL = '/movie-detail.php?%s'
@@ -52,7 +53,6 @@ class BeinMovie_Scraper(scraper.Scraper):
             match = re.search('<source\s+src="([^"]+)', html)
             if match and match.group(1) != 'nop':
                 return match.group(1)
-                    
         else:
             return link
 
@@ -67,7 +67,7 @@ class BeinMovie_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, headers=XHR, cache_limit=.5)
             
             fragment = dom_parser.parse_dom(html, 'div', {'class': '[^"]*movie_langs_list[^"]*'})
             if fragment:
@@ -90,6 +90,7 @@ class BeinMovie_Scraper(scraper.Scraper):
                                 if match:
                                     other_url = urlparse.urljoin(self.base_url, PLAYER_URL % (match.group(1)))
                                     if other_url == player_url: continue
+                                    other_url += '|User-Agent=%s&X-Requested-With=XMLHttpRequest' % (self._get_ua())
                                     hoster = {'multi-part': False, 'url': other_url, 'class': self, 'quality': QUALITY_MAP.get(quality, QUALITIES.HD720), 'host': self._get_direct_hostname(other_url), 'rating': None, 'views': None, 'direct': True}
                                     hosters.append(hoster)
 

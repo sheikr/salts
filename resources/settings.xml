@@ -507,7 +507,7 @@
          <setting id="WatchSeries-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
          <setting id="WatchSeries_last_results" type="number" default="0" visible="false"/>
          <setting id="wmo.ch-enable" type="bool" label="wmo.ch Enabled" default="true" visible="true"/>
-         <setting id="wmo.ch-base_url" type="text" label="    Base Url" default="http://watchmovies-online.ch" visible="eq(-1,true)"/>
+         <setting id="wmo.ch-base_url" type="text" label="    Base Url" default="http://watchmovies-online.nl" visible="eq(-1,true)"/>
          <setting id="wmo.ch-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="wmo.ch_last_results" type="number" default="0" visible="false"/>
          <setting id="wso.ch-enable" type="bool" label="wso.ch Enabled" default="true" visible="true"/>
