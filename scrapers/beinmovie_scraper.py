@@ -102,7 +102,7 @@ class BeinMovie_Scraper(scraper.Scraper):
     def search(self, video_type, title, year):
         search_url = urlparse.urljoin(self.base_url, '/movies-list.php?b=search&v=%s')
         search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=0)
+        html = self._http_get(search_url, headers=XHR, cache_limit=0)
         results = []
         for movie in dom_parser.parse_dom(html, 'li', {'class': '[^"]*movie[^"]*'}):
             href = dom_parser.parse_dom(movie, 'a', ret='href')
