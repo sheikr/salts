@@ -25,7 +25,8 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib import dom_parser
 
-BASE_URL = 'http://yify-streaming.com'
+BASE_URL = 'http://yss.rocks'
+GK_URL = '/plugins/gkpluginsphp.php'
 CATEGORIES = {VIDEO_TYPES.MOVIE: 'category-movies', VIDEO_TYPES.EPISODE: 'category-tv-series'}
 
 class YifyStreaming_Scraper(scraper.Scraper):
@@ -37,7 +38,7 @@ class YifyStreaming_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
@@ -55,51 +56,29 @@ class YifyStreaming_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            q_str = ''
-            match = re.search('<h2>([^<]+)', html)
+            match = re.search('<iframe[^>]+src="([^"]+watch=([^"]+))', html)
             if match:
-                q_str = match.group(1)
-                
-            match = re.search('href=[\'"]([^\'"]+)[^>]*>Download Now<', html)
-            if match:
-                stream_url = match.group(1)
-                host = urlparse.urlparse(stream_url).hostname
-                hoster = {'multi-part': False, 'url': stream_url, 'class': self, 'quality': self._blog_get_quality(video, q_str, host), 'host': host, 'rating': None, 'views': None, 'direct': False}
-                hosters.append(hoster)
+                iframe_url, link_id = match.groups()
+                data = {'link': link_id}
+                headers = {'Referer': iframe_url}
+                gk_url = urlparse.urljoin(self.base_url, GK_URL)
+                html = self._http_get(gk_url, data=data, headers=headers, cache_limit=.5)
+                js_data = self._parse_json(html, gk_url)
+                if 'link' in js_data:
+                    for link in js_data['link']:
+                        stream_url = link['link']
+                        host = self._get_direct_hostname(stream_url)
+                        if host == 'gvideo':
+                            quality = self._gv_get_quality(stream_url)
+                        else:
+                            quality = self._height_get_quality(link['label'])
+                        hoster = {'multi-part': False, 'url': stream_url, 'class': self, 'quality': quality, 'host': host, 'rating': None, 'views': None, 'direct': True}
+                        hosters.append(hoster)
         return hosters
 
     def get_url(self, video):
-        self.create_db_connection()
-        url = None
+        return super(YifyStreaming_Scraper, self)._default_get_url(video)
 
-        if video.video_type == VIDEO_TYPES.MOVIE:
-            result = self.db_connection.get_related_url(video.video_type, video.title, video.year, self.get_name())
-            if result:
-                url = result[0][0]
-                log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url))
-            else:
-                results = self.search(video.video_type, video.title, video.year)
-                if results:
-                    url = results[0]['url']
-        else:
-            result = self.db_connection.get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
-            if result:
-                url = result[0][0]
-                log_utils.log('Got local related url: |%s|%s|%s|' % (video, self.get_name(), url))
-            else:
-                url = self._get_episode_url('', video)
-                if url:
-                    self.db_connection.set_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), url, video.season, video.episode)
-
-        return url
-
-    def _get_episode_url(self, show_url, video):
-        search_title = '%s S%02dE%02d' % (video.title, int(video.season), int(video.episode))
-        results = self.search(video.video_type, search_title, '')
-        for result in results:
-            if re.search('S%02dE%02d' % (int(video.season), int(video.episode)), result['title'], re.I):
-                return result['url']
-    
     def search(self, video_type, title, year):
         search_url = urlparse.urljoin(self.base_url, '/?s=')
         search_url += urllib.quote_plus(title)
@@ -111,10 +90,9 @@ class YifyStreaming_Scraper(scraper.Scraper):
             match = re.search('href="([^"]+)[^>]+>\s*([^<]+)', element, re.DOTALL)
             if match:
                 url, match_title_year = match.groups()
-                match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)\s*(.*)', match_title_year)
+                match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
                 if match:
-                    match_title, match_year, extra_title = match.groups()
-                    match_title += ' [%s]' % (extra_title)
+                    match_title, match_year = match.groups()
                 else:
                     match_title = match_title_year
                     match_year = ''
