@@ -810,12 +810,10 @@ class Scraper(object):
     def _parse_json(self, html, url=''):
         if html:
             try:
-                js_result = json.loads(html)
+                return json.loads(html)
             except ValueError:
                 log_utils.log('Invalid JSON returned: %s: %s' % (html, url), log_utils.LOGWARNING)
                 return {}
-            else:
-                return js_result
         else:
             log_utils.log('Empty JSON object: %s: %s' % (html), log_utils.LOGDEBUG)
             return {}
