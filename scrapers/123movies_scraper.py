@@ -66,7 +66,7 @@ class One23Movies_Scraper(scraper.Scraper):
                 url = urlparse.urljoin(self.base_url, server_url)
                 html = self._http_get(url, cache_limit=.5)
                 sources = {}
-                for match in re.finditer('changeServer\(\s*(\d+)\s*,\s*(\d+)\s*\).*?class="btn-eps[^>]*>([^<]+)', html, re.DOTALL):
+                for match in re.finditer('loadEpisode\(\s*(\d+)\s*,\s*(\d+)\s*\).*?class="btn-eps[^>]*>([^<]+)', html, re.DOTALL):
                     link_type, link_id, q_str = match.groups()
                     if link_type in ['12', '13', '14']:
                         url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
