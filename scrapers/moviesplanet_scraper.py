@@ -82,7 +82,7 @@ class MoviesPlanet_Scraper(scraper.Scraper):
                                 if 'download.php' in stream_url:
                                     redir_html = self._http_get(stream_url, allow_redirect=False, cache_limit=0)
                                     if stream_url.startswith('http'): stream_url = redir_html
-                                    stream_urls.append(stream_url)
+                                stream_urls.append(stream_url)
                 
         for stream_url in list(set(stream_urls)):
             host = self._get_direct_hostname(stream_url)
