@@ -20,11 +20,12 @@ import re
 import urlparse
 import urllib
 from salts_lib import kodi
+from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://watchmovies-online.ch'
+BASE_URL = 'http://watchmovies-online.nl'
 
 class WMO_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -72,15 +73,23 @@ class WMO_Scraper(scraper.Scraper):
         return super(WMO_Scraper, self)._default_get_url(video)
 
     def search(self, video_type, title, year):
+        results = []
         url = urlparse.urljoin(self.base_url, '/?s=%s&search=' % urllib.quote_plus(title))
         html = self._http_get(url, cache_limit=8)
 
-        results = []
-        pattern = 'class="PostHeader".*?href="([^"]+)[^>]+>\s*(.*?) \((\d+)\)'
-        for match in re.finditer(pattern, html, re.DOTALL):
-            url, match_title, match_year = match.groups()
-            if not year or not match_year or year == match_year:
-                result = {'url': self._pathify_url(url), 'title': match_title, 'year': match_year}
-                results.append(result)
+        for item in dom_parser.parse_dom(html, 'div', {'class': '[^"]*movie_poster[^"]*'}):
+            match = re.search('href="([^"]+)[^>]+title="([^"]+)', item)
+            if match:
+                url, match_title_year = match.groups()
+                match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
+                if match:
+                    match_title, match_year = match.groups()
+                else:
+                    match_title = match_title_year
+                    match_year = ''
+                
+                if not year or not match_year or year == match_year:
+                    result = {'url': self._pathify_url(url), 'title': match_title, 'year': match_year}
+                    results.append(result)
 
         return results
