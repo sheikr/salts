@@ -1,4 +1,4 @@
-[B]Version 1.0.95[/B]
+[B]Version 1.0.96[/B]
 - Add support for default trakt list item sorting
 - Allow add to favorites for Lists
 - filter xxx titles from filmikz results
@@ -11,6 +11,7 @@
 - Fix wmo scraper
 - Fix beinmovie scraper
 - Fix OneClickTVShows scraper
+- Fix Ororo.tv scraper
 - Update ocw scraper
 - Improve sezonlukdizi scraper
 - Remove shush scraper
