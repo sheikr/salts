@@ -95,7 +95,6 @@ class Zumvo_Scraper(scraper.Scraper):
                             
                             for source in sources:
                                 host = self._get_direct_hostname(source)
-                                log_utils.log('%s - %s' % (page_quality, sources[source]))
                                 if Q_ORDER[page_quality] < Q_ORDER[sources[source]]:
                                     quality = page_quality
                                 else:
