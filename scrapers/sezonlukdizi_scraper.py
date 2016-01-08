@@ -144,8 +144,10 @@ class SezonLukDizi_Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, SEARCH_URL)
         search_url = search_url % (urllib.quote_plus(title), str(int(time.time() * 1000)))
         html = self._http_get(search_url, headers=XHR, cache_limit=1)
-        for item in self._parse_json(html, search_url):
-            result = {'url': self._pathify_url(item['url']), 'title': item['name'], 'year': ''}
-            results.append(result)
+        js_result = self._parse_json(html, search_url)
+        if js_result:
+            for item in js_result:
+                result = {'url': self._pathify_url(item['url']), 'title': item['name'], 'year': ''}
+                results.append(result)
 
         return results
