@@ -1,3 +1,20 @@
+[B]Version 1.0.95[/B]
+- Add support for default trakt list item sorting
+- Allow add to favorites for Lists
+- filter xxx titles from filmikz results
+- Simplify json parsing
+- Fix icefilms scraper
+- Fix 123movies scraper
+- Fix diziay scraper
+- Fix MoviePlanet scraper
+- Fix yify-streaming scraper
+- Fix wmo scraper
+- Fix beinmovie scraper
+- Fix OneClickTVShows scraper
+- Update ocw scraper
+- Improve sezonlukdizi scraper
+- Remove shush scraper
+
 [B]Version 1.0.94[/B]
 - Fix dizilab scraper
 - Update twomovies scraper
