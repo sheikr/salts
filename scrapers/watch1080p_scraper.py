@@ -92,7 +92,10 @@ class Watch1080P_Scraper(scraper.Scraper):
 
     def format_source_label(self, item):
         label = '[%s] %s' % (item['quality'], item['host'])
-        if 'title' in item: label += ' (%s)' % (item['title'])
+        if 'title' in item:
+            label += ' (%s)' % (item['title'])
+        if 'views' in item and item['views']:
+            label += ' (%s views)' % item['views']
         return label
 
     def get_sources(self, video):
@@ -101,6 +104,11 @@ class Watch1080P_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
+            match = re.search('<b>Views:.*?([\d,]+)', html)
+            if match:
+                views = int(match.group(1).replace(',', ''))
+            else:
+                views = None
             button = dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn_watch_detail[^"]*'}, ret='href')
             if button:
                 html = self._http_get(button[0], cache_limit=.5)
@@ -114,7 +122,7 @@ class Watch1080P_Scraper(scraper.Scraper):
                         else:
                             quality = QUALITIES.HIGH
                         stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), url)
-                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': True}
                         hoster['title'] = title
                         hosters.append(hoster)
         return hosters
