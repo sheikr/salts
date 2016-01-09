@@ -254,4 +254,5 @@ STRINGS = {
     'set_sso': 30242,
     'set_reset_url': 30243,
     'select_all_none': 30244,
+    'auto_pick': 30245
 }

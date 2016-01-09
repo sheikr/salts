@@ -994,6 +994,10 @@ msgctxt "#30244"
 msgid "Select All/None"
 msgstr ""
 
+msgctxt "#30245"
+msgid "Automatically Select Best Source"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
