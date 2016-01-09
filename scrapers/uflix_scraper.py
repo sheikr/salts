@@ -50,7 +50,9 @@ class UFlix_Scraper(scraper.Scraper):
         return link
 
     def format_source_label(self, item):
-        return '[%s] %s (%s Up, %s Down) (%s/100)' % (item['quality'], item['host'], item['up'], item['down'], item['rating'])
+        label = '[%s] %s (%s Up, %s Down)' % (item['quality'], item['host'], item['up'], item['down'])
+        if item['rating'] is not None: label += ' (%s/100)' % (item['rating'])
+        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -124,5 +126,5 @@ class UFlix_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'class="link"\s+href="([^"]+/show/[^"]+/season/%s/episode/%s)"' % (video.season, video.episode)
-        title_pattern = 'class="link"\s+href="(?P<url>[^"]+).*?class="tv_episode_name">.*?Episode\s+\d+\s+-\s+(?P<title>[^<]+)'
+        title_pattern = 'class="link"\s+href="(?P<url>[^"]+).*?class="tv_episode_name"[^>]*>\s*(?P<title>[^<]+)'
         return super(UFlix_Scraper, self)._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
