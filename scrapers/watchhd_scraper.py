@@ -32,7 +32,7 @@ from salts_lib.constants import Q_ORDER
 
 BASE_URL = 'http://watch1080p.com'
 
-class Watch1080P_Scraper(scraper.Scraper):
+class WatchHD_Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -46,7 +46,7 @@ class Watch1080P_Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return 'Watch1080p'
+        return 'WatchHD'
 
     def resolve_link(self, link):
         try:
@@ -128,7 +128,7 @@ class Watch1080P_Scraper(scraper.Scraper):
         return hosters
 
     def get_url(self, video):
-        return super(Watch1080P_Scraper, self)._default_get_url(video)
+        return super(WatchHD_Scraper, self)._default_get_url(video)
 
     def search(self, video_type, title, year):
         search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote_plus(title)))
@@ -154,7 +154,7 @@ class Watch1080P_Scraper(scraper.Scraper):
 
     @classmethod
     def get_settings(cls):
-        settings = super(Watch1080P_Scraper, cls).get_settings()
+        settings = super(WatchHD_Scraper, cls).get_settings()
         name = cls.get_name()
         settings.append('         <setting id="%s-auto_pick" type="bool" label="    %s" default="false" visible="eq(-4,true)"/>' % (name, i18n('auto_pick')))
         return settings
