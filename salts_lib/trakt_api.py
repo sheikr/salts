@@ -395,17 +395,17 @@ class Trakt_API():
         elif sort_key == TRAKT_LIST_SORT.RECENTLY_ADDED:
             return sorted(list_data, key=lambda x: x['listed_at'], reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.TITLE:
-            return sorted(list_data, key=lambda x: self.__title_key(x[x['type']]['title']), reverse=reverse)
+            return sorted(list_data, key=lambda x: self.__title_key(x[x['type']].get('title', '')), reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.RELEASE_DATE:
             return sorted(list_data, key=lambda x: self.__released_key(x[x['type']]), reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.RUNTIME:
-            return sorted(list_data, key=lambda x: x[x['type']]['runtime'], reverse=reverse)
+            return sorted(list_data, key=lambda x: x[x['type']].get('runtime', 0), reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.POPULARITY:
-            return sorted(list_data, key=lambda x: x[x['type']]['votes'], reverse=reverse)
+            return sorted(list_data, key=lambda x: x[x['type']].get('votes', 0), reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.PERCENTAGE:
-            return sorted(list_data, key=lambda x: x[x['type']]['rating'], reverse=reverse)
+            return sorted(list_data, key=lambda x: x[x['type']].get('rating', 0), reverse=reverse)
         elif sort_key == TRAKT_LIST_SORT.VOTES:
-            return sorted(list_data, key=lambda x: x[x['type']]['votes'], reverse=reverse)
+            return sorted(list_data, key=lambda x: x[x['type']].get('votes', 0), reverse=reverse)
         else:
             log_utils.log('Unrecognized list sort key: %s - %s' % (sort_key, sort_direction), log_utils.LOGWARNING)
             return list_data
