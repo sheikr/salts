@@ -1,3 +1,9 @@
+[B]Version 1.0.97[/B]
+- Add WatchHD scraper
+- Add Iflix scraper
+- Avoid exception when sort keys don't exist 
+- Handle trakt usernames with special characters
+
 [B]Version 1.0.96[/B]
 - Add support for default trakt list item sorting
 - Allow add to favorites for Lists
