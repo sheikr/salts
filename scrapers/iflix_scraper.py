@@ -25,9 +25,11 @@ from salts_lib import dom_parser
 from salts_lib.trans_utils import i18n
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
+from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://iflix.ch'
 BASE_URL2 = 'http://tvshows.iflix.ch'
+MAX_LINKS = 3
 
 class Iflix_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -47,7 +49,12 @@ class Iflix_Scraper(scraper.Scraper):
         return 'IFlix'
 
     def resolve_link(self, link):
-        return link
+        if 'player.php' in link:
+            stream_url = self.__get_links(link)
+            if stream_url:
+                return stream_url[0]
+        else:
+            return link
 
     def format_source_label(self, item):
         return '[%s] %s' % (item['quality'], item['host'])
@@ -56,11 +63,66 @@ class Iflix_Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         sources = []
         if source_url and source_url != FORCE_NO_MATCH:
-            url = urlparse.urljoin(self.base_url, source_url)
+            url = urlparse.urljoin(self.__get_base_url(video.video_type), source_url)
             html = self._http_get(url, cache_limit=.5)
-#             source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
-#             sources.append(source)
+            fragment = dom_parser.parse_dom(html, 'div', {'id': 'player-container'})
+            if fragment:
+                iframe_urls = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
+                labels = dom_parser.parse_dom(fragment[0], 'a', {'href': '#play-\d+'})
+                over_max = len(iframe_urls) > MAX_LINKS
+                
+                for iframe_url, label in zip(iframe_urls, labels):
+                    if re.search('\(Part?\s+\d+\)', label):
+                        multipart = True
+                        continue  # skip multipart
+                    else:
+                        multipart = False
+                        
+                    if over_max:
+                        stream_urls = [iframe_url]
+                    else:
+                        stream_urls = self.__get_links(iframe_url)
+                    
+                    for stream_url in stream_urls:
+                        if over_max:
+                            match = re.search('\((\d+)p\)', label)
+                            if match:
+                                quality = self._height_get_quality(match.group(1))
+                            else:
+                                quality = QUALITIES.HIGH
+                        else:
+                            quality = self._gv_get_quality(stream_url)
 
+                        host = self._get_direct_hostname(stream_url)
+                        stream_url += '|User-Agent=%s' % (self._get_ua())
+                        source = {'multi-part': multipart, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
+                        sources.append(source)
+
+        return sources
+
+    def __get_links(self, iframe_url):
+        sources = []
+        html = self._http_get(iframe_url, cache_limit=.5)
+        iframe_url2 = dom_parser.parse_dom(html, 'iframe', ret='src')
+        if iframe_url2 and 'token=&' not in iframe_url2[0]:
+            html = self._http_get(iframe_url2[0], cache_limit=.5)
+            if 'fmt_stream_map' in html:
+                sources = self.__parse_fmt(html)
+            else:
+                sources = dom_parser.parse_dom(html, 'source', {'type': 'video[^"]*'}, ret='src')
+        return sources
+        
+    def __parse_fmt(self, html):
+        sources = []
+        for match in re.finditer('\[\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\]', html):
+            key, value = match.groups()
+            if key == 'fmt_stream_map':
+                items = value.split(',')
+                for item in items:
+                    _, source_url = item.split('|')
+                    source_url = source_url.replace('\\u003d', '=').replace('\\u0026', '&')
+                    source_url = urllib.unquote(source_url)
+                    sources.append(source_url)
         return sources
 
     def get_url(self, video):

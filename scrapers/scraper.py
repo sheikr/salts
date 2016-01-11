@@ -643,6 +643,8 @@ class Scraper(object):
             return QUALITIES.HIGH
         elif 'itag=37' in stream_url or '=m37' in stream_url:
             return QUALITIES.HD1080
+        elif 'itag=43' in stream_url or '=m43' in stream_url:
+            return QUALITIES.MEDIUM
         else:
             return QUALITIES.HIGH
     
