@@ -22,6 +22,7 @@ import urllib
 import socket
 import ssl
 import time
+import re
 import kodi
 import log_utils
 from db_utils import DB_Connection
@@ -81,7 +82,7 @@ class Trakt_API():
         else:
             cache_limit = 1  # cache other user's list for one hour
 
-        url = '/users/%s/lists/%s/items' % (username.strip(), slug)
+        url = '/users/%s/lists/%s/items' % (self.__to_slug(username), slug)
         params = {'extended': 'full,images'}
         list_data = self.__call_trakt(url, params=params, auth=auth, cache_limit=cache_limit, cached=cached)
         return [item[item['type']] for item in list_data if item['type'] == TRAKT_SECTIONS[section][:-1]]
@@ -94,12 +95,12 @@ class Trakt_API():
 
     def get_list_header(self, slug, username=None, auth=True):
         if not username: username = 'me'
-        url = '/users/%s/lists/%s' % (username.strip(), slug)
+        url = '/users/%s/lists/%s' % (self.__to_slug(username), slug)
         return self.__call_trakt(url, auth=auth)
 
     def get_lists(self, username=None):
         if not username: username = 'me'
-        url = '/users/%s/lists' % (username.strip())
+        url = '/users/%s/lists' % (self.__to_slug(username))
         return self.__call_trakt(url, cache_limit=0)
 
     def get_liked_lists(self, cached=True):
@@ -283,7 +284,7 @@ class Trakt_API():
     
     def get_user_profile(self, username=None, cached=True):
         if username is None: username = 'me'
-        url = '/users/%s' % (username.strip())
+        url = '/users/%s' % (self.__to_slug(username))
         return self.__call_trakt(url, cached=cached)
         
     def get_bookmarks(self, section=None, full=False):
@@ -385,6 +386,12 @@ class Trakt_API():
             return item['first_aired']
         else:
             return 0
+    
+    def __to_slug(self, username):
+        username = username.strip()
+        username = username.lower()
+        username = re.sub('[^a-z0-9]', '-', username)
+        return username
     
     def __sort_list(self, sort_key, sort_direction, list_data):
         log_utils.log('Sorting List: %s - %s' % (sort_key, sort_direction), log_utils.LOGDEBUG)
