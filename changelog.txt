@@ -1,3 +1,9 @@
+[B]Version 1.0.98[/B]
+- Fix easynews scraper
+- Fix rare exception in MNE
+- Add db recovery attempt on bad db model & malformed db
+- Update translations
+
 [B]Version 1.0.97[/B]
 - Add WatchHD scraper
 - Add Iflix scraper
