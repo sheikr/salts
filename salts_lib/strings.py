@@ -254,5 +254,12 @@ STRINGS = {
     'set_sso': 30242,
     'set_reset_url': 30243,
     'select_all_none': 30244,
-    'auto_pick': 30245
+    'auto_pick': 30245,
+    'recovery_header': 30246,
+    'rec_mig_1': 30247,
+    'rec_mig_2': 30248,
+    'rec_reset_1': 30249,
+    'rec_reset_2': 30250,
+    'rec_reset_3': 30251,
+    'reset_failed': 30252
 }

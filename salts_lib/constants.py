@@ -57,6 +57,7 @@ PROGRESS = __enum(OFF=0, WINDOW=1, BACKGROUND=2)
 FORCE_NO_MATCH = '***FORCE_NO_MATCH***'
 SHORT_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 ACTIONS = __enum(ADD='add', REMOVE='remove')
+TRIG_DB_UPG = False
 
 # sort keys need to be defined such that "best" have highest values
 # unknown (i.e. None) is always worst

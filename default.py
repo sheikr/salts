@@ -50,7 +50,11 @@ db_connection = DB_Connection()
 
 @url_dispatcher.register(MODES.MAIN)
 def main_menu():
-    db_connection.init_database()
+    if TRIG_DB_UPG:
+        db_version = db_connection.get_db_version()
+    else:
+        db_version = kodi.get_version()
+    db_connection.init_database(db_version)
     if kodi.get_setting('auto-disable') != DISABLE_SETTINGS.OFF:
         utils.do_disable_check()
 

@@ -998,6 +998,34 @@ msgctxt "#30245"
 msgid "Automatically Select Best Source"
 msgstr ""
 
+msgctxt "#30246"
+msgid "SALTS Database Issue Recovery"
+msgstr ""
+
+msgctxt "#30247"
+msgid "The SALTS DB has an issue that may be correctable by a forced DB migration."
+msgstr ""
+
+msgctxt "#30248"
+msgid "Should SALTS attempt a DB migration?"
+msgstr ""
+
+msgctxt "#30249"
+msgid "DB Migration Failed but a DB reset may succeed."
+msgstr ""
+
+msgctxt "#30250"
+msgid "Should SALTS attempt a DB reset?"
+msgstr ""
+
+msgctxt "#30251"
+msgid "([COLOR red]***All DB data will be lost.***[/COLOR])"
+msgstr ""
+
+msgctxt "#30252"
+msgid "DB Reset Failed: %s"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""

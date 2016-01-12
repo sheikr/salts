@@ -23,13 +23,13 @@ import xbmcvfs
 import xbmcgui
 import log_utils
 import kodi
+from trans_utils import i18n
 
 def enum(**enums):
     return type('Enum', (), enums)
 
 DB_TYPES = enum(MYSQL='mysql', SQLITE='sqlite')
 CSV_MARKERS = enum(REL_URL='***REL_URL***', OTHER_LISTS='***OTHER_LISTS***', SAVED_SEARCHES='***SAVED_SEARCHES***', BOOKMARKS='***BOOKMARKS***')
-TRIG_DB_UPG = False
 MAX_TRIES = 5
 MYSQL_DATA_SIZE = 512
 
@@ -37,17 +37,20 @@ class DB_Connection():
     def __init__(self):
         global db_lib
         global OperationalError
+        global DatabaseError
         self.dbname = kodi.get_setting('db_name')
         self.username = kodi.get_setting('db_user')
         self.password = kodi.get_setting('db_pass')
         self.address = kodi.get_setting('db_address')
         self.db = None
         self.progress = None
+        self.__recovery = False
 
         if kodi.get_setting('use_remote_db') == 'true':
             if self.address is not None and self.username is not None and self.password is not None and self.dbname is not None:
                 import mysql.connector as db_lib
                 from mysql.connector import OperationalError as OperationalError
+                from mysql.connector import DatabaseError as DatabaseError
                 log_utils.log('Loading MySQL as DB engine', log_utils.LOGDEBUG)
                 self.db_type = DB_TYPES.MYSQL
             else:
@@ -56,6 +59,7 @@ class DB_Connection():
         else:
             from sqlite3 import dbapi2 as db_lib
             from sqlite3 import OperationalError as OperationalError
+            from sqlite3 import DatabaseError as DatabaseError
             log_utils.log('Loading sqlite3 as DB engine', log_utils.LOGDEBUG)
             self.db_type = DB_TYPES.SQLITE
             db_dir = xbmc.translatePath("special://database")
@@ -226,7 +230,7 @@ class DB_Connection():
         temp_path = os.path.join(xbmc.translatePath("special://profile"), 'temp_export_%s.csv' % (int(time.time())))
         with open(temp_path, 'w') as f:
             writer = csv.writer(f)
-            f.write('***VERSION: %s***\n' % self.__get_db_version())
+            f.write('***VERSION: %s***\n' % self.get_db_version())
             if self.__table_exists('rel_url'):
                 f.write(CSV_MARKERS.REL_URL + '\n')
                 for fav in self.get_all_rel_urls():
@@ -306,6 +310,7 @@ class DB_Connection():
             if not xbmcvfs.delete(temp_path):
                 raise Exception('Import: Delete of %s failed.' % (temp_path))
             progress.close()
+            self.progress = None
             if self.db_type == DB_TYPES.SQLITE:
                 self.__execute('VACUUM')
 
@@ -325,52 +330,52 @@ class DB_Connection():
         self.__execute(sql)
 
     # intended to be a common method for creating a db from scratch
-    def init_database(self):
-        cur_version = kodi.get_version()
-        db_version = self.__get_db_version()
-        if not TRIG_DB_UPG:
-            db_version = cur_version
-
-        if db_version is not None and cur_version != db_version:
-            log_utils.log('DB Upgrade from %s to %s detected.' % (db_version, cur_version))
-            self.progress = xbmcgui.DialogProgress()
-            self.progress.create('SALTS', line1='Migrating from %s to %s' % (db_version, cur_version), line2='Saving current data.')
-            self.progress.update(0)
-            self.__prep_for_reinit()
-
-        log_utils.log('Building SALTS Database', log_utils.LOGDEBUG)
-        if self.db_type == DB_TYPES.MYSQL:
-            self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(255) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_DATA_SIZE))
-            self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255) NOT NULL, value TEXT, PRIMARY KEY(setting))')
-            self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
-            (video_type VARCHAR(15) NOT NULL, title VARCHAR(255) NOT NULL, year VARCHAR(4) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, source VARCHAR(50) NOT NULL, rel_url VARCHAR(255), \
-            PRIMARY KEY(video_type, title, year, season, episode, source))')
-            self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section VARCHAR(10) NOT NULL, username VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, name VARCHAR(255), \
-            PRIMARY KEY(section, username, slug))')
-            self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER NOT NULL AUTO_INCREMENT, section VARCHAR(10) NOT NULL, added DOUBLE NOT NULL,query VARCHAR(255) NOT NULL, \
-            PRIMARY KEY(id))')
-            self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug VARCHAR(255) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, resumepoint DOUBLE NOT NULL, \
-            PRIMARY KEY(slug, season, episode))')
-        else:
-            self.__create_sqlite_db()
-            self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARCHAR(255) NOT NULL, data VARCHAR(255), response, timestamp, PRIMARY KEY(url, data))')
-            self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255), value TEXT, PRIMARY KEY(setting))')
-            self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
-            (video_type TEXT NOT NULL, title TEXT NOT NULL, year TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, source TEXT NOT NULL, rel_url TEXT, \
-            PRIMARY KEY(video_type, title, year, season, episode, source))')
-            self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section TEXT NOT NULL, username TEXT NOT NULL, slug TEXT NOT NULL, name TEXT, PRIMARY KEY(section, username, slug))')
-            self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER PRIMARY KEY, section TEXT NOT NULL, added DOUBLE NOT NULL,query TEXT NOT NULL)')
-            self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, resumepoint DOUBLE NOT NULL, \
-            PRIMARY KEY(slug, season, episode))')
-
-        # reload the previously saved backup export
-        if db_version is not None and cur_version != db_version:
-            log_utils.log('Restoring DB from backup at %s' % (self.mig_path), log_utils.LOGDEBUG)
-            self.import_into_db(self.mig_path)
-            log_utils.log('DB restored from %s' % (self.mig_path))
-
-        sql = 'REPLACE INTO db_info (setting, value) VALUES(?,?)'
-        self.__execute(sql, ('version', kodi.get_version()))
+    def init_database(self, db_version):
+        try:
+            cur_version = kodi.get_version()
+            if db_version is not None and cur_version != db_version:
+                log_utils.log('DB Upgrade from %s to %s detected.' % (db_version, cur_version))
+                self.progress = xbmcgui.DialogProgress()
+                self.progress.create('SALTS', line1='Migrating from %s to %s' % (db_version, cur_version), line2='Saving current data.')
+                self.progress.update(0)
+                self.__prep_for_reinit()
+    
+            log_utils.log('Building SALTS Database', log_utils.LOGDEBUG)
+            if self.db_type == DB_TYPES.MYSQL:
+                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(255) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_DATA_SIZE))
+                self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255) NOT NULL, value TEXT, PRIMARY KEY(setting))')
+                self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
+                (video_type VARCHAR(15) NOT NULL, title VARCHAR(255) NOT NULL, year VARCHAR(4) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, source VARCHAR(50) NOT NULL, rel_url VARCHAR(255), \
+                PRIMARY KEY(video_type, title, year, season, episode, source))')
+                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section VARCHAR(10) NOT NULL, username VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, name VARCHAR(255), \
+                PRIMARY KEY(section, username, slug))')
+                self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER NOT NULL AUTO_INCREMENT, section VARCHAR(10) NOT NULL, added DOUBLE NOT NULL,query VARCHAR(255) NOT NULL, \
+                PRIMARY KEY(id))')
+                self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug VARCHAR(255) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, resumepoint DOUBLE NOT NULL, \
+                PRIMARY KEY(slug, season, episode))')
+            else:
+                self.__create_sqlite_db()
+                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARCHAR(255) NOT NULL, data VARCHAR(255), response, timestamp, PRIMARY KEY(url, data))')
+                self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255), value TEXT, PRIMARY KEY(setting))')
+                self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
+                (video_type TEXT NOT NULL, title TEXT NOT NULL, year TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, source TEXT NOT NULL, rel_url TEXT, \
+                PRIMARY KEY(video_type, title, year, season, episode, source))')
+                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section TEXT NOT NULL, username TEXT NOT NULL, slug TEXT NOT NULL, name TEXT, PRIMARY KEY(section, username, slug))')
+                self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER PRIMARY KEY, section TEXT NOT NULL, added DOUBLE NOT NULL,query TEXT NOT NULL)')
+                self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, resumepoint DOUBLE NOT NULL, \
+                PRIMARY KEY(slug, season, episode))')
+    
+            # reload the previously saved backup export
+            if db_version is not None and cur_version != db_version:
+                log_utils.log('Restoring DB from backup at %s' % (self.mig_path), log_utils.LOGDEBUG)
+                self.import_into_db(self.mig_path)
+                log_utils.log('DB restored from %s' % (self.mig_path))
+    
+            sql = 'REPLACE INTO db_info (setting, value) VALUES(?,?)'
+            self.__execute(sql, ('version', kodi.get_version()))
+        finally:
+            if self.progress is not None:
+                self.progress.close()
 
     def __table_exists(self, table):
         if self.db_type == DB_TYPES.MYSQL:
@@ -391,10 +396,23 @@ class DB_Connection():
             os.remove(self.db_path)
             self.db = None
             self.__connect_to_db()
-            self.init_database()
+            self.init_database(None)
             return True
         else:
             return False
+
+    def get_db_version(self):
+        version = None
+        try:
+            sql = 'SELECT value FROM db_info WHERE setting="version"'
+            rows = self.__execute(sql)
+        except:
+            return None
+
+        if rows:
+            version = rows[0][0]
+
+        return version
 
     def __execute(self, sql, params=None):
         if params is None:
@@ -413,28 +431,38 @@ class DB_Connection():
                 cur.close()
                 self.db.commit()
                 return rows
-            except OperationalError:
+            except OperationalError as e:
                 if tries < MAX_TRIES:
                     tries += 1
                     log_utils.log('Retrying (%s/%s) SQL: %s' % (tries, MAX_TRIES, sql), log_utils.LOGWARNING)
                     self.db = None
                     self.__connect_to_db()
+                elif any(s for s in ['no such table', 'no such column'] if s in str(e)) and not self.__recovery:
+                    self.__attempt_db_recovery()
+                else:
+                    raise
+            except DatabaseError:
+                if not self.__recovery:
+                    self.__attempt_db_recovery()
                 else:
                     raise
 
-    def __get_db_version(self):
-        version = None
-        try:
-            sql = 'SELECT value FROM db_info WHERE setting="version"'
-            rows = self.__execute(sql)
-        except:
-            return None
-
-        if rows:
-            version = rows[0][0]
-
-        return version
-
+    def __attempt_db_recovery(self):
+        self.__recovery = True
+        header = i18n('recovery_header')
+        if xbmcgui.Dialog().yesno(header, i18n('rec_mig_1'), i18n('rec_mig_2')):
+            try: self.init_database('0.0.0')
+            except Exception as e:
+                log_utils.log('DB Migration Failed: %s' % (e), log_utils.LOGWARNING)
+                if xbmcgui.Dialog().yesno(header, i18n('rec_reset_1'), i18n('rec_reset_2'), i18n('rec_reset_3')):
+                    try: result = self.reset_db()
+                    except Exception as e:
+                        log_utils.log('Reset Failed: %s' % (e), log_utils.LOGWARNING)
+                        kodi.notify(msg=i18n('reset_failed') % e, duration=5000)
+                    else:
+                        if result:
+                            kodi.notify(msg=i18n('db_reset_success'))
+        
     # purpose is to save the current db with an export, drop the db, recreate it, then connect to it
     def __prep_for_reinit(self):
         self.mig_path = os.path.join(xbmc.translatePath("special://database"), 'mig_export_%s.csv' % (int(time.time())))

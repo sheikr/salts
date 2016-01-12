@@ -21,6 +21,7 @@ from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import utils
 from salts_lib.constants import MODES
+from salts_lib.constants import TRIG_DB_UPG
 from salts_lib.db_utils import DB_Connection
 
 MAX_ERRORS = 10
@@ -28,7 +29,11 @@ MAX_ERRORS = 10
 log_utils.log('Service: Installed Version: %s' % (kodi.get_version()))
 db_connection = DB_Connection()
 if kodi.get_setting('use_remote_db') == 'false' or kodi.get_setting('enable_upgrade') == 'true':
-    db_connection.init_database()
+    if TRIG_DB_UPG:
+        db_version = db_connection.get_db_version()
+    else:
+        db_version = kodi.get_version()
+    db_connection.init_database(db_version)
 
 class Service(xbmc.Player):
     def __init__(self, *args, **kwargs):
