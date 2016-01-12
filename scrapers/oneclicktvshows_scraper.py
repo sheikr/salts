@@ -88,10 +88,8 @@ class OCTV_Scraper(scraper.Scraper):
         html = self._http_get(search_url, cache_limit=48)
         norm_title = self._normalize_title(title)
         for item in dom_parser.parse_dom(html, 'li'):
-            log_utils.log(item)
             match = re.search('href=["\']([^"\']+)[^>]+>([^<]+)', item)
             if match:
-                log_utils.log(match.groups())
                 url, match_title = match.groups()
                 match = re.search('(.*?)\s*\(Season\s+\d+', match_title)
                 if match:

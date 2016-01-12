@@ -111,7 +111,7 @@ class IceFilms_Scraper(scraper.Scraper):
                         source['url'] = url
                         sources.append(source)
             except Exception as e:
-                log_utils.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video))
+                log_utils.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video), log_utils.LOGWARNING)
         return sources
 
     def get_url(self, video):
