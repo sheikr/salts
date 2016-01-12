@@ -2,12 +2,12 @@
 # Addon id: plugin.video.salts
 # Addon Provider: TV Addons
 # Translators:
-# Achaw <achaw.ar@gmail.com>, 2015
+# Achaw <achaw.ar@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2015-12-03 12:22+0000\n"
+"PO-Revision-Date: 2016-01-12 04:15+0000\n"
 "Last-Translator: Achaw <achaw.ar@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/tv-addons/salts/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -82,7 +82,7 @@ msgstr " %s recomendadas"
 
 msgctxt "#30016"
 msgid "My %s Collection"
-msgstr "%s en mi colección"
+msgstr "%s en mi Librería"
 
 msgctxt "#30017"
 msgid "My Favorites"
@@ -230,11 +230,11 @@ msgstr "Definir como lista de Favoritos"
 
 msgctxt "#30053"
 msgid "Set as Subscription List"
-msgstr "Definir como losta de Suscripción"
+msgstr "Definir como lista de Suscripción"
 
 msgctxt "#30054"
 msgid "Import from Collection"
-msgstr "Importar desde Colección"
+msgstr "Importar desde Librería"
 
 msgctxt "#30055"
 msgid "Add another user's list"
@@ -270,7 +270,7 @@ msgstr "La Lista no existe: %s"
 
 msgctxt "#30063"
 msgid "Progress Timeouts: %s/%s"
-msgstr "Timepo de progreso agotado: %s/%s"
+msgstr "Tiempo de progreso agotado: %s/%s"
 
 msgctxt "#30064"
 msgid "Browse Seasons"
@@ -342,7 +342,7 @@ msgstr "Elige tu Fuente"
 
 msgctxt "#30081"
 msgid "Set Related Url"
-msgstr "Define la Url relacionada"
+msgstr "Definir la Url relacionada"
 
 msgctxt "#30082"
 msgid "Received result from: %s"
@@ -374,7 +374,7 @@ msgstr "Ingresar Búsqueda"
 
 msgctxt "#30089"
 msgid "Scraper does not support searching"
-msgstr "La fuente no soporta búsquedas"
+msgstr "El scraper no soporta búsquedas"
 
 msgctxt "#30090"
 msgid "Enter Rating (unrate, or 1-10)"
@@ -386,11 +386,11 @@ msgstr "Ingresa ID de Serie de TV"
 
 msgctxt "#30092"
 msgid "Item Added to Collection"
-msgstr "Item agregado a la Colección"
+msgstr "Item agregado a la Librería"
 
 msgctxt "#30093"
 msgid "Item Removed from Collection"
-msgstr "Item eliminado de la Colección"
+msgstr "Item eliminado de la Librería"
 
 msgctxt "#30094"
 msgid "Item Added to List"
@@ -398,7 +398,7 @@ msgstr "Item agregado a la Lista"
 
 msgctxt "#30095"
 msgid "List Copied: (A:%s/E:%s/S:%s)"
-msgstr "List Copiada: (A:%s/E:%s/S:%s)"
+msgstr "Lista Copiada: (A:%s/E:%s/S:%s)"
 
 msgctxt "#30096"
 msgid "TV"
@@ -418,7 +418,7 @@ msgstr "Próxima actualización en %0.1f horas"
 
 msgctxt "#30100"
 msgid "Are you sure you want to delete the url cache?"
-msgstr "¿Estas seguro que deseas eliminar la cache url?"
+msgstr "¿Estas seguro que deseas eliminar la cache  de urls?"
 
 msgctxt "#30101"
 msgid "This will slow things down until all urls are re-cached"
@@ -562,11 +562,11 @@ msgstr "Definir Url relativa (Manual)"
 
 msgctxt "#30136"
 msgid "Remove from Collection"
-msgstr "Eliminar de la Colección"
+msgstr "Eliminar de la Librería"
 
 msgctxt "#30137"
 msgid "Add to Collection"
-msgstr "Agregar a la Colección"
+msgstr "Agregar a la Librería"
 
 msgctxt "#30138"
 msgid "Add to List"
@@ -609,16 +609,16 @@ msgid "Scraper Automatically Disabled"
 msgstr "Fuente desactivada automáticamente"
 
 msgctxt "#30148"
-msgid "[COLOR blue]%s[/COLOR] returned no results %s times in a row."
-msgstr "[COLOR blue]%s[/COLOR] no arrojó resultads %s tiempos en fila."
+msgid "[COLOR blue]%s[/COLOR]'s FL of %s is over your Failure Level threshold"
+msgstr "[COLOR blue]%s[/COLOR]'s LF de %s supera el nivel de fallas permitido"
 
 msgctxt "#30149"
-msgid "This wastes system resources and time."
-msgstr "Esto gasta recursos del sistema y tiempo."
+msgid "Disabling it avoids wasting time and resources"
+msgstr "Desactivarla previene gasto de tiempo y recursos"
 
 msgctxt "#30150"
-msgid ""
-msgstr "([I]Si lo mantienes activado, considera aumentar el tiempo de espera de la fuente.[/I])"
+msgid "([I]If you Keep Enabled, consider increasing scraper timeout[/I])"
+msgstr "([I]Si la mantienes activa, considera aumentar el tiempo de espera de scraper[/I])"
 
 msgctxt "#30151"
 msgid "Keep Enabled"
@@ -626,7 +626,7 @@ msgstr "Mantener Activo."
 
 msgctxt "#30152"
 msgid "Disable It"
-msgstr "Desativar"
+msgstr "Desactivar"
 
 msgctxt "#30153"
 msgid "Trakt Bookmark Exists"
@@ -770,7 +770,7 @@ msgstr "Visto"
 
 msgctxt "#30188"
 msgid "Unwatched"
-msgstr "NO Visto"
+msgstr "No Visto"
 
 msgctxt "#30189"
 msgid "Updating"
@@ -778,7 +778,7 @@ msgstr "Actualizando"
 
 msgctxt "#30190"
 msgid "Failed to create directory"
-msgstr "Error al crear carpeta"
+msgstr "Error al crear directorio"
 
 msgctxt "#30191"
 msgid "Failed to write file"
@@ -842,15 +842,15 @@ msgstr "Mas vistos en tiempo"
 
 msgctxt "#30206"
 msgid "Most Collected This Week"
-msgstr "Mas recogidos esta semana"
+msgstr "Mas recolectados esta semana"
 
 msgctxt "#30207"
 msgid "Most Collected This Month"
-msgstr "Mas recogidos este mes"
+msgstr "Mas recolectados este mes"
 
 msgctxt "#30208"
 msgid "Most Collected All Time"
-msgstr "Mas recogidos en tiempo"
+msgstr "Mas recolectados en tiempo"
 
 msgctxt "#30209"
 msgid "%s NOT added to library (%s)"
@@ -890,7 +890,7 @@ msgstr "Forzar No Match"
 
 msgctxt "#30218"
 msgid "Getting Sources"
-msgstr "Obteniendo Fuentes"
+msgstr "Recibiendo Fuentes"
 
 msgctxt "#30219"
 msgid "Requested Sources from: %s"
@@ -902,7 +902,7 @@ msgstr "%s fuentes recibidas de: %s"
 
 msgctxt "#30221"
 msgid "Applying Source Filters"
-msgstr "Aplicando filtro de fuentes"
+msgstr "Filtrando fuentes"
 
 msgctxt "#30222"
 msgid "Include Links from Comments"
@@ -914,7 +914,7 @@ msgstr "Mi Historial de Vistos"
 
 msgctxt "#30224"
 msgid "Trying Sources for Auto-Play"
-msgstr "Intentando Auto-play de Fuentes"
+msgstr "Intentando Reprod. Automática de Fuentes"
 
 msgctxt "#30225"
 msgid "Trying: [%s] %s from %s"
@@ -930,7 +930,7 @@ msgstr "Tiempo de  espera agotado de Scraper: [COLOR blue]%s[/COLOR]"
 
 msgctxt "#30228"
 msgid "Reset Failures"
-msgstr "Reiniciar fallados"
+msgstr "Reiniciar limite de fallas"
 
 msgctxt "#30229"
 msgid "Maximum Source Results"
@@ -942,7 +942,7 @@ msgstr "Incluir en Mis Próximos Episodios"
 
 msgctxt "#30231"
 msgid "Auto-Play"
-msgstr "Auto-Play"
+msgstr "Reproducción Automática"
 
 msgctxt "#30232"
 msgid "Set Trakt.tv API timeout to 60 seconds"
@@ -980,9 +980,13 @@ msgctxt "#30240"
 msgid "No Limit on Maximum Source Results"
 msgstr "Sin límite máximo de resultado de fuentes"
 
+msgctxt "#30241"
+msgid "Set Source Sort Keys to default"
+msgstr "Definir orden de clasificación de Fuentes a valores por defecto"
+
 msgctxt "#30242"
 msgid "Set Scraper Sort Order to default"
-msgstr "Definir orden de Prioridad de Scraper a valores por defecto"
+msgstr "Definir orden de clasificación de Scraper a valores por defecto"
 
 msgctxt "#30243"
 msgid "Reset All Scraper Base Urls to Default"
@@ -991,6 +995,10 @@ msgstr "Reiniciar todas las base de url de scraper a valores por defecto"
 msgctxt "#30244"
 msgid "Select All/None"
 msgstr "Seleccionar Todos/Ninguno"
+
+msgctxt "#30245"
+msgid "Automatically Select Best Source"
+msgstr "Seleccionar automáticamente la mejor fuente"
 
 msgctxt "#30500"
 msgid "Addon Theme"
@@ -1010,7 +1018,7 @@ msgstr "Mostrar tiempo de emisión en calendarios"
 
 msgctxt "#30504"
 msgid "My Collection Sort Order"
-msgstr "Orden de clasificación de Mi Colección"
+msgstr "Orden de clasificación de Mi Librería"
 
 msgctxt "#30505"
 msgid "My Next Episodes Sort Order"
@@ -1050,7 +1058,7 @@ msgstr "12 horas"
 
 msgctxt "#30514"
 msgid "Previously Collected"
-msgstr "Anteriormente recogido"
+msgstr "Recolectados anteriormente"
 
 msgctxt "#30515"
 msgid "Recently Collected"
@@ -1086,7 +1094,7 @@ msgstr "Emitidos recientemente"
 
 msgctxt "#30523"
 msgid "Previously Aired"
-msgstr "Anteriormente Emitido"
+msgstr "Emitidos Anteriormente"
 
 msgctxt "#30524"
 msgid "Show Trending"
@@ -1098,7 +1106,7 @@ msgstr "Mostrar Popular"
 
 msgctxt "#30526"
 msgid "Show Recently Updated"
-msgstr "Mostrar recientemente actualizadas"
+msgstr "Mostrar Actualizadas Recientemente"
 
 msgctxt "#30527"
 msgid "Show Recommended"
@@ -1106,7 +1114,7 @@ msgstr "Mostrar Recomendadas"
 
 msgctxt "#30528"
 msgid "Show My Collection"
-msgstr "Mostrar Mi Colección"
+msgstr "Mostrar Mi Librería"
 
 msgctxt "#30529"
 msgid "Show My Favorites"
@@ -1142,7 +1150,7 @@ msgstr "Mostrar Calendario General"
 
 msgctxt "#30537"
 msgid "Show Premiere Calendar"
-msgstr "Mostrar Calendario Premiere"
+msgstr "Mostrar Calendario de  Estrenos"
 
 msgctxt "#30538"
 msgid "Show Friends"
@@ -1202,7 +1210,7 @@ msgstr "Pre-Testear todas las fuentes directas"
 
 msgctxt "#30552"
 msgid "Use Trakt Bookmarks"
-msgstr "Usar Trakt Bookmarks"
+msgstr "Usar Bookmarks de Trakt"
 
 msgctxt "#30553"
 msgid "Cache watched status"
@@ -1210,7 +1218,7 @@ msgstr "Cachear Status de Vistos"
 
 msgctxt "#30554"
 msgid "Cache Collection"
-msgstr "Cachear Colección"
+msgstr "Cachear Librería"
 
 msgctxt "#30555"
 msgid "Include People"
@@ -1226,11 +1234,11 @@ msgstr "Integración de Colección"
 
 msgctxt "#30558"
 msgid "TV Show Folder"
-msgstr "Carpeta de Series de TV"
+msgstr "Directorio de Series de TV"
 
 msgctxt "#30559"
 msgid "Movie Folder"
-msgstr "Carpeta de Películas"
+msgstr "Directorio de Películas"
 
 msgctxt "#30560"
 msgid "Automatically Update Subscriptions"
@@ -1282,7 +1290,7 @@ msgstr "Administración de Fuentes"
 
 msgctxt "#30572"
 msgid "Auto-Play Sources"
-msgstr "Auto-Play de Fuentes"
+msgstr "Auto Reproducción de Fuentes"
 
 msgctxt "#30573"
 msgid "    Source Selection Method"
@@ -1298,11 +1306,11 @@ msgstr "    Mostrar Progreso de Descargas"
 
 msgctxt "#30576"
 msgid "    TV Show Download Folder"
-msgstr "    Carpeta de Descarga de Series de TV"
+msgstr "Directorio de Descarga de Series de TV"
 
 msgctxt "#30577"
 msgid "    Movie Download Folder"
-msgstr "    Carpeta de Descarga de Películas"
+msgstr "Directorio de Descarga de Películas"
 
 msgctxt "#30578"
 msgid "Scraper Timeout (seconds) (0=No Limit)"
@@ -1338,7 +1346,7 @@ msgstr "Igualar título de episodio cuando temporada & episodio falla"
 
 msgctxt "#30586"
 msgid "Automatically disable ineffective scrapers"
-msgstr "Automáticamente desactivar scraper no efectivos"
+msgstr "Desactivar automaticamente scrapers no efectivos"
 
 msgctxt "#30587"
 msgid "    Check Frequency (requests)"
@@ -1350,7 +1358,7 @@ msgstr "    Porcentaje mínimo de éxito permitido"
 
 msgctxt "#30589"
 msgid "Window"
-msgstr "ventana"
+msgstr "Ventana"
 
 msgctxt "#30590"
 msgid "Background"
@@ -1426,7 +1434,7 @@ msgstr "Idioma de Subtítulo"
 
 msgctxt "#30619"
 msgid "Require HD"
-msgstr "Requerir HD"
+msgstr " HD requerido"
 
 msgctxt "#30620"
 msgid "Download Subtitles on playback"
@@ -1434,7 +1442,7 @@ msgstr "Descargar Subtítulos en Reproducción"
 
 msgctxt "#30621"
 msgid "Subtitle Download Folder"
-msgstr "Carpeta deDescarga de Subtítulos"
+msgstr "Directorio de descarga de subtítulos"
 
 msgctxt "#30622"
 msgid "Show Subtitles on Playback"
@@ -1522,11 +1530,11 @@ msgstr "Orden Lista de Seguimiento"
 
 msgctxt "#30643"
 msgid "Recently Added"
-msgstr "Agregados recientemente"
+msgstr "Añadidos recientemente"
 
 msgctxt "#30644"
 msgid "Previously Added"
-msgstr "Anteriormente agregados"
+msgstr "Añadidos anteriormente"
 
 msgctxt "#30645"
 msgid "Skip movies/episodes that exist locally"
@@ -1546,7 +1554,7 @@ msgstr "Mostrar Dialogo de Progreso Personalizado en Colección"
 
 msgctxt "#30649"
 msgid "Create tvshow/movie nfo file for?"
-msgstr "¿Crear archivo nfo para Serie/Película?"
+msgstr "¿Crear archivo nfo para Series/Películas?"
 
 msgctxt "#30650"
 msgid "Won't scrape"

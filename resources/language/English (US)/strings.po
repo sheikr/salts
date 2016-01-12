@@ -2,12 +2,12 @@
 # Addon id: plugin.video.salts
 # Addon Provider: TV Addons
 # Translators:
-# tknorris, 2015
+# tknorris, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2015-12-04 23:09+0000\n"
+"PO-Revision-Date: 2016-01-12 06:40+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: English (United States) (http://www.transifex.com/tv-addons/salts/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -609,16 +609,16 @@ msgid "Scraper Automatically Disabled"
 msgstr "Scraper Automatically Disabled"
 
 msgctxt "#30148"
-msgid "[COLOR blue]%s[/COLOR] returned no results %s times in a row."
-msgstr "[COLOR blue]%s[/COLOR] returned no results %s times in a row."
+msgid "[COLOR blue]%s[/COLOR]'s FL of %s is over your Failure Level threshold"
+msgstr "[COLOR blue]%s[/COLOR]'s FL of %s is over your Failure Level threshold"
 
 msgctxt "#30149"
-msgid "This wastes system resources and time."
-msgstr "This wastes system resources and time."
+msgid "Disabling it avoids wasting time and resources"
+msgstr "Disabling it avoids wasting time and resources"
 
 msgctxt "#30150"
-msgid ""
-msgstr "([I]If you keep it enabled, consider increasing your scraper timeout.[/I])"
+msgid "([I]If you Keep Enabled, consider increasing scraper timeout[/I])"
+msgstr "([I]If you Keep Enabled, consider increasing scraper timeout[/I])"
 
 msgctxt "#30151"
 msgid "Keep Enabled"
@@ -995,6 +995,10 @@ msgstr "Reset All Scraper Base Urls to Default"
 msgctxt "#30244"
 msgid "Select All/None"
 msgstr "Select All/None"
+
+msgctxt "#30245"
+msgid "Automatically Select Best Source"
+msgstr "Automatically Select Best Source"
 
 msgctxt "#30500"
 msgid "Addon Theme"

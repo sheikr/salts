@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2015-12-03 08:24+0000\n"
+"PO-Revision-Date: 2016-01-09 08:29+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: Croatian (http://www.transifex.com/tv-addons/salts/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -610,16 +610,16 @@ msgid "Scraper Automatically Disabled"
 msgstr "Izvor automatski onemogućen"
 
 msgctxt "#30148"
-msgid "[COLOR blue]%s[/COLOR] returned no results %s times in a row."
-msgstr "[COLOR plavo]%s[/COLOR] vraćeno bez rezultata %s puta za redom."
+msgid "[COLOR blue]%s[/COLOR]'s FL of %s is over your Failure Level threshold"
+msgstr "[BOJA plava]%s[/BOJA]'s FL od %s je preko tvoje granice pogrešnog nivoa"
 
 msgctxt "#30149"
-msgid "This wastes system resources and time."
-msgstr "To troši vrijeme i resurse sustava."
+msgid "Disabling it avoids wasting time and resources"
+msgstr "Onemogućavanjem toga izbjegava se gubljenje vremena i resursa"
 
 msgctxt "#30150"
-msgid ""
-msgstr "([I]Ako to držite omogućeno, razmislite o povećanju timeouta scrapera.[/I])"
+msgid "([I]If you Keep Enabled, consider increasing scraper timeout[/I])"
+msgstr "([I]Ako zadržite omogućenim, razmislite o povećanju timeouta scrapera[/I])"
 
 msgctxt "#30151"
 msgid "Keep Enabled"
@@ -869,6 +869,10 @@ msgctxt "#30212"
 msgid "Scraper Decryption Key"
 msgstr "Ključ za dešifriranje Scrapera "
 
+msgctxt "#30213"
+msgid "Trakt On Deck"
+msgstr "Trakt On Deck"
+
 msgctxt "#30214"
 msgid "on"
 msgstr "na"
@@ -913,6 +917,166 @@ msgctxt "#30224"
 msgid "Trying Sources for Auto-Play"
 msgstr "Iskušavanje Izvora za Automatsku reprodukciju"
 
+msgctxt "#30225"
+msgid "Trying: [%s] %s from %s"
+msgstr "Pokušaj: [%s] %s iz %s"
+
+msgctxt "#30226"
+msgid "Failed: [%s] %s from %s"
+msgstr "Neuspješno: [%s] %s iz %s"
+
+msgctxt "#30227"
+msgid "Scraper Timeouts: [COLOR blue]%s[/COLOR]"
+msgstr "Timeouti Scrapera: [BOJA plava]%s[/BOJA]"
+
+msgctxt "#30228"
+msgid "Reset Failures"
+msgstr "Reset pogrešaka"
+
+msgctxt "#30229"
+msgid "Maximum Source Results"
+msgstr "Maksimum Rezultata Izvora"
+
+msgctxt "#30230"
+msgid "Include in My Next Episodes"
+msgstr "Uključi u Moje sljedeće Epizode"
+
+msgctxt "#30231"
+msgid "Auto-Play"
+msgstr "Auto-Play"
+
+msgctxt "#30232"
+msgid "Set Trakt.tv API timeout to 60 seconds"
+msgstr "Postavite Trakt.tv API timeout na 60 sekundi"
+
+msgctxt "#30233"
+msgid "Set Calendar start day to Yesterday"
+msgstr "Postavite početni dan Kalendara na jučer"
+
+msgctxt "#30234"
+msgid "Show Episode Airtime on Calendar"
+msgstr "Pokaži vrijeme emitiranja epizoda  na kalendaru"
+
+msgctxt "#30235"
+msgid "Set Scraper timeout to 20 seconds"
+msgstr "Postavite Scraper timeout na 20 sekundi"
+
+msgctxt "#30236"
+msgid "Include Watchlist in My Next Episodes"
+msgstr "Uključi Listu gledanja u Moje sljedeće Epizode"
+
+msgctxt "#30237"
+msgid "Remove Deleted Direct sources from results"
+msgstr "Uklanjanje izbrisanih izravnih izvora iz rezultata"
+
+msgctxt "#30238"
+msgid "Remove Unusable Indirect sources from results"
+msgstr "Uklanjanje neupotrebljivih neizravnih izvora iz rezultata"
+
+msgctxt "#30239"
+msgid "Show Debrid sources in Green"
+msgstr "Pokaži Debrid izvore u zeleno"
+
+msgctxt "#30240"
+msgid "No Limit on Maximum Source Results"
+msgstr "Nema ograničenja na Maksimalni rezultat Izvora"
+
+msgctxt "#30241"
+msgid "Set Source Sort Keys to default"
+msgstr "Postavite Sort ključeve Izvora na zadane"
+
+msgctxt "#30242"
+msgid "Set Scraper Sort Order to default"
+msgstr "Postavite Poredak Sortiranja Scrapera na zadano"
+
+msgctxt "#30243"
+msgid "Reset All Scraper Base Urls to Default"
+msgstr "Ponovno postavljanje Svih URL-ova Scraper baza na  Uobičajeno"
+
+msgctxt "#30244"
+msgid "Select All/None"
+msgstr "Odaberi sve/ništa"
+
+msgctxt "#30500"
+msgid "Addon Theme"
+msgstr "Tema dodatka"
+
+msgctxt "#30501"
+msgid "Authorized Trakt User"
+msgstr "Autorizirani Trakt Korisnik"
+
+msgctxt "#30502"
+msgid "Calendar Start Day (0=Today)"
+msgstr "Početni Dan Kalendara (0 = Danas)"
+
+msgctxt "#30503"
+msgid "Show air time on calendars"
+msgstr "Pokaži vremena emitiranja na kalendarima"
+
+msgctxt "#30504"
+msgid "My Collection Sort Order"
+msgstr "Redoslijed slaganja Moje kolekcije"
+
+msgctxt "#30505"
+msgid "My Next Episodes Sort Order"
+msgstr "Redoslijed slaganja Moje sljedeće epizode"
+
+msgctxt "#30506"
+msgid "Show unaired episodes in My Next Episodes"
+msgstr "Pokaži neemitirane epizode u Moje sljedeće Epizode"
+
+msgctxt "#30507"
+msgid "Show Season 0 in Seasons View"
+msgstr "Prikaži Sezonu 0 u Pregledu sezona"
+
+msgctxt "#30508"
+msgid "Show unaired episodes in Seasons"
+msgstr "Prikaži neemitirane epizode u Seasonama"
+
+msgctxt "#30509"
+msgid "    Show an Indicator on Unaired Episodes"
+msgstr "Prikaži indikator na Neemitiranim epizodama"
+
+msgctxt "#30510"
+msgid "    Show episodes with unknown air date"
+msgstr "Pokaži epizode s nepoznatim datumom emitiranja"
+
+msgctxt "#30511"
+msgid "Off"
+msgstr "Isključeno"
+
+msgctxt "#30512"
+msgid "24 Hour"
+msgstr "24 sata"
+
+msgctxt "#30513"
+msgid "12 Hour"
+msgstr "12 sati"
+
+msgctxt "#30514"
+msgid "Previously Collected"
+msgstr "Prethodno prikupljeni"
+
+msgctxt "#30515"
+msgid "Recently Collected"
+msgstr "Nedavno Prikupljeni"
+
+msgctxt "#30516"
+msgid "Title"
+msgstr "Naslov"
+
+msgctxt "#30517"
+msgid "Year"
+msgstr "Godina"
+
+msgctxt "#30518"
+msgid "Activity"
+msgstr "Aktivnost"
+
+msgctxt "#30519"
+msgid "Title"
+msgstr "Naslov"
+
 msgctxt "#30612"
 msgid "Base Url"
 msgstr "Bazni Url"
@@ -920,4 +1084,8 @@ msgstr "Bazni Url"
 msgctxt "#30613"
 msgid "Include in Page Existence checks?"
 msgstr "Uključiti u provjeru postojanja stranice"
+
+msgctxt "#30646"
+msgid "Include Watchlist in My Next Episodes"
+msgstr "Uključi Listu gledanja u Moje sljedeće Epizode"
 
