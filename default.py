@@ -740,7 +740,7 @@ def get_progress(cache_override=False):
             else:
                 trakt_id = str(progress['trakt'])
                 show = shows[trakt_id]
-                if show['status'].upper() == 'ENDED' and progress['completed'] == progress['aired'] and trakt_id not in filter_list and trakt_id not in force_list:
+                if show['status'] and show['status'].upper() == 'ENDED' and progress['completed'] == progress['aired'] and trakt_id not in filter_list and trakt_id not in force_list:
                     log_utils.log('Adding %s (%s) (%s - %s) to MNE exclusion list' % (trakt_id, show['title'], progress['completed'], progress['aired']), log_utils.LOGDEBUG)
                     manage_progress_cache(ACTIONS.ADD, progress['trakt'])
 
