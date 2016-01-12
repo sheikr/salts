@@ -92,28 +92,29 @@ class EasyNews_Scraper(scraper.Scraper):
         search_url = self.__translate_search(url)
         html = self._http_get(search_url, cache_limit=.5)
         js_result = self._parse_json(html, search_url)
-        for item in js_result['data']:
-            post_hash, size, post_title, ext, duration = item['0'], item['4'], item['10'], item['11'], item['14']
-            checks = [False] * 6
-            if not self._title_check(video, post_title): checks[0] = True
-            if 'alangs' in item and item['alangs'] and 'eng' not in item['alangs']: checks[1] = True
-            if re.match('^\d+s', duration) or re.match('^[0-5]m', duration): checks[2] = True
-            if 'passwd' in item and item['passwd']: checks[3] = True
-            if 'virus' in item and item['virus']: checks[4] = True
-            if 'type' in item and item['type'].upper() != 'VIDEO': checks[5] = True
-            if any(checks):
-                log_utils.log('EasyNews Post excluded: %s - |%s|' % (checks, item), log_utils.LOGDEBUG)
-                continue
-            
-            stream_url = urllib.quote('%s%s/%s%s' % (post_hash, ext, post_title, ext))
-            stream_url = 'http://members.easynews.com/dl/%s' % (stream_url)
-            stream_url = stream_url + '|Cookie=%s' % (self.__get_cookies())
-            host = self._get_direct_hostname(stream_url)
-            quality = self._width_get_quality(item['width'])
-            hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': True}
-            if size: hoster['size'] = size
-            if post_title: hoster['extra'] = post_title
-            hosters.append(hoster)
+        if 'data' in js_result:
+            for item in js_result['data']:
+                post_hash, size, post_title, ext, duration = item['0'], item['4'], item['10'], item['11'], item['14']
+                checks = [False] * 6
+                if not self._title_check(video, post_title): checks[0] = True
+                if 'alangs' in item and item['alangs'] and 'eng' not in item['alangs']: checks[1] = True
+                if re.match('^\d+s', duration) or re.match('^[0-5]m', duration): checks[2] = True
+                if 'passwd' in item and item['passwd']: checks[3] = True
+                if 'virus' in item and item['virus']: checks[4] = True
+                if 'type' in item and item['type'].upper() != 'VIDEO': checks[5] = True
+                if any(checks):
+                    log_utils.log('EasyNews Post excluded: %s - |%s|' % (checks, item), log_utils.LOGDEBUG)
+                    continue
+                
+                stream_url = urllib.quote('%s%s/%s%s' % (post_hash, ext, post_title, ext))
+                stream_url = 'http://members.easynews.com/dl/%s' % (stream_url)
+                stream_url = stream_url + '|Cookie=%s' % (self.__get_cookies())
+                host = self._get_direct_hostname(stream_url)
+                quality = self._width_get_quality(item['width'])
+                hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': True}
+                if size: hoster['size'] = size
+                if post_title: hoster['extra'] = post_title
+                hosters.append(hoster)
         return hosters
     
     def get_url(self, video):
