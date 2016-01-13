@@ -20,6 +20,7 @@ import re
 import urlparse
 import time
 import urllib
+import random
 from salts_lib import kodi
 from salts_lib import dom_parser
 from salts_lib import log_utils
@@ -31,7 +32,7 @@ from salts_lib.constants import XHR
 
 BASE_URL = 'http://movietv.to'
 SEASON_URL = '/series/season?id=%s&s=%s&_=%s&token=%s'
-LINK_URL = '/series/getLink?id=%s&s=%s&e=%s'
+LINK_URL = '/series/getLink?id=%s&s=%s&e=%s&show_url=%s'
 
 class MovieTV_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -61,12 +62,16 @@ class MovieTV_Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
+            headers = XHR
             if video.video_type == VIDEO_TYPES.EPISODE:
+                query = urlparse.parse_qs(source_url)
+                if 'show_url' in query:
+                    headers['Referer'] = urlparse.urljoin(self.base_url, query['show_url'][0])
+                else:
+                    headers['Referer'] = self.base_url + '/series/%s' % (random.randint(1, 1000))
                 source_url += '&_=%s' % (str(int(time.time()) * 1000))
                 source_url += '&token=%s' % (self.__get_token())
             url = urlparse.urljoin(self.base_url, source_url)
-            headers = XHR
-            headers['Referer'] = self.base_url + '/series/'
             html = self._http_get(url, headers=headers, cache_limit=1)
             sources = {}
             if video.video_type == VIDEO_TYPES.MOVIE:
@@ -114,13 +119,13 @@ class MovieTV_Scraper(scraper.Scraper):
             if not force_title:
                 for episode in js_data:
                         if int(episode['episode_number']) == int(video.episode):
-                            return LINK_URL % (show_id, video.season, episode['episode_number'])
+                            return LINK_URL % (show_id, video.season, episode['episode_number'], show_url)
             
             if (force_title or kodi.get_setting('title-fallback') == 'true') and video.ep_title:
                 norm_title = self._normalize_title(video.ep_title)
                 for episode in js_data:
                     if norm_title == self._normalize_title(episode['title']):
-                        return LINK_URL % (show_id, video.season, episode['episode_number'])
+                        return LINK_URL % (show_id, video.season, episode['episode_number'], show_url)
         
     def search(self, video_type, title, year):
         results = []
