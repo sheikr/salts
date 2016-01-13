@@ -58,33 +58,41 @@ def update_xml(xml, new_settings, cat_count):
 
 def update_settings():
     full_path = os.path.join(kodi.get_path(), 'resources', 'settings.xml')
+    
     try:
-        with open(full_path, 'r') as f:
-            xml = f.read()
-    except:
-        raise
-
-    new_settings = []
-    cat_count = 1
-    old_xml = xml
-    classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)
-    for cls in sorted(classes, key=lambda x: x.get_name().upper()):
-        new_settings += cls.get_settings()
-        if len(new_settings) > 90:
-            xml = update_xml(xml, new_settings, cat_count)
-            new_settings = []
-            cat_count += 1
-
-    if new_settings:
-        xml = update_xml(xml, new_settings, cat_count)
-
-    if xml != old_xml:
+        # open for append; skip update if it fails
+        with open(full_path, 'a') as f:
+            pass
+    except Exception as e:
+        log_utils.log('Dynamic settings update skipped: %s' % (e), log_utils.LOGWARNING)
+    else:
         try:
-            with open(full_path, 'w') as f:
-                f.write(xml)
+            with open(full_path, 'r') as f:
+                xml = f.read()
         except:
             raise
-    else:
-        log_utils.log('No Settings Update Needed', log_utils.LOGDEBUG)
+    
+        new_settings = []
+        cat_count = 1
+        old_xml = xml
+        classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)
+        for cls in sorted(classes, key=lambda x: x.get_name().upper()):
+            new_settings += cls.get_settings()
+            if len(new_settings) > 90:
+                xml = update_xml(xml, new_settings, cat_count)
+                new_settings = []
+                cat_count += 1
+    
+        if new_settings:
+            xml = update_xml(xml, new_settings, cat_count)
+    
+        if xml != old_xml:
+            try:
+                with open(full_path, 'w') as f:
+                    f.write(xml)
+            except:
+                raise
+        else:
+            log_utils.log('No Settings Update Needed', log_utils.LOGDEBUG)
 
 update_settings()
