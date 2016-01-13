@@ -1,3 +1,9 @@
+[B]Version 1.0.99[/B]
+- Fix movietv.to scraper
+- Improve WatchHD scraper
+- Gracefully fail when path isn't writeable
+- Try #1 to fix utf-8 in paths
+
 [B]Version 1.0.98[/B]
 - Fix easynews scraper
 - Fix rare exception in MNE
