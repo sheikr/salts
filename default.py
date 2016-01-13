@@ -26,7 +26,7 @@ import xbmc
 import xbmcvfs
 import json
 from Queue import Queue, Empty
-from salts_lib.db_utils import DB_Connection
+from salts_lib.db_utils import DB_Connection, DatabaseRecoveryError
 from salts_lib.url_dispatcher import URL_Dispatcher
 from salts_lib.srt_scraper import SRT_Scraper
 from salts_lib.trakt_api import Trakt_API, TransientTraktError, TraktNotFoundError, TraktError, TraktAuthError
@@ -2340,6 +2340,9 @@ def main(argv=None):
     except (TransientTraktError, TraktError) as e:
         log_utils.log(str(e), xbmc.LOGERROR)
         kodi.notify(msg=str(e), duration=5000)
+    except DatabaseRecoveryError as e:
+        log_utils.log('Attempting DB recovery due to Database Error: %s' % (e), log_utils.LOGWARNING)
+        db_connection.attempt_db_recovery()
 
 if __name__ == '__main__':
     sys.exit(main())
