@@ -87,7 +87,7 @@ class WatchHD_Scraper(scraper.Scraper):
                         
                         if best_stream:
                             return best_stream
-                else:
+                elif streams:
                     return streams[0][0]
 
     def format_source_label(self, item):
