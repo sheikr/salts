@@ -21,7 +21,6 @@ import urllib2
 import re
 import HTMLParser
 import socket
-import xbmc
 import xbmcvfs
 import log_utils
 import kodi
@@ -144,7 +143,7 @@ class SRT_Scraper():
             filename = 'addic7ed_subtitle.srt'
 
         final_path = os.path.join(BASE_PATH, filename)
-        final_path = xbmc.translatePath(final_path)
+        final_path = kodi.translate_path(final_path)
         if not xbmcvfs.exists(os.path.dirname(final_path)):
             try:
                 try: xbmcvfs.mkdirs(os.path.dirname(final_path))

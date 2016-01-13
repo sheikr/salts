@@ -27,16 +27,18 @@ import os
 import re
 
 addon = xbmcaddon.Addon()
-ICON_PATH = os.path.join(addon.getAddonInfo('path'), 'icon.png')
-
 get_setting = addon.getSetting
 show_settings = addon.openSettings
 
 def get_path():
-    return addon.getAddonInfo('path')
+    return addon.getAddonInfo('path').decode('utf-8')
+ICON_PATH = os.path.join(get_path(), 'icon.png')
 
 def get_profile():
-    return addon.getAddonInfo('profile')
+    return addon.getAddonInfo('profile').decode('utf-8')
+
+def translate_path(path):
+    return xbmc.translatePath(path).decode('utf-8')
 
 def set_setting(id, value):
     if not isinstance(value, basestring): value = str(value)
@@ -107,7 +109,7 @@ def notify(header=None, msg='', duration=2000, sound=None):
         xbmc.executebuiltin(builtin)
     
 def get_current_view():
-    skinPath = xbmc.translatePath('special://skin/')
+    skinPath = translate_path('special://skin/')
     xml = os.path.join(skinPath, 'addon.xml')
     f = xbmcvfs.File(xml)
     read = f.read()

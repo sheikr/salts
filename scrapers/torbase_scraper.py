@@ -20,7 +20,6 @@ import urllib
 import urlparse
 import re
 import xbmcvfs
-import xbmc
 import os
 from salts_lib import log_utils
 from salts_lib import kodi
@@ -35,7 +34,7 @@ BASE_URL2 = 'http://streamtorrent.tv'
 SEARCH_URL = '/search?title=%s&order=recent&_pjax=#films-pjax-container'
 TOR_URL = BASE_URL2 + '/api/torrent/%s.json'
 PL_URL = BASE_URL2 + '/api/torrent/%s/%s.m3u8'
-M3U8_PATH = os.path.join(xbmc.translatePath(kodi.get_profile()), 'torbase.m3u8')
+M3U8_PATH = os.path.join(kodi.translate_path(kodi.get_profile()), 'torbase.m3u8')
 M3U8_TEMPLATE = [
     '#EXTM3U',
     '#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="{audio_group}",DEFAULT=YES,AUTOSELECT=YES,NAME="Stream 1",URI="{audio_stream}"',

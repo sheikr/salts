@@ -18,7 +18,6 @@
 import os
 import time
 import csv
-import xbmc
 import xbmcvfs
 import xbmcgui
 import log_utils
@@ -65,7 +64,7 @@ class DB_Connection():
             from sqlite3 import DatabaseError as DatabaseError
             log_utils.log('Loading sqlite3 as DB engine', log_utils.LOGDEBUG)
             self.db_type = DB_TYPES.SQLITE
-            db_dir = xbmc.translatePath("special://database")
+            db_dir = kodi.translate_path("special://database")
             self.db_path = os.path.join(db_dir, 'saltscache.db')
         self.__connect_to_db()
 
@@ -232,7 +231,7 @@ class DB_Connection():
         self.set_setting(setting, str(cur_value + 1))
 
     def export_from_db(self, full_path):
-        temp_path = os.path.join(xbmc.translatePath("special://profile"), 'temp_export_%s.csv' % (int(time.time())))
+        temp_path = os.path.join(kodi.translate_path("special://profile"), 'temp_export_%s.csv' % (int(time.time())))
         with open(temp_path, 'w') as f:
             writer = csv.writer(f)
             f.write('***VERSION: %s***\n' % self.get_db_version())
@@ -273,7 +272,7 @@ class DB_Connection():
         return l
         
     def import_into_db(self, full_path):
-        temp_path = os.path.join(xbmc.translatePath("special://profile"), 'temp_import_%s.csv' % (int(time.time())))
+        temp_path = os.path.join(kodi.translate_path("special://profile"), 'temp_import_%s.csv' % (int(time.time())))
         log_utils.log('Copying import file from: |%s| to |%s|' % (full_path, temp_path), log_utils.LOGDEBUG)
         if not xbmcvfs.copy(full_path, temp_path):
             raise Exception('Import: Copy from |%s| to |%s| failed' % (full_path, temp_path))
@@ -468,7 +467,7 @@ class DB_Connection():
 
     # purpose is to save the current db with an export, drop the db, recreate it, then connect to it
     def __prep_for_reinit(self):
-        self.mig_path = os.path.join(xbmc.translatePath("special://database"), 'mig_export_%s.csv' % (int(time.time())))
+        self.mig_path = os.path.join(kodi.translate_path("special://database"), 'mig_export_%s.csv' % (int(time.time())))
         log_utils.log('Backing up DB to %s' % (self.mig_path), log_utils.LOGDEBUG)
         self.export_from_db(self.mig_path)
         log_utils.log('Backup export of DB created at %s' % (self.mig_path))

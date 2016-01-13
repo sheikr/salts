@@ -1737,9 +1737,9 @@ def reset_db():
 def export_db():
     try:
         dialog = xbmcgui.Dialog()
-        export_path = dialog.browse(0, i18n('select_export_dir'), 'files')
+        export_path = dialog.browse(0, i18n('select_export_dir'), 'files').encode('utf-8')
         if export_path:
-            export_path = xbmc.translatePath(export_path)
+            export_path = kodi.translate_path(export_path)
             keyboard = xbmc.Keyboard('export.csv', i18n('enter_export_name'))
             keyboard.doModal()
             if keyboard.isConfirmed():
@@ -1755,9 +1755,9 @@ def export_db():
 def import_db():
     try:
         dialog = xbmcgui.Dialog()
-        import_file = dialog.browse(1, i18n('select_import_file'), 'files')
+        import_file = dialog.browse(1, i18n('select_import_file'), 'files').encode('utf-8')
         if import_file:
-            import_file = xbmc.translatePath(import_file)
+            import_file = kodi.translate_path(import_file)
             db_connection.import_into_db(import_file)
             kodi.notify(header=i18n('import_success'), msg=i18n('imported_from') % (import_file))
     except Exception as e:
@@ -1786,7 +1786,7 @@ def add_to_library(video_type, title, year, trakt_id):
 
     if video_type == VIDEO_TYPES.TVSHOW:
         save_path = kodi.get_setting('tvshow-folder')
-        save_path = xbmc.translatePath(save_path)
+        save_path = kodi.translate_path(save_path)
         show = trakt_api.get_show_details(trakt_id)
         show['title'] = re.sub(' \(\d{4}\)$', '', show['title'])  # strip off year if it's part of show title
         seasons = trakt_api.get_seasons(trakt_id)
@@ -1834,7 +1834,7 @@ def add_to_library(video_type, title, year, trakt_id):
                 raise Exception(i18n('local_exists'))
         
         save_path = kodi.get_setting('movie-folder')
-        save_path = xbmc.translatePath(save_path)
+        save_path = kodi.translate_path(save_path)
         if create_nfo > 0:
             movie_path = make_path(save_path, video_type, title, year)
             if ((create_nfo == 1) and (title not in movie_path)) or create_nfo == 2:
