@@ -32,6 +32,7 @@ DB_TYPES = enum(MYSQL='mysql', SQLITE='sqlite')
 CSV_MARKERS = enum(REL_URL='***REL_URL***', OTHER_LISTS='***OTHER_LISTS***', SAVED_SEARCHES='***SAVED_SEARCHES***', BOOKMARKS='***BOOKMARKS***')
 MAX_TRIES = 5
 MYSQL_DATA_SIZE = 512
+MYSQL_URL_SIZE = 255
 
 class DB_Connection():
     def __init__(self):
@@ -102,6 +103,8 @@ class DB_Connection():
     def cache_url(self, url, body, data=''):
         if data is None: data = ''
         # truncate data if running mysql and greater than col size
+        if self.db_type == DB_TYPES.MYSQL and len(url) > MYSQL_URL_SIZE:
+            url = url[:MYSQL_URL_SIZE]
         if self.db_type == DB_TYPES.MYSQL and len(data) > MYSQL_DATA_SIZE:
             data = data[:MYSQL_DATA_SIZE]
         now = time.time()
@@ -342,7 +345,7 @@ class DB_Connection():
     
             log_utils.log('Building SALTS Database', log_utils.LOGDEBUG)
             if self.db_type == DB_TYPES.MYSQL:
-                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(255) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_DATA_SIZE))
+                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(%s) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_URL_SIZE, MYSQL_DATA_SIZE))
                 self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255) NOT NULL, value TEXT, PRIMARY KEY(setting))')
                 self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
                 (video_type VARCHAR(15) NOT NULL, title VARCHAR(255) NOT NULL, year VARCHAR(4) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, source VARCHAR(50) NOT NULL, rel_url VARCHAR(255), \
@@ -441,8 +444,9 @@ class DB_Connection():
                     self.__attempt_db_recovery()
                 else:
                     raise
-            except DatabaseError:
+            except DatabaseError as e:
                 if not self.__recovery:
+                    log_utils.log('Attempting DB recovery due to Database Error: %s' % (e), log_utils.LOGDEBUG)
                     self.__attempt_db_recovery()
                 else:
                     raise
