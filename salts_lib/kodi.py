@@ -32,7 +32,6 @@ show_settings = addon.openSettings
 
 def get_path():
     return addon.getAddonInfo('path').decode('utf-8')
-ICON_PATH = os.path.join(get_path(), 'icon.png')
 
 def get_profile():
     return addon.getAddonInfo('profile').decode('utf-8')
@@ -102,10 +101,11 @@ def parse_query(query):
 def notify(header=None, msg='', duration=2000, sound=None):
     if header is None: header = get_name()
     if sound is None: sound = get_setting('mute_notifications') == 'false'
+    icon_path = os.path.join(get_path(), 'icon.png')
     try:
-        xbmcgui.Dialog().notification(header, msg, ICON_PATH, duration, sound)
+        xbmcgui.Dialog().notification(header, msg, icon_path, duration, sound)
     except:
-        builtin = "XBMC.Notification(%s,%s, %s, %s)" % (header, msg, duration, ICON_PATH)
+        builtin = "XBMC.Notification(%s,%s, %s, %s)" % (header, msg, duration, icon_path)
         xbmc.executebuiltin(builtin)
     
 def get_current_view():
