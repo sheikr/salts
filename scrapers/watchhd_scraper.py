@@ -121,18 +121,26 @@ class WatchHD_Scraper(scraper.Scraper):
                             quality = self._height_get_quality(match.group(1))
                         else:
                             quality = QUALITIES.HIGH
-                        stream_url += '|User-Agent=%s&Referer=%s' % (self._get_ua(), url)
+                        stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (self._get_ua(), url, self.__get_stream_cookies())
                         hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': True}
                         hoster['title'] = title
                         hosters.append(hoster)
         return hosters
+
+    def __get_stream_cookies(self):
+        cj = self._set_cookies(self.base_url, {})
+        cookies = []
+        for cookie in cj:
+            cookies.append('%s=%s' % (cookie.name, cookie.value))
+        return urllib.quote(';'.join(cookies))
 
     def get_url(self, video):
         return super(WatchHD_Scraper, self)._default_get_url(video)
 
     def search(self, video_type, title, year):
         search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=1)
+        html = self._http_get(search_url, cache_limit=.25)
+        log_utils.log(html)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'name_top'}):
             match = re.search('href="([^"]+)[^>]+>([^<]+)', item)
@@ -147,7 +155,7 @@ class WatchHD_Scraper(scraper.Scraper):
                     match_year = ''
                 
                 if not year or not match_year or year == match_year:
-                    result = {'title': match_title, 'year': '', 'url': self._pathify_url(url)}
+                    result = {'title': match_title, 'year': match_year, 'url': self._pathify_url(url)}
                     results.append(result)
 
         return results
