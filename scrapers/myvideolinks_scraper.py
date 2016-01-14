@@ -21,10 +21,11 @@ import urlparse
 import re
 from salts_lib import kodi
 from salts_lib.trans_utils import i18n
+from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
-BASE_URL = 'http://myvideolinks.xyz'
+BASE_URL = 'http://mypopcorntime.xyz'
 
 class MyVidLinks_Scraper(scraper.Scraper):
     base_url = BASE_URL
