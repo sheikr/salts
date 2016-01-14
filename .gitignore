@@ -2,4 +2,3 @@
 /.pydevproject
 *.pyc
 *.pyo
-/scrapers/ocw_scraper.py
