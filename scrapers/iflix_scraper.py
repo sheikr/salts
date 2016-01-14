@@ -162,6 +162,10 @@ class Iflix_Scraper(scraper.Scraper):
         return results
 
     @classmethod
+    def has_proxy(cls):
+        return True
+    
+    @classmethod
     def get_settings(cls):
         settings = super(Iflix_Scraper, cls).get_settings()
         name = cls.get_name()
