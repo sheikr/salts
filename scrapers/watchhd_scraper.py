@@ -140,7 +140,6 @@ class WatchHD_Scraper(scraper.Scraper):
     def search(self, video_type, title, year):
         search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote_plus(title)))
         html = self._http_get(search_url, cache_limit=.25)
-        log_utils.log(html)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'name_top'}):
             match = re.search('href="([^"]+)[^>]+>([^<]+)', item)
