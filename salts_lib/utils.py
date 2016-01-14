@@ -555,7 +555,8 @@ def relevant_scrapers(video_type=None, include_disabled=False, order_matters=Fal
     for cls in classes:
         if video_type is None or video_type in cls.provides():
             if include_disabled or scraper_enabled(cls.get_name()):
-                relevant.append(cls)
+                if not cls.has_proxy():
+                    relevant.append(cls)
 
     if order_matters:
         relevant.sort(key=get_source_sort_key)

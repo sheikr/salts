@@ -2,15 +2,15 @@ import re
 import os
 import datetime
 import time
+import importlib
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
-from . import scraper  # just to avoid editor warning
 
 __all__ = ['scraper', 'local_scraper', 'pw_scraper', 'uflix_scraper', 'watchseries_scraper', 'movie25_scraper', 'merdb_scraper', '2movies_scraper', 'icefilms_scraper',
            'movieshd_scraper', 'viooz_scraper', 'filmstreaming_scraper', 'myvideolinks_scraper', 'filmikz_scraper', 'clickplay_scraper', 'nitertv_scraper',
-           'iwatch_scraper', 'ororotv_scraper', 'view47_scraper', 'vidics_scraper', 'oneclickwatch_scraper', 'losmovies_scraper', 'movie4k_scraper', 'easynews_scraper',
+           'iwatch_scraper', 'ororotv_scraper', 'view47_scraper', 'vidics_scraper', 'ocw_proxy', 'losmovies_scraper', 'movie4k_scraper', 'easynews_scraper',
            'noobroom_scraper', 'solar_scraper', 'directdl_scraper', 'movietv_scraper', 'moviesonline7_scraper', 'streamallthis_scraper', 'afdah_scraper', 'torbase_scraper',
            'streamtv_scraper', 'moviestorm_scraper', 'wmo_scraper', 'zumvo_scraper', 'wso_scraper', 'ch131_scraper', 'watchfree_scraper', 'streamlord_scraper',
            'pftv_scraper', 'flixanity_scraper', 'cmz_scraper', 'movienight_scraper', 'alluc_scraper', 'afdahorg_scraper', 'xmovies8_scraper', 'yifystreaming_scraper',
@@ -22,7 +22,7 @@ __all__ = ['scraper', 'local_scraper', 'pw_scraper', 'uflix_scraper', 'watchseri
            'putmv_scraper', '9movies_scraper', 'watchhd_scraper', 'iflix_scraper']
 
 from . import *
-
+    
 class ScraperVideo:
     def __init__(self, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate=''):
         assert(video_type in (VIDEO_TYPES.__dict__[k] for k in VIDEO_TYPES.__dict__ if not k.startswith('__')))
@@ -66,16 +66,14 @@ def update_settings():
     except Exception as e:
         log_utils.log('Dynamic settings update skipped: %s' % (e), log_utils.LOGWARNING)
     else:
-        try:
-            with open(full_path, 'r') as f:
-                xml = f.read()
-        except:
-            raise
-    
+        with open(full_path, 'r') as f:
+            xml = f.read()
+
         new_settings = []
         cat_count = 1
         old_xml = xml
-        classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)
+        classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)  # @UndefinedVariable
+        log_utils.log(classes)
         for cls in sorted(classes, key=lambda x: x.get_name().upper()):
             new_settings += cls.get_settings()
             if len(new_settings) > 90:
@@ -87,11 +85,8 @@ def update_settings():
             xml = update_xml(xml, new_settings, cat_count)
     
         if xml != old_xml:
-            try:
-                with open(full_path, 'w') as f:
-                    f.write(xml)
-            except:
-                raise
+            with open(full_path, 'w') as f:
+                f.write(xml)
         else:
             log_utils.log('No Settings Update Needed', log_utils.LOGDEBUG)
 

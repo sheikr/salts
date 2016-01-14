@@ -201,6 +201,10 @@ class Scraper(object):
         ]
 
     @classmethod
+    def has_proxy(cls):
+        return False
+    
+    @classmethod
     def _disable_sub_check(cls, settings):
         for i in reversed(xrange(len(settings))):
             if 'sub_check' in settings[i]:

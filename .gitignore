@@ -2,4 +2,4 @@
 /.pydevproject
 *.pyc
 *.pyo
-/scrapers/shush_scraper.py
+/scrapers/ocw_scraper.py
