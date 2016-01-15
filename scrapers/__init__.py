@@ -2,7 +2,6 @@ import re
 import os
 import datetime
 import time
-import importlib
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib.constants import VIDEO_TYPES
