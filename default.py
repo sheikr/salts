@@ -46,7 +46,6 @@ list_size = int(kodi.get_setting('list_size'))
 trakt_api = Trakt_API(TOKEN, use_https, list_size, trakt_timeout)
 
 url_dispatcher = URL_Dispatcher()
-db_connection = DB_Connection()
 
 @url_dispatcher.register(MODES.MAIN)
 def main_menu():
@@ -2335,6 +2334,8 @@ def main(argv=None):
         return
 
     try:
+        global db_connection
+        db_connection = DB_Connection()
         mode = queries.get('mode', None)
         url_dispatcher.dispatch(mode, queries)
     except (TransientTraktError, TraktError) as e:

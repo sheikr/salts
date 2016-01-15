@@ -38,7 +38,6 @@ MYSQL_URL_SIZE = 255
 
 class DB_Connection():
     def __init__(self):
-        global db_lib
         global OperationalError
         global DatabaseError
         self.dbname = kodi.get_setting('db_name')
@@ -66,6 +65,7 @@ class DB_Connection():
             self.db_type = DB_TYPES.SQLITE
             db_dir = kodi.translate_path("special://database")
             self.db_path = os.path.join(db_dir, 'saltscache.db')
+        self.db_lib = db_lib
         self.__connect_to_db()
 
     def flush_cache(self):
@@ -494,9 +494,9 @@ class DB_Connection():
     def __connect_to_db(self):
         if not self.db:
             if self.db_type == DB_TYPES.MYSQL:
-                self.db = db_lib.connect(database=self.dbname, user=self.username, password=self.password, host=self.address, buffered=True)
+                self.db = self.db_lib.connect(database=self.dbname, user=self.username, password=self.password, host=self.address, buffered=True)
             else:
-                self.db = db_lib.connect(self.db_path)
+                self.db = self.db_lib.connect(self.db_path)
                 self.db.text_factory = str
                 self.__execute('PRAGMA journal_mode=WAL')
 
