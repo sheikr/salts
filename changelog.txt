@@ -1,4 +1,4 @@
-[B]Version 1.0.100[/B]
+[B]Version 1.0.101[/B]
 - Fix rel_url key length for MySQL 32 bit
 - Fix mvl scraper
 - Remove moviefarsi
