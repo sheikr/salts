@@ -623,7 +623,7 @@ class Scraper(object):
             
         try: height = int(height)
         except: height = 200
-        if height > 800:
+        if height >= 800:
             quality = QUALITIES.HD1080
         elif height > 480:
             quality = QUALITIES.HD720
