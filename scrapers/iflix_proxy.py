@@ -90,7 +90,7 @@ class IFlix_Proxy(scraper.Scraper):
             offset = 5
         except:
             settings = super(IFlix_Proxy, cls).get_settings()
-            offset = 3
+            offset = 4
         settings.append('         <setting id="%s-scraper_url" type="text" label="    %s" default="" visible="eq(-%d,true)"/>' % (name, i18n('scraper_location'), offset))
         settings.append('         <setting id="%s-scraper_password" type="text" label="    %s" option="hidden" default="" visible="eq(-%d,true)"/>' % (name, i18n('scraper_key'), offset + 1))
         return settings
