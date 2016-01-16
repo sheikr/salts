@@ -359,6 +359,7 @@ class DB_Connection():
                 PRIMARY KEY(slug, season, episode))')
             else:
                 self.__create_sqlite_db()
+                self.__execute('PRAGMA journal_mode=WAL')
                 self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARCHAR(255) NOT NULL, data VARCHAR(255), response, timestamp, PRIMARY KEY(url, data))')
                 self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255), value TEXT, PRIMARY KEY(setting))')
                 self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
@@ -498,7 +499,6 @@ class DB_Connection():
             else:
                 self.db = self.db_lib.connect(self.db_path)
                 self.db.text_factory = str
-                self.__execute('PRAGMA journal_mode=WAL')
 
     # apply formatting changes to make sql work with a particular db driver
     def __format(self, sql):
